@@ -1,0 +1,105 @@
+
+<section style="flex:1; padding-bottom:0.5rem; padding-top:0.5rem; overflow:auto">
+<!--
+    <table>
+        <thead>
+            <tr>
+                <th>Artikli</th>
+                2017-10
+            </tr>
+        </thead>
+        <tbody>
+            {{#rows}}
+            <tr>
+                <td>{{.IDENT}}</td>
+                {{#m}}
+                <td>{{.}}</td>
+                {{/m}}
+            </tr>
+            {{/rows}}
+        </tbody>
+    </table>
+-->
+    <div style="display:box; display:flex; height:100%; overflow:auto; flex:1; min-width: 44em;;">
+        <f2table style="width:100%;" rows={{rows}} row={{row}} visible="true" close={{closeList}} headerFixedHeight={{headerFixedHeight}} alternateColor="{{alternateColor}}" 
+            serviceName="{{serviceName}}" columns={{columns}}  env={{env}} ipp="100"
+            variableRowHeight={{variableRowHeight}} showSearch={{showSearch}} showPaginator={{showPaginator}} showHeaders={{showHeaders}} selectid={{selectid}} loading={{izdatiracuniIsLoading}} nodata={{nodata}} >
+        </f2table>
+    </div>
+
+</section>
+<section style="padding-bottom:0.5rem; padding-top:0.5rem">
+    <button primary m-full on-click="@this.getizdatiracuni()" style="width: 100%;" >Last sync: {{izdatiracuniDate}}
+        <i style="float:right" class="glyphicon {{izdatiracuniIsLoading?'glyphicon-repeat fast-right-spinner':'glyphicon-refresh'}} "></i>
+    </button>
+</section>
+
+<script>
+  component.exports = {
+    onrender: function () {
+        var self = this;
+        const got = require('got');
+        this.formatDate = function(date){
+            return  date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' ' + date.getHours()+':' + date.getMinutes()
+        }
+        
+        setTimeout(function(){
+            var izdatiracuniDate = localStorage.getItem("izdatiracuniDate");
+            if (izdatiracuniDate) {
+                var date = new Date(parseInt(izdatiracuniDate));
+                self.set('izdatiracuniDate', self.formatDate(date));
+                self.set('rows', cacheLocalStorage.izdatiracuni?cacheLocalStorage.izdatiracuni:JSON.parse(localStorage.getItem("izdatiracuni")));
+            }
+        },1)
+        
+        this.getizdatiracuni = async function() {
+            self.set('izdatiracuniIsLoading', true);
+            setTimeout(function(){ self.set('izdatiracuniIsLoading', false) }, 1000)
+            try {
+                const response = await got('http://77.105.33.22:8765/izdatiracuni', { json: true });
+//                console.log(response.body);
+                localStorage.setItem("izdatiracuni", JSON.stringify(response.body));
+                var date= new Date();
+                var dateInt = date.getTime();
+                localStorage.setItem("izdatiracuniDate", dateInt);
+                
+                var dateF = self.formatDate(date);
+                
+                self.set('izdatiracuniDate', dateF);
+                self.set('izdatiracuniIsLoading', false);
+                self.set('rows', response.body);
+            } catch (error) {
+                console.log(error);
+                self.set('izdatiracuniIsLoading', false);
+            }
+        }    
+        this.getizdatiracuni()
+    },        
+    data:function() {
+            return {
+                text: ''
+                , ur:null
+                , rows:[]
+                , row:null
+                , izdatiracuniDate: ''
+                , izdatiracuniIsLoading:false
+                , columns:null
+                /*
+                , columns: [
+        //        {visible:true , filter:false, compId:"id", compType:"text", label:"Naziv", w:"20%", template:"<img style='height:2em' src='objengine/image.php?filename={{viewport[i][.compId]}}&h=140'>"}
+                   // {visible:true , filter:true, compId:"id", compType:"text", label:"Naziv", w:"100%",
+                  //  template:"<div> {{viewport[i]['id']}}</div>" },Number(77).toFixed(2)
+                  {visible:true , filter:true, compId:"IDENT", compType:"text", label:"Naziv", w:"22%"},
+                  {visible:true , filter:true, compId:"2017-10", compType:"number", label:"2017-10", w:"13%"},
+                  {visible:true , filter:true, compId:"2017-11", compType:"number", label:"2017-11", w:"13%"},
+                  {visible:true , filter:true, compId:"2017-12", compType:"number", label:"2017-12", w:"13%"},
+                  {visible:true , filter:true, compId:"2018-1", compType:"number", label:"2018-1", w:"13%"},
+                  {visible:true , filter:true, compId:"2018-2", compType:"number", label:"2018-2", w:"13%"},
+                  {visible:true , filter:true, compId:"2018-3", compType:"number", label:"2018-3", w:"13%"},
+//                  {visible:true , filter:true, compId:"kol", compType:"number", label:"Kol", w:"12em", template:"{{Number(viewport[i][compId]).toFixed(2)}}"},
+                ]
+                  */          
+            }
+        }
+  };
+  </script>

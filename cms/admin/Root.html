@@ -1,0 +1,146 @@
+
+<nav style="z-index: 1044;">
+    <!-- this label allows the checkbox to be activated by clicking anywhere in the nav -->
+    <label>
+        <!-- checkbox required for responsiven menu -->
+        <input type="checkbox">
+        
+        <!-- bareCSS will use the header to contain the hamburger menu -->
+        <header>
+            <!-- you can leave this empty if you don't want a title -->
+            <a><img src="https://resize-service.buildcon.org/?url=https://buildcon.s3.amazonaws.com/1d93c389-540b-479d-8877-3cefa33c2d87.png&width=20">{{selectedModule?selected_tablename:'Admin Panel'}}</a>
+        </header>
+        
+        <!-- the main navigation items are anchor links within an unordered list -->
+        <ul>
+        
+            <li>
+                <a  on-click="@this.set('selectedModule','ImageBrowser')" style="{{selectedModule=='ImageBrowser'?'border-color: #679;':''}}" >Media</a>
+            </li>
+        
+            <li>
+                <a style="{{selectedModule=='Schema'?'border-color: #679;':''}}">Schema</a>                
+                <menu>
+                    <menuitem><a style="text-transform: capitalize;" on-click="@this.set('showSchemaNew',true)" >Add New Schema</a></menuitem>
+                    {{#each sqlite_schema}}                        
+                    <menuitem style="{{(selectedModule=='Schema' && selected_tablename==.name)?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="@this.fire('onModuleSelect',@this.event,'Schema', .name)" >{{.name}}</a></menuitem>
+                    {{/each}}
+                </menu>
+            </li>            
+    
+
+            <li>
+                <a style="{{selectedModule=='TGrid'?'border-color: #679;':''}}">Tables</a>                
+                <menu>
+                    {{#each sqlite_tables}}
+                    {{#if .is_multiple == 'false'}}
+                    <menuitem style="{{(selectedModule=='TDetailsSingle' && selected_tablename==.name)?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="@this.fire('onModuleSelect',@this.event,'TDetailsSingle', .name)" >{{.nice_name}}</a></menuitem>
+                    {{else}}
+                    <menuitem style="{{(selectedModule=='TGrid' && selected_tablename==.name)?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="@this.fire('onModuleSelect',@this.event,'TGrid', .name)" >{{.nice_name}}</a></menuitem>
+                    {{/if}}
+                    {{/each}}
+                </menu>
+            </li>            
+<!--
+            <li on-click="@this.set('selectedModule','settings')"><a style="{{selectedModule=='settings'?'border-color: #679;':''}}">Settings</a></li>            
+-->
+            <li on-click="logout"><a style="{{selectedModule=='Login'?'border-color: #679;':''}}" >Sign out</a></li>        
+        </ul>
+    </label>
+</nav>
+
+<!--
+                		
+{{#if selectedModule && selectedModule != 'settings'}}
+<Grid G={{.}} selectedModule={{selectedModule}} rows={{rows[selectedModule]}} ts={{ts[selectedModule]}} columns={{setings[selectedModule].columns}}></Grid>
+{{/if}}
+-->
+
+{{#if selectedModule == 'TGrid'}}
+<TGrid G={{.}} selected_tablename = {{selected_tablename}}></TGrid>
+{{/if}}
+
+{{#if selectedModule == 'TDetailsSingle'}}
+<TDetailsSingle G={{.}} selected_tablename = {{selected_tablename}}></TDetailsSingle>
+{{/if}}
+
+{{#if selectedModule == 'ImageBrowser'}}
+<ImageBrowser G={{.}}></ImageBrowser>
+{{/if}}
+
+{{#if selectedModule == 'Schema'}}
+<Schema G={{.}} schema_name = {{selected_tablename}}></Schema>
+{{/if}}
+
+
+{{#if showSchemaNew }}
+<modal show="{{showSchemaNew}}" title="Create New Schema" 
+class="animated fadeInRight" showOverlay="{{true}}" showHeader="{{true}}" style="
+height: 20em;
+width: 30em;
+left: calc(50% - 15em);
+right: inherit;
+top: calc(50% - 10em);
+bottom: inherit;
+" >
+    <SchemaNew G={{.}} show="{{showSchemaNew}}"></SchemaNew>
+</modal>
+{{/if}}
+
+<script>
+  component.exports = {
+    onrender: function () {
+        var self = this;
+
+        this.on('refresh', async function(){
+            console.log('refreshing sqlite tables')
+            var [resp,err] = await fetch2("?query=cms_tables_list_get")
+            if (resp) self.set('sqlite_tables', resp)
+            if (resp) self.set('sqlite_schema', resp)
+
+            // TODO: popravi, odje ne trebaju 2 poziva
+            var [resparr, err] = await fetch2('?query=engine_schema_get_all');
+            if (resparr){
+                var respkv={}
+                for (var i=0; i<resparr.length;i++)
+                    respkv[ resparr[i].name ] = resparr[i];
+                self.set('schemas', respkv);
+            }                
+        })
+        this.fire('refresh')
+
+        this.on('onModuleSelect', function(e, component, tablename){
+            //"@this.set('selectedModule','settings')
+            console.log(e, component,tablename );
+            //e.original.stopImmediatePropagation()
+            //e.original.preventDefault();
+            //e.original.stopPropagation();
+            self.set('selectedModule', null).then(function(){
+                self.set('selected_tablename', tablename);
+                self.set('selectedModule', component);
+            })
+            return true
+        })
+
+        this.on('logout', function(n,o,k,i){
+            localStorage.removeItem('token')
+            self.set('is_logedin', false)
+            self.set('selectedModule', 'Login')
+        }, {init:false})
+        
+    },        
+    data:function() {
+            return {    
+                selectedModule:'TGrid',   
+                QRScannerActive:false,
+                company_id:'',   
+                is_logedin:false,
+                kvStore:{}, 
+                sqlite_tables:[],
+                sqlite_schema:[],
+                selected_tablename:'Sati',
+                showSchemaNew:false
+            }
+        }
+  };
+  </script>

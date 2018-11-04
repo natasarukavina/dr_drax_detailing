@@ -1,0 +1,54 @@
+
+<section style="flex:1; padding-bottom:0; padding:1rem; overflow:auto">
+    <label>Username</label>
+    <input type="text" placeholder="email" value={{email}} >
+    
+    <label>Password</label>
+    <input type="password" placeholder="password" value={{password}}>
+    
+    <button  primary m-full style="width: 100%; margin-bottom: 0;" on-click="tryLogin">Sign in
+    </button>    
+
+</section>
+
+
+<script>
+  component.exports = {
+    onrender: function () {
+        var self = this;
+        this.focusFirstElement();
+        if (localStorage.getItem('token')){
+            //socket.emit('client_token', localStorage.getItem('token'))
+            izitoast.success({ message: 'Welcome back'});
+            self.set('G.is_logedin',true);
+            self.set('G.selectedModule','Companies');            
+        }
+
+        this.on('tryLogin', async function(){
+            var email = self.get('email');
+            var password = self.get('password');
+            console.log('tryLogin')
+            var [resp,err] = await fetch2('api/v2/authSA', {email:email, password:password})
+            if (resp && resp.token) {
+                localStorage.setItem('token', resp.token);
+                socket.emit('client_token', resp.token)
+                izitoast.success({ message: 'You are in'}); 
+                self.set('G.is_logedin',true);
+                self.set('G.selectedModule','Companies');
+                //self.set('G.showModal',false)
+            } else izitoast.error({ message: 'Wrong credentials'});                
+
+        })
+    },        
+    data:function() {
+            return {
+                G:null
+                , email:null
+                , password:null
+            }
+        }
+
+  };
+  </script>
+
+
