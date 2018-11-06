@@ -9,7 +9,7 @@ id="rmodalm" >
   <div class="modal-header rmodal-head noselect" on-pan="onpan" on-panstart="onpanstart" style="{{isFullScreen?'':'cursor: move'}}">
 
     <h4 class="modal-title" xx>
-        {{title}} 
+        <span class="modal-title-span" >{{title}}</span>
 
         <button aria-label="Close" type="button" on-click="@this.fire('close', @this.event)" style="float:right; margin-bottom: 0;border-radius: 50%;margin-right: 0; padding: 0.9rem 0.9rem;">
             <i class="glyphicon glyphicon-remove">
@@ -50,6 +50,15 @@ id="rmodalm" >
     margin: 6px;
     color: white;
     line-height: 1.7;
+    height: 3.5rem;
+}
+.modal-title-span{
+    width: calc(100% - 10rem);
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 /* overlay styles, all needed */
 .roverlay {

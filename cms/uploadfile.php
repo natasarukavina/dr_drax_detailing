@@ -1,5 +1,9 @@
 <?PHP
 include("engine.php");
+session_start();
+if ( !isset($_SESSION['_session_user_name']) ){
+    return;
+}
 
 if(!empty($_FILES['file']))
 {

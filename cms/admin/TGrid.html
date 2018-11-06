@@ -1,11 +1,14 @@
 <section style="padding-bottom:0; padding-top:2rem; display:flex; flex-flow: row; justify-content:space-between">
     <span style="font-weight: bold">
-        Total records <tag>{{fr.length}}</tag>
+        <tag>{{fr.length}} item{{fr.length==1?'':'s'}}</tag>
     </span>      
     <span style="flex: 1; text-align: center; font-weight: bold; text-transform: uppercase;">
         {{.selected_tablename}}
     </span>
-    <button style="padding: 9px; margin: 0;" on-click="@this.set('addNew',true)" id="addNew">Add new row</button>
+    <button style="padding: 9px; margin: 0;" on-click="@this.set('addNew',true)" id="addNew">
+        <span class="glyphicon glyphicon-plus"></span>
+        Add new
+    </button>
 </section>
 
 <section style="flex:1; padding-bottom:1rem; padding-top:0; overflow:auto">
@@ -61,7 +64,9 @@ bottom: inherit;" >
 //                if (columns) self.set('columns', columns)
                 var cols = self.get('G.schemas.'+selected_tablename+'.field');
                 if (!cols){
-                    var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename);
+                    //var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename);
+                    var [columns, err] = await self.fetch2("?query=_engine_schema_column&table_name="+selected_tablename);
+                    
                     cols = columns;
                 }
                 if (resp) self.set( { rows: resp, columns: cols } )

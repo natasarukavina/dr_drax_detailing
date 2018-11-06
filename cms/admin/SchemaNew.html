@@ -54,7 +54,8 @@
                 izitoast.error({ message: "Schema name must have only letters,numbers and _ and can't start with number"}); return;
             }
             
-            var [resp, err] = await fetch2('?query=engine_schema_new&tablename='+ tablename)
+//            var [resp, err] = await fetch2('?query=engine_schema_new&tablename='+ tablename)
+            var [resp, err] = await fetch2('?query=_engine_schema&_action=insert&tablename='+ tablename)
             if (resp) {
                 if (self.parent) self.parent.fire('refresh');
                 self.set('G.selectedModule', null).then(function(){

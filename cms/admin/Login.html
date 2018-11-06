@@ -14,28 +14,27 @@
 
 <script>
   component.exports = {
-    onrender: function () {
+    onrender: async function () {
         var self = this;
         this.focusFirstElement();
-        if (localStorage.getItem('token')){
-            //socket.emit('client_token', localStorage.getItem('token'))
-            izitoast.success({ message: 'Welcome back'});
+        var [resp,err] = await fetch2('?query=_authCheck');
+        if (resp && resp._session_user_name) {
+            izitoast.success({ message: 'Welcome back'}); 
+            self.set('G._session_user_name', resp._session_user_name);
+            self.set('G._session_user_role', resp._session_user_role);
             self.set('G.is_logedin',true);
-            self.set('G.selectedModule','Companies');            
         }
 
         this.on('tryLogin', async function(){
             var email = self.get('email');
             var password = self.get('password');
             console.log('tryLogin')
-            var [resp,err] = await fetch2('api/v2/authSA', {email:email, password:password})
-            if (resp && resp.token) {
-                localStorage.setItem('token', resp.token);
-                socket.emit('client_token', resp.token)
+            var [resp,err] = await fetch2('?query=_authSA', {email:email, password:password})
+            if (resp && resp._session_user_name) {
                 izitoast.success({ message: 'You are in'}); 
+                self.set('G._session_user_name', resp._session_user_name);
+                self.set('G._session_user_role', resp._session_user_role);
                 self.set('G.is_logedin',true);
-                self.set('G.selectedModule','Companies');
-                //self.set('G.showModal',false)
             } else izitoast.error({ message: 'Wrong credentials'});                
 
         })

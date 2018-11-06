@@ -25,7 +25,7 @@
     function remove_extra_params($sql, $in_params){
         $res = array();
         preg_match_all("/\:(\w+)/", $sql, $matches);
-        foreach($matches[1] as $keyname) $res[$keyname] = $in_params[$keyname];
+        foreach($matches[1] as $keyname) $res[$keyname] = isset($in_params[$keyname])?$in_params[$keyname]:'';
         return $res;
     }
     // json
@@ -47,14 +47,47 @@
             //return;
         }
         if ($wc==1) {
-            $stmt = $db->prepare(" select sql_select, is_multiple from cms_sql where sql_name = :sql_name");
-            $stmt->execute( array('sql_name' => $sqlstring) );
-//            $sqlstring = $stmt->fetchColumn();    
+//            $stmt = $db->prepare(" select sql_select, is_multiple from _sql where sql_name = :sql_name");
+            $stmt = $db->prepare("
+            select case :_action
+            when '' then  sql_select
+            when 'select' then  sql_select
+            when 'insert' then sql_insert 
+            when 'update' then sql_update
+            when 'delete' then sql_delete
+            else '' end sql_select
+            , read_role
+            , write_role
+            , is_multiple 
+            , case when :_action in ('', 'select') then
+            case  when ( read_role & cast(:_session_user_role as integer) ) = cast(:_session_user_role  as integer) then 'true' else 'false' end 
+            else
+            case  when ( write_role & cast(:_session_user_role as integer) ) = cast(:_session_user_role  as integer) then 'true' else 'false' end 
+            end as can_exec
+            , :_session_user_role as _session_user_role
+            , :_action as _action
+            from _sql 
+            where sql_name = :sql_name");
+
+            //$stmt->execute( array('sql_name' => $sqlstring) );
+            $stmt->execute( array(
+                'sql_name' => $sqlstring,
+                '_action' => isset($params['_action'])?$params['_action']:'',
+                '_session_user_role' => isset($params['_session_user_role'])?$params['_session_user_role']:'1'
+            ) );
+
+            //            $sqlstring = $stmt->fetchColumn();    
             $respp = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($respp)<1) {
                 //echo json_encode(array('error'=>"query $sqlstring missing!"));
                 //return;
                 return array('error'=>"query $sqlstring missing!");
+            }   
+            if ($respp[0]['can_exec']=='false') {
+                //echo json_encode(array('error'=>"query $sqlstring missing!"));
+                //return;
+                //print_r ($respp[0]);
+                return array('error'=>"No privilegies");
             }   
             $sqlstring = $respp[0]['sql_select'];
             $is_multiple = $respp[0]['is_multiple']==='false'?false:true;
@@ -75,7 +108,9 @@
             //echo json_encode(array('s'=>$sqlstring)); // todo
             //return;            
         }
+        if (empty($sqlstring)) return array('error'=>"Query missing");
         $sqls = explode(';', $sqlstring);
+        
         foreach( $sqls as $sql )
             if ( trim($sql)!=false ){
                 //echo $sql;
@@ -115,7 +150,7 @@
 
         // else get image from DB 
         global $db;
-        $stmt = $db->prepare("SELECT image_blob, mime_type from files where id = :id union all SELECT image_blob, mime_type from files where nice_url = :id limit 1");
+        $stmt = $db->prepare("SELECT image_blob, mime_type from _files where id = :id union all SELECT image_blob, mime_type from _files where nice_url = :id limit 1");
         $stmt->execute(array('id' => $id));
         $file = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (count($file)<1) { 
@@ -133,7 +168,7 @@
     function upload2sqlite($uploaded_file){
         // [uploaded_file] => Array ( [name] => bzvz (1).jpg [type] => image/jpeg [tmp_name] => /tmp/phpvZ85y1 [error] => 0 [size] => 23814
         global $db;
-        $query = $db->prepare("INSERT INTO files (image_blob, mime_type, name, nice_url, size) VALUES (:image_blob, :mime_type, :name, :nice_url, :size)");
+        $query = $db->prepare("INSERT INTO _files (image_blob, mime_type, name, nice_url, size) VALUES (:image_blob, :mime_type, :name, :nice_url, :size)");
         $query->bindValue(':image_blob', fopen($uploaded_file['tmp_name'], "rb"), PDO::PARAM_LOB);
         $query->bindParam(':mime_type',  $uploaded_file['type'], PDO::PARAM_STR);
         $query->bindParam(':name',       $uploaded_file['name'], PDO::PARAM_STR);

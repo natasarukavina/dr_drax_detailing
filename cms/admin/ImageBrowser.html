@@ -19,10 +19,13 @@
     <grid style="flex:1; overflow:auto;">
         {{#each rows}}
         <div col='1/4' class="cardholder" on-dblclick="confirm" on-click="@this.fire('imgSelect', .)">
-            <card style="{{imgSelect == .id?'box-shadow: 0 1px 4px 0 rgba(0,0,0,1)':''}}">
+            <card style="{{imgSelect == .id?'box-shadow: 0 1px 4px 0 rgba(0,0,0,1)':''}}; position:relative" id="ib{{.id}}">
                 <div xx class="img" style="background-image:url('{{HOSTNAME}}image.php?id={{id}}')">
                 </div>
                 <p xx class="carddesc">{{.name}}</p>
+                <button type="button" on-tap="@this.fire('showFullScreen', .)" style="position: absolute; right:0; top:0; margin-right: 0; margin-bottom: 0;border-radius: 50%; padding: 0.9rem 0.9rem;" >
+                    <i class="glyphicon glyphicon-fullscreen"></i>
+                </button>                
             </card>
         </div>
         {{/each}}
@@ -36,6 +39,18 @@
     </div>
             
 </section>
+
+{{#if showFullScreen}}
+<modal show="{{showFullScreen}}" zoomFrom="ib{{showFullScreenObj.id}}" cw="{{cw}}" title="{{showFullScreenObj.name}}" showOverlay="{{true}}" style="
+height: calc(100% - 45px);
+width: 100%;
+left: 0;
+right: inherit;
+top: 45px;
+bottom: inherit;" >
+    <ShowImage show="{{showFullScreen}}" imgObj={{showFullScreenObj}} ></ShowImage>
+</modal>
+{{/if}}
 
 <style>
 .upload {
@@ -128,6 +143,12 @@ component.exports = {
     ,onrender: function () {
         var self = this;
         self.set('HOSTNAME', HOSTNAME);
+
+        this.on('showFullScreen', function(o){
+            self.set('showFullScreenObj', o);
+            self.set('showFullScreen', true);
+            //{{HOSTNAME}}image.php?id={{id}}
+        })
         //this.focusFirstElement();
         this.handleDragenter = function (e) {
             console.log('Dragenter')
@@ -203,7 +224,7 @@ component.exports = {
         })
 
         this.on('refresh', async function(){
-            var [resp, err] = await fetch2('?query=files_get_list')
+            var [resp, err] = await fetch2('?query=_files')
             if (resp && resp) {
                 self.set('rows', resp)
             }
@@ -222,7 +243,7 @@ component.exports = {
         })
         
         this.on('delete', async function(){
-            var [resp, err] = await fetch2('?query=files_delete&id='+self.get('imgSelect') )
+            var [resp, err] = await fetch2('?query=_files&_action=delete&id='+self.get('imgSelect') )
             if (resp ) {
                 self.set('imgSelect', null);
                 self.fire('refresh');
@@ -236,7 +257,9 @@ component.exports = {
                 rows:[],
                 path:null,
                 imgSelect:null,
-                drag:false
+                drag:false,
+                showFullScreen:false,
+                showFullScreenObj:{}
             }
         }
     };

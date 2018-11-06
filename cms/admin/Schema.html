@@ -184,7 +184,7 @@ bottom: inherit;
             //engine_schema_get
             this.on('refresh', async function(){
                 var tablename = self.get('schema_name');
-                var [resp, err] = await fetch2('?query=engine_schema_get&tablename=' + tablename)
+                var [resp, err] = await fetch2('?query=_engine_schema&tablename=' + tablename)
                 if (resp && resp.length==1) 
                     self.set('row', resp[0])    
             })
@@ -205,7 +205,8 @@ bottom: inherit;
                     group_by_order_asc: self.get('row.group_by_order_asc')
                     
                 }
-                var [resp, err] = await fetch2('?query=engine_schema_update', o)
+                //var [resp, err] = await fetch2('?query=engine_schema_update', o)
+                var [resp, err] = await fetch2('?query=_engine_schema&_action=update', o)
                 self.fire('refresh');
                 if (self.parent) self.parent.fire('refresh');
                 izitoast.info({ message: 'Changes saved'});
@@ -214,7 +215,8 @@ bottom: inherit;
 
             this.on('droptable', async function(){
                 var tablename = self.get('schema_name');
-                var [resp, err] = await fetch2('?query=engine_drop_table&tablename=' + tablename)
+//                var [resp, err] = await fetch2('?query=engine_drop_table&tablename=' + tablename)
+                var [resp, err] = await fetch2('?query=_engine_schema&_action=delete&tablename=' + tablename)
                 if (resp) {
                     if (self.parent) self.parent.fire('refresh');
                     self.set('G.selected_tablename', null);

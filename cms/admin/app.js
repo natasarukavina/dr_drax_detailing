@@ -20,6 +20,8 @@ window.izitoast = izitoast;
 izitoast.settings({
     progressBar:false
     , position: 'bottomLeft'
+    , closeOnClick:true
+    , timeout:2000
 });
 
 
@@ -49,7 +51,8 @@ window.fetch2 = function(url, obj){
                 return response.json()
             })
           .then(function(j){ 
-              console.log('j',j); 
+              //console.log('j',j); 
+              if (j && j._message_action == "reload") document.location = document.location; // missing session
               resolve([j,null]) 
             })
           .catch(function(err){
@@ -225,7 +228,7 @@ Ractive.components.SchemaFiledAdd          =  require('./SchemaFiledAdd.html');
 Ractive.components.map                     =  require('./map.html');
 Ractive.components.HtmlEdit                =  require('./HtmlEdit.html');
 Ractive.components.Selectize               =  require('./Selectize.html');
-
+Ractive.components.ShowImage               =  require('./ShowImage.html');
 
 //document.addEventListener("deviceready", onDeviceReady, false);
 //if (!window.cordova) onDeviceReady()

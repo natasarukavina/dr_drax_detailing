@@ -55,7 +55,7 @@
         </div>
         <div col='1/1'>
             <label style="width:14em">Lookup field ({{row.lookup_field}})</label>
-            <Select style="display: inline-block; width:calc(99% - 14em);" url="?query=engine_table_columns_get&table_name={{row.lookup_table}}" value={{row.lookup_field}} labelf="label" valuef="compId" >
+            <Select style="display: inline-block; width:calc(99% - 14em);" url="?query=_engine_schema_column&table_name={{row.lookup_table}}" value={{row.lookup_field}} labelf="label" valuef="compId" >
                 <option disabled selected value="" >Pick</option>
             </Select>
         </div>
@@ -108,7 +108,7 @@
         SFA = this;
 
         this.on('get_next_sort', async function(){
-            var [resp, err] = await fetch2('?query=engine_schema_column_next_sort_get&table_name=' + self.get('table_name'))
+            var [resp, err] = await fetch2('?query=_engine_schema_column_next_sort_get&table_name=' + self.get('table_name'))
             if (resp) {
                 self.set('row.field_sort', resp.next_sort);
             }
@@ -116,9 +116,10 @@
         if (!self.get('update')) self.fire('get_next_sort');
 
         this.on('delete', async function(){
-            var [resp, err] = await fetch2('?query=engine_schema_column_delete', self.get('row'))
+            var [resp, err] = await fetch2('?query=_engine_schema_column&_action=delete', self.get('row'))
             if (resp) {
                 if (self.parent) self.parent.fire('refresh');
+                self.root.fire('refresh');
                 izitoast.info({ message: 'Field removed'});
                 self.set('show', false);
             }
@@ -132,18 +133,27 @@
             if (!field_name.match(/^[a-zA-Z][a-zA-Z0-9_]*$/)) {
                 izitoast.error({ message: "Field name must have only letters,numbers and _ and can't start with number"}); return;
             }
+            if ( self.get('row.field_type')=='DROPDOWN' || self.get('row.field_type')=='MULTISELECT' ) {
+                if ( !self.get('row.lookup_table') ) {
+                    izitoast.error({ message: "For filed type 'DropDown' you must pick 'lookup table'"}); return;
+                }
+                if ( !self.get('row.lookup_field') ) {
+                    izitoast.error({ message: "For filed type 'DropDown' you must pick 'lookup field'"}); return;
+                }
+            }
             
             if ( !self.get('row.nice_name') ) self.set('row.nice_name', self.get('row.field_name') )
 
-            var servicename = self.get('update')?'engine_schema_column_update':'engine_schema_column_insert'; 
+            var servicename = self.get('update')?'update':'insert'; 
             var table_name = self.get('table_name');
             self.set('row.table_name', table_name)
             var o = self.get('row');
             var field_type = o.field_type;
             o.sqlite_field_type = self.get('types.'+field_type+'.sqlitename');
-            var [resp, err] = await fetch2('?query='+servicename, o)
+            var [resp, err] = await fetch2('?query=_engine_schema_column&_action='+servicename, o)
             if (resp) {
                 if (self.parent) self.parent.fire('refresh');
+                self.root.fire('refresh');
                 izitoast.info({ message: 'Field saved'});
                 self.set('show', false);
             }

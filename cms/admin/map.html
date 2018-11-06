@@ -34,9 +34,10 @@
         var lng = 20.435552000999454;
         var gps = self.get('gps');
         if (gps){
-            lat = gps.split(',')[0];
-            lng = gps.split(',')[1];
+            lat = isNaN(gps.split(',')[0])?lat:gps.split(',')[0];
+            lng = isNaN(gps.split(',')[1])?lng:gps.split(',')[1];
         }
+        self.set('tmpgps', lat+','+lng );
         //var map = L.map('mapid').setView([51.505, -0.09], 13);
         var map =  L.map('mapid').setView([lat, lng ], 13);
         MAP = map; // global

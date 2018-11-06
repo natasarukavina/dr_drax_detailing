@@ -3,35 +3,35 @@
         {{#each cols}}
 
         {{#if .compType=='TEXT' && .visible_details=='true'}}
-        <div col='1/1'>
+        <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
             <input style="width: calc(100% - 15rem)" type="text" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}  >
         </div>
         {{/if}}
 
         {{#if .compType=='LONGTEXT' && .visible_details=='true'}}
-        <div col='1/1'>
+        <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
             <textarea style="width: calc(100% - 15rem)" style="min-height: 14rem;" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}  >
         </div>
         {{/if}}
         
         {{#if (.compType=='INTEGER' || .compType=='NUMERIC') && .visible_details=='true' }}
-        <div col='1/1'>
+        <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
             <input style="width: calc(100% - 15rem)" type="number" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}} >
         </div>
         {{/if}}
 
         {{#if .compType=='DATE' && .visible_details=='true'}}
-        <div col='1/1'>
+        <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
             <input style="width: calc(100% - 15rem)" type="date" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}  >
         </div>
         {{/if}}
 
         {{#if .compType=='COLOR' && .visible_details=='true'}}
-        <div col='1/1'>
+        <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
             <input style="width: 8rem" type="text" style="height:3.6rem" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}  >
             <input style="width: calc(100% - 23rem)" type="color" style="height:4rem" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}  >
@@ -39,7 +39,7 @@
         {{/if}}
 
         {{#if .compType=='MULTISELECT' && .visible_details=='true'}}
-        <div col='1/1' style="display:flex;align-items: center;">
+        <div col='1/1'  class="f" xx >
             <label class="l" xx>{{.nice_name}}</label>
             <Selectize url="?query={{.lookup_table}}" value="{{row[.compId]}}" labelf="{{.lookup_field}}" 
                 multiple="multiple" style="display: inline-block; width: calc(100% - 15rem)"  > 
@@ -48,17 +48,17 @@
         {{/if}}
         
         {{#if .compType=='IMAGE' && .visible_details=='true'}}
-        <div col='1/1' style="display:flex;align-items: start;">
+        <div col='1/1'  class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
             <input style="width: calc(100% - 39rem); margin-right: 1rem;" type="text" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}>
             <button id="browse" style="width: 14rem;" on-click="@this.fire('showFileBrowse', .compId)">Browse
             </button>    
-            <img src="{{HOSTNAME}}image.php?id={{row[.compId]}}" alt="{{row[.compId]}}" style="width: 8rem;">
+            <img src="{{HOSTNAME}}image.php?id={{row[.compId]}}" alt="{{row[.compId]}}" style="max-width: 8rem; max-height: 6rem;">
         </div>
         {{/if}}
 
         {{#if .compType=='DROPDOWN' && .visible_details=='true'}}
-        <div col='1/1'>
+        <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
             <Select style="display: inline-block; width: calc(100% - 15rem)" url="?query={{.lookup_table}}" value={{row[.compId]}} labelf="{{.lookup_field}}" valuef="id" >
                 <option disabled selected value="" >Pick</option>
@@ -67,7 +67,7 @@
         {{/if}}
 
         {{#if .compType=='GPS' && .visible_details=='true'}}
-        <div col='1/1'>
+        <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
             <input style="width: calc(100% - 23rem)" type="text" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}  >
             <button style="float:right" on-click="@this.fire('showMap', .compId)">Map</button>
@@ -75,14 +75,14 @@
         {{/if}}
 
         {{#if .compType=='CHECKBOX' && .visible_details=='true'}}
-        <div col='1/1'>
+        <div col='1/1' class="f" xx>
             <Checkbox id="{{compId}}" checked={{row[.compId]}}></Checkbox>
             <label for="{{compId}}">{{.nice_name}}</label>
         </div>
         {{/if}}
 
         {{#if .compType=='HTMLEDIT' && .visible_details=='true'}}
-        <div col='1/1'>
+        <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
             <HtmlEdit style="width: calc(100% - 15rem) height:30rem" placeholder="{{.placeholder}}" code={{row[.compId]}} >
             </HtmlEdit>
@@ -90,7 +90,7 @@
         {{/if}}
 
         {{#if .compType=='RANGE' && .visible_details=='true'}}
-        <div col='1/1'>
+        <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
             <input style="width: calc(100% - 15rem)" type="range" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}  >
         </div>
@@ -130,7 +130,8 @@
         {{/each}}
     </grid>
     <div xx class="buttonBar">
-        <button disabled="{{!row.id || loading}}" on-click="delete">Delete
+        <button disabled="{{!row.id || loading}}" on-click="delete">
+            <span class="glyphicon glyphicon-remove"></span> Delete
         </button>    
         <button primary disabled={{loading}} style="width: 14rem;" on-click="save">
             <span class="glyphicon {{loading?'glyphicon-refresh glyphicon-refresh-animate':'glyphicon-ok'}}"></span>
@@ -175,6 +176,10 @@ bottom: inherit;" >
 <style>
 .l{
     width:14rem;
+}
+.f {
+    display: flex;
+    align-items: center;
 }
 .componentSection {
     flex:1; 
@@ -228,6 +233,7 @@ bottom: inherit;" >
 */
         this.on('save', async function(){
             var row = self.get('row');
+/*
             var cn=[];
             var cu=[];
             var cols = self.get('cols');
@@ -239,6 +245,9 @@ bottom: inherit;" >
             var qinsert = 'insert into '+self.get('tablename') +' (' + cn.join(',') + ') values (:' + cn.join(',:') + ')' 
             var qupdate = 'update '+self.get('tablename') +' set ' + cu.join(',') + ' where id = :id'
             var [resp, err] = await self.fetch2('?query='+(self.get('row.id')?qupdate:qinsert) , self.get('row'))
+*/
+            var [resp, err] = await self.fetch2('?query='+self.get('tablename')+'&_action='+(self.get('row.id')?'update':'insert') , self.get('row'))
+
             if (resp) {
                 izitoast.success({ message: 'Record saved.'});
                 if (self.parent) self.parent.fire('refresh');
@@ -248,8 +257,7 @@ bottom: inherit;" >
         this.on('delete', async function(){
             var id  = self.get('row.id');
             if (!id) return;
-            var q = 'delete from '+self.get('tablename') +' where id = :id';
-            var [resp, err] = await fetch2('?query='+q, {id:id})
+            var [resp, err] = await fetch2('?query='+self.get('tablename')+'&_action=delete', {id:id})
             if (resp) {
                 izitoast.success({ message: 'Record deleted.'});
                 if (self.parent) self.parent.fire('refresh');
