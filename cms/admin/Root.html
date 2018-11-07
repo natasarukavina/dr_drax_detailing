@@ -46,11 +46,24 @@
                     {{/if}}
                     {{/each}}
                 </menu>
-            </li>            
+            </li>       
+            
+
+            <li>
+                <a style="{{selectedModule=='UserList'?'border-color: #679;':''}}">Settings</a>                
+                <menu>
+                    {{#if (_session_user_role == 2) || (_session_user_role == 4) || true}} <!--SA and Owner-->
+                    <menuitem style="{{(selectedModule=='UserList')?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="@this.fire('onModuleSelect',@this.event,'UserList', '')" >Users</a></menuitem>
+                    {{/if}}
+                    <menuitem style="{{(selectedModule=='Login')?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="logout" >Sign out</a></menuitem>
+                </menu>
+            </li>       
+                
+                
 <!--
             <li on-click="@this.set('selectedModule','settings')"><a style="{{selectedModule=='settings'?'border-color: #679;':''}}">Settings</a></li>            
--->
             <li on-click="logout" ><a style="{{selectedModule=='Login'?'border-color: #679;':''}}" >Sign out</a></li>        
+-->
         </ul>
     </label>
 </nav>
@@ -74,6 +87,10 @@ bottom: inherit;
 " >
     <Login G={{.}} ></Login>
 </modal>
+{{/if}}
+
+{{#if selectedModule == 'UserList'}}
+<UserList G={{.}}></UserList>
 {{/if}}
 
 {{#if selectedModule == 'TGrid'}}

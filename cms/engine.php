@@ -13,7 +13,17 @@
     // helper functions for splitting comma separated string for old sqlite (without with statement)
     $db->sqliteCreateFunction('substr_count', 'substr_count', 2); // or createFunction if type is Sqlite3 or SQLiteDatabase
     $db->sqliteCreateFunction('explode_by_index', 'explode_by_index', 2);
-    
+    $db->sqliteCreateCollation('NATURAL_CMP', 'strnatcmp');  // !!! UNDOCUMENTED PDO FUNCTION
+    $db->sqliteCreateCollation('UTF8_CMP', 'UTF8_CMP');  // !!! UNDOCUMENTED PDO FUNCTION
+
+
+    $coll = collator_create( 'sr_Latn_RS' ); // en_US
+    function UTF8_CMP($s1, $s2){
+        //return strcmp($s1, $s2);
+        global $coll;     
+        return collator_compare( $coll, $s1, $s2 );
+    }
+
     function explode_by_index($string, $index){
         $arr = explode(",", $string);
         return $arr[$index];

@@ -18,6 +18,7 @@ $twig = new Twig_Environment($loader, array(
 ));
 
 $f = new Twig_SimpleFunction('fetch', function ($name, $params=array()) {
+    print_r($params);
     return fetch($name, $params);
 });
 $twig->addFunction($f);

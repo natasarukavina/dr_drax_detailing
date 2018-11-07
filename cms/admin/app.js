@@ -52,7 +52,7 @@ window.fetch2 = function(url, obj){
             })
           .then(function(j){ 
               //console.log('j',j); 
-              if (j && j._message_action == "reload") document.location = document.location; // missing session
+              if (j && j._message_action == "reload")  ractive.set('is_logedin',false)//document.location = document.location; // missing session
               resolve([j,null]) 
             })
           .catch(function(err){
@@ -176,6 +176,7 @@ Ractive.components[ 'Select' ] = Ractive.extend( {
     	//	console.log(c);
             var iid = self.get('valuef') ;
             var obj = self.get('rows');
+            if (!Array.isArray(obj)) obj = [];
     		if (obj) obj = obj.filter(function ( o ) { return o[iid] == c; })[0];
 
     		if(obj !== undefined ) {
@@ -229,6 +230,8 @@ Ractive.components.map                     =  require('./map.html');
 Ractive.components.HtmlEdit                =  require('./HtmlEdit.html');
 Ractive.components.Selectize               =  require('./Selectize.html');
 Ractive.components.ShowImage               =  require('./ShowImage.html');
+Ractive.components.UserList                =  require('./user/UserList.html');
+Ractive.components.UserDetail              =  require('./user/UserDetail.html');
 
 //document.addEventListener("deviceready", onDeviceReady, false);
 //if (!window.cordova) onDeviceReady()
