@@ -1,7 +1,7 @@
 <section xx id="dropArea" class="componentSection" style="transition: border 2s; border: dashed {{drag?'8px #689':'8px #fff'}}">
     <div  style="display: flex;align-items: center;padding-bottom: 0; padding-top: 2rem;padding-bottom: 1rem; text-align: center;justify-content: center;">
-        <input type="file" multiple name="file" id="file" class="inputfile">
-        <label class="upload" for="file" >Upload file here</label>
+        <input type="file" multiple name="file" id="inputfile" class="inputfile">
+        <label class="upload" for="inputfile" >Upload file here</label>
          <span style="padding: 1rem;"> OR </span>     
         <div class="upload" style="border:dashed 1px #679" xx> Drag & Drop files here</div>
     </div>
@@ -20,12 +20,15 @@
         {{#each rows}}
         <div col='1/4' class="cardholder" on-dblclick="confirm" on-click="@this.fire('imgSelect', .)">
             <card style="{{imgSelect == .id?'box-shadow: 0 1px 4px 0 rgba(0,0,0,1)':''}}; position:relative" id="ib{{.id}}">
-                <div xx class="img" style="background-image:url('{{HOSTNAME}}image.php?id={{id}}')">
+                <div xx class="img" style="background-image:url('{{HOSTNAME}}image.php?id={{.id}}&forcethumb')">
                 </div>
                 <p xx class="carddesc">{{.name}}</p>
                 <button type="button" on-tap="@this.fire('showFullScreen', .)" style="position: absolute; right:0; top:0; margin-right: 0; margin-bottom: 0;border-radius: 50%; padding: 0.9rem 0.9rem;" >
                     <i class="glyphicon glyphicon-fullscreen"></i>
                 </button>                
+                <a btn href="{{HOSTNAME}}image.php?id={{.id}}" download="{{.name}}" style="position: absolute; left:0; top:0; margin-left: 0; margin-bottom: 0;border-radius: 50%; padding: 0.9rem 0.9rem;" >
+                    <i class="glyphicon glyphicon-download-alt"></i>
+                </a>                
             </card>
         </div>
         {{/each}}
@@ -155,46 +158,39 @@ component.exports = {
             self.set('drag', true)
         }
         this.handleDragleave = function (e) {
-            console.log('Dragleave')
             self.set('drag', false)
         }
 
         this.handleDrop = function (e) {
-            console.log('skvik',e)
             e.preventDefault();
             e.stopPropagation();
             let dt = e.dataTransfer;
             let files = dt.files;
             self.fire('upload', files);
+            self.set('drag', false)
             return false;
         }
         this.handleDragover = function (e) {
-            console.log('Dragover')
             e.preventDefault();
             e.stopPropagation();
             self.set('drag', true)
             return false;
         }
-        //console.log('this.nodes.dropArea', this.nodes.dropArea)
+
         this.nodes.dropArea.addEventListener('drop', this.handleDrop, false);
         this.nodes.dropArea.addEventListener('dragover', this.handleDragover, false);
         this.nodes.dropArea.addEventListener('dragleave', this.handleDragleave, false);
         this.nodes.dropArea.addEventListener('dragenter', this.handleDragenter, false);
         
-
-
-        this.nodes.file.onchange = function() {
+        this.nodes.inputfile.onchange = function() {
             self.fire('upload')
         };        
-        this.singleUpload = function(file){
-
-        }
+        //this.singleUpload = function(file){}
         this.on('upload', async function(files){
             //console.log(e)
             if (!files){
-                var input = document.querySelector('input[type="file"]')
-                //console.log('input', input)
-                //console.log('input.files', input.files)
+//                var input = document.querySelector('input[type="file"]');
+                var input = self.nodes.inputfile;
                 files = input.files;
                 //data.append('file', input.files[0])
             }
@@ -204,18 +200,19 @@ component.exports = {
                 var data = new FormData()
                 data.append('file', files[i])
 
-                resp = await fetch(HOSTNAME+'uploadfile', {
+                resp = await fetch(HOSTNAME+'uploadfile.php', {
                     method: 'POST',
-                    mode:'no-cors',
+                    credentials:'same-origin',
+                    //'Content-Type': 'application/json',
                     body: data
                 })
                 //.then(function(resp){
                     //console.log('up resp',resp)
-                    izitoast.success({ message: 'File '+(i+1)+' of '+ files.length+' uploaded.'});
+                izitoast.success({ message: 'File '+(i+1)+' of '+ files.length+' uploaded.'});
                     //self.fire('refresh')
                     
             }
-            resp.text().then(function(id){
+            if (resp) resp.text().then(function(id){
                 console.log('iidd uploada',id)
                 self.set('imgSelect', id)
             })
@@ -239,6 +236,7 @@ component.exports = {
         this.on('confirm', function(r){
             self.set('path', self.get('imgSelect'))
             //console.log('imgSelect',r)
+            if (self.parent) self.parent.fire('path', self.get('imgSelect'));
             self.set('show', false)
         })
         

@@ -25,9 +25,31 @@
                 <input type="checkbox" id="checkbox-1" checked={{row.is_multiple}}> 
                 <label for="checkbox-1">Multiple rows</label>
             </div>-->
+            <div col='1/1'>
+                <label style="width: 14rem;">Sort by</label>
+                <select style="width:calc(99% - 19em); display: inline;" value='{{row.sort_field}}'>
+                    <option value=''>Pick field</option>
+                    {{#each row.field:key}}
+                        <option value='{{.field_name}}'>{{.field_name}} ({{.nice_name}})</option>
+                    {{/each}}
+                </select>     
+                <Checkbox id="groupcheckbox-55" checked={{row.sort_asc}}></Checkbox>
+                <label for="groupcheckbox-55">Ascending</label> 
+            </div>
+
             <div col='1/1'>    
-                <label style="width: 14rem;">Display order</label>
-                <input type="number" placeholder="" value={{row.sort}} style="width: calc(100% - 15rem);">
+                <label style="width: 14rem;">Sort collation</label>
+                <select style="width:calc(99% - 19em); display: inline;" value='{{row.sort_collate}}'>
+                    <option value=''>Pick Collation</option>
+                    {{#each collation}}
+                        <option value='{{.}}'>{{.}}</option>
+                    {{/each}}
+                </select>             
+            </div>
+
+            <div col='1/1'>    
+                <label style="width: 14rem;">Menu order</label>
+                <input type="number" placeholder="" value={{row.menu_sort}} style="width: calc(100% - 15rem);">
             </div>
             <div col='1/1'>
                 <Checkbox id="checkbox-2" checked={{row.is_multiple}}></Checkbox>
@@ -36,14 +58,14 @@
             {{#if row.is_multiple===true || row.is_multiple=='true' }}
             <div col='1/1'>
                 <label style="width: 14rem;">Group table By  </label>
-                <select style="width:calc(99% - 16em); display: inline;" value='{{row.group_by}}'>
+                <select style="width:calc(99% - 22em); display: inline;" value='{{row.group_by}}'>
                     <option value=''>(don't group)</option>
                     {{#each row.field:key}}
                         <option value='{{.field_name}}'>{{.field_name}} ({{.nice_name}})</option>
                     {{/each}}
                 </select>     
                 <Checkbox id="groupcheckbox-2" checked={{row.group_by_order_asc}}></Checkbox>
-                <label for="groupcheckbox-2">Desc</label>
+                <label for="groupcheckbox-2">Ascending</label>
             </div>
             {{/if}}
                                     
@@ -197,14 +219,9 @@ bottom: inherit;
             })
 
             this.on('schema_update', async function(){
-                var o = {
-                    tablename:self.get('schema_name'),
-                    is_multiple: self.get('row.is_multiple'),
-                    nice_name: self.get('row.nice_name'),
-                    group_by: self.get('row.group_by'),
-                    group_by_order_asc: self.get('row.group_by_order_asc')
-                    
-                }
+                var o =  self.get('row');
+                o.tablename = self.get('schema_name')
+
                 //var [resp, err] = await fetch2('?query=engine_schema_update', o)
                 var [resp, err] = await fetch2('?query=_engine_schema&_action=update', o)
                 self.fire('refresh');
@@ -236,7 +253,12 @@ bottom: inherit;
                     , field:[]
                     , group_by:''
                     , group_by_order_asc:'true'
+                    , menu_sort:''
+                    , sort_field:''
+                    , sort_desc:'false'
+                    , sort_collate:''
                 }
+                , collation:['SR_LATIN_CMP','NATURAL_CMP', 'NOCASE', 'BINARY','RTRIM']
                 , columns:null
                 , showSchemaFiledAdd:false
                 , showSchemaFiledUpdate:false

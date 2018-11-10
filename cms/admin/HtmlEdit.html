@@ -1,25 +1,68 @@
 <div class="{{class}}" id ="summernote" style="{{style}}"></div>
 
+
+{{#if showFileBrowse}}
+<modal show="{{showFileBrowse}}" zoomFrom="summernote" cw="{{cw}}" title="Browse" 
+class="animated fadeInRight" showOverlay="{{true}}" style="
+height: 44em;
+width: 50em;
+left: calc(50% - 25em);
+right: inherit;
+top: calc(50% - 22em);
+bottom: inherit;" >
+    <ImageBrowser path="{{pathvarname}}" show="{{showFileBrowse}}"></ImageBrowser>
+</modal>
+{{/if}}
+
 <script>
   component.exports ={
-    data:{code:null, fromParent:true}
-    ,onrender: function(){
+    onrender: function(){
         var self = this;
+        var HelloButton = function (context) {
+            var ui = $.summernote.ui;
+            // create button
+            var button = ui.button({
+                contents: '<i class="note-icon-picture"/>',
+                tooltip: 'Image',
+                click: function () {
+                // invoke insertText method with 'hello' on editor module.
+                    self.set('showFileBrowse',true);
+                    //context.invoke('editor.insertText', 'Image odje');
+                }
+            });
+            return button.render();   // return button as jquery object
+        }
+        this.on('path', function(path){
+            $('#summernote').summernote('insertImage', 'image.php?id='+path, path)
+        })
+
         var e = $(this.find('*')).summernote({
-                  height: 300,                 
-                  minHeight: null,             
-                  maxHeight: '100%',
-                  //dialogsInBody: true,
-                  callbacks: {
-                    onFocus: function(e) {  $('.note-dialog').parents().removeClass('animated');  },  //modal fix                  
-                    onChange: function (contents, $editable) {
-                        console.log( 'contents',contents)
-                        console.log( 'editable',$editable)
-                        self.set('fromParent',false);
-                        self.set('code',contents);
-                        self.set('fromParent',true);
-                        }
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],                            
+                    ['imagez', ['link','image', 'video']],
+                    ['tables', ['table']],
+                    ['codeview', ['codeview']]
+                ],
+                buttons: {
+                    image: HelloButton
+                },
+                height: 300,               
+                minHeight: null,             
+                maxHeight: '100%',
+                //dialogsInBody: true,
+                callbacks: {
+                onFocus: function(e) {  $('.note-dialog').parents().removeClass('animated');  },  //modal fix                  
+                onChange: function (contents, $editable) {
+                    console.log( 'contents',contents)
+                    console.log( 'editable',$editable)
+                    self.set('fromParent',false);
+                    self.set('code',contents);
+                    self.set('fromParent',true);
                     }
+                }
                   
                 }); 
         SN = e
@@ -30,7 +73,16 @@
             }
         });
         
-    }
+    },   // data:{code:null, fromParent:true}
+
+        data:function() { 
+            return {
+                 showFileBrowse:false
+                ,pathvarname:''
+                ,code:null
+                ,fromParent:true
+             }
+        }
 }
 
 </script>

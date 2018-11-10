@@ -147,7 +147,7 @@ bottom: inherit;
 
         this.observe('is_logedin', function(n,o){
             if (n) self.fire('refresh');
-            self.set('selectedModule','TGrid'); // default (first), TODO
+            self.set('selectedModule','TDetailsSingle'); // default (first), TODO
         }, {init:false})
 
         //this.fire('refresh')
@@ -183,7 +183,7 @@ bottom: inherit;
                 kvStore:{}, 
                 sqlite_tables:[],
                 sqlite_schema:[],
-                selected_tablename:'Sati',
+                selected_tablename:'Home',
                 showSchemaNew:false,
 
             }

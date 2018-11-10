@@ -19,7 +19,7 @@
         this.focusFirstElement();
         var [resp,err] = await fetch2('?query=_authCheck');
         if (resp && resp._session_user_name) {
-            izitoast.success({ message: 'Welcome back'}); 
+            izitoast.success({ message: 'Welcome back, '+resp._session_user_name}); 
             self.set('G._session_user_name', resp._session_user_name);
             self.set('G._session_user_role', resp._session_user_role);
             self.set('G.is_logedin',true);

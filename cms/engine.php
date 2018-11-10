@@ -14,11 +14,11 @@
     $db->sqliteCreateFunction('substr_count', 'substr_count', 2); // or createFunction if type is Sqlite3 or SQLiteDatabase
     $db->sqliteCreateFunction('explode_by_index', 'explode_by_index', 2);
     $db->sqliteCreateCollation('NATURAL_CMP', 'strnatcmp');  // !!! UNDOCUMENTED PDO FUNCTION
-    $db->sqliteCreateCollation('UTF8_CMP', 'UTF8_CMP');  // !!! UNDOCUMENTED PDO FUNCTION
+    $db->sqliteCreateCollation('SR_LATIN_CMP', 'SR_LATIN_CMP');  // !!! UNDOCUMENTED PDO FUNCTION
 
 
     $coll = collator_create( 'sr_Latn_RS' ); // en_US
-    function UTF8_CMP($s1, $s2){
+    function SR_LATIN_CMP($s1, $s2){
         //return strcmp($s1, $s2);
         global $coll;     
         return collator_compare( $coll, $s1, $s2 );
@@ -164,10 +164,31 @@
         $stmt->execute(array('id' => $id));
         $file = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (count($file)<1) { 
-            echo 'no image';
+            //echo 'no image';
+            header("Content-type: image/png");
+            readfile(dirname(__FILE__).'/images/noimage.png');            
             //http_response_code(404); 
             return;
         }
+        $ftypes = array(
+              'application/vnd.ms-excel'=>'excel.png'
+            , 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'=>'excel.png'
+            , 'application/msword'=>'word.png'
+            , 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' =>'word.png'      
+            , 'application/pdf'=>'pdf.png'
+            , 'video/x-msvideo'=>'video.png'
+            , 'video/mpeg'=>'video.png'
+            , 'text/plain'=>'text.png'
+            , 'application/x-rar-compressed'=>'zip.png'
+            , 'application/zip'=>'zip.png'
+        );
+        if (isset($_GET['forcethumb']) && isset($ftypes[ $file[0]['mime_type'] ])){
+            header("Content-type: image/png");
+            readfile(dirname(__FILE__).'/images//'. $ftypes[ $file[0]['mime_type'] ] );             
+            return;
+        }
+        //$ftype = strtolower(end(explode('/', $file[0]['mime_type'])));
+        //if (in_array( array('pdf'), $ftype))
         header('Pragma: public');
         header('Cache-Control: max-age=86400');
         header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));

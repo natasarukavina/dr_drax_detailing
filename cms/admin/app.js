@@ -37,7 +37,7 @@ window.fetch2 = function(url, obj){
     var self =  (this instanceof Ractive)?this:null;
     if (self) self.set('loading', true)
 	return new Promise(function(resolve, reject) {
-        var response = fetch(HOSTNAME+'api/'+url, {
+        var response = fetch(HOSTNAME+'api.php/'+url, {
             method: 'post',
             credentials:'same-origin',
 //            headers: {

@@ -203,6 +203,7 @@ bottom: inherit;" >
         var self = this;
         self.set('HOSTNAME', HOSTNAME);
         TDetails = self;
+        console.log('in TDetailsSingle')
 
         this.on('refresh', async function(){
             var selected_tablename = self.get('selected_tablename');
@@ -232,17 +233,7 @@ bottom: inherit;" >
 
         this.on('save', async function(){
             var row = self.get('row');
-            var cn=[];
-            var cu=[];
-            var cols = self.get('cols');
-            for(var i=0;i<cols.length;i++) 
-                if(cols[i].compId!='id' && typeof( row[ cols[i].compId ])!=='undefined' ) {
-                    cn.push(cols[i].compId);
-                    cu.push(cols[i].compId+' = :'+cols[i].compId); 
-                }
-            var qinsert = 'insert into '+self.get('selected_tablename') +' (' + cn.join(',') + ') values (:' + cn.join(',:') + ')' 
-            var qupdate = 'update '+self.get('selected_tablename') +' set ' + cu.join(',') + ' where id = :id'
-            var [resp, err] = await fetch2('?query='+(self.get('row.id')?qupdate:qinsert) , self.get('row'))
+            var [resp, err] = await self.fetch2('?query='+self.get('selected_tablename')+'&_action='+(self.get('row.id')?'update':'insert') , row);
             if (resp) {
                 izitoast.success({ message: 'Record saved.'});
                 if (self.parent) self.parent.fire('refresh');
