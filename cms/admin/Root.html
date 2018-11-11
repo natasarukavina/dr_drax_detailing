@@ -2,7 +2,7 @@
 <nav style="z-index: 1044;" id="nav">
         <header>
                 <!-- you can leave this empty if you don't want a title -->
-                <a on-click="@this.set('selectedModule',null)">
+                <a  style="left: 0; top: 0; bottom: 0; padding: 1rem 2rem;">
                     <img src="favicon.png">
                     {{selectedModule?selected_tablename:'Admin Panel'}}
                 </a>
@@ -11,7 +11,7 @@
     <!-- this label allows the checkbox to be activated by clicking anywhere in the nav -->
     <label>
         <!-- checkbox required for responsiven menu -->
-        <input type="checkbox">
+        <input type="checkbox" id="menuOpen" checked={{menuOpen}}>
         
         <!-- bareCSS will use the header to contain the hamburger menu -->
 
@@ -187,7 +187,10 @@ bottom: inherit;
             self.set('is_logedin',false);
             document.location = document.location;
         })
-        
+
+        this.observe('selectedModule selected_tablename', function(n,o){
+            setTimeout( function(){  self.set('menuOpen', false) },100);
+        }, {init:false, defer:true})        
     },        
     data:function() {
             return {    
@@ -200,6 +203,7 @@ bottom: inherit;
                 sqlite_schema:[],
                 selected_tablename:'',
                 showSchemaNew:false,
+                menuOpen:false
 
             }
         }
