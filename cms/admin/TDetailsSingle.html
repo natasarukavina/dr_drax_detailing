@@ -237,7 +237,8 @@ bottom: inherit;" >
             if (resp) {
                 izitoast.success({ message: 'Record saved.'});
                 if (self.parent) self.parent.fire('refresh');
-                self.set('show', false)
+                self.set('show', false);
+                ractive.set('selectedModule',null);
             }
         })
     

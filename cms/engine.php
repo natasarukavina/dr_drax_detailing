@@ -173,20 +173,52 @@
         $ftypes = array(
               'application/vnd.ms-excel'=>'excel.png'
             , 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'=>'excel.png'
+            , 'application/vnd.oasis.opendocument.spreadsheet'=>'excel.png'
             , 'application/msword'=>'word.png'
-            , 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' =>'word.png'      
+            , 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' =>'word.png'   
+            , 'application/vnd.oasis.opendocument.text' =>'word.png'   
             , 'application/pdf'=>'pdf.png'
+
             , 'video/x-msvideo'=>'video.png'
             , 'video/mpeg'=>'video.png'
+            , 'video/3gpp'=>'video.png'
+            , 'audio/3gpp'=>'video.png'
+            , 'video/3gpp2'=>'video.png'
+            , 'audio/3gpp2'=>'video.png'
+            , 'audio/wav' =>'video.png'
+            , 'audio/webm' =>'video.png'
+            , 'video/webm' =>'video.png'
+            , 'audio/ogg' =>'video.png'
+            , 'video/ogg' =>'video.png'
+            , 'application/ogg' =>'video.png'
+            , 'audio/midi' =>'video.png'
+            , 'audio/x-midi' =>'video.png'
+            , 'audio/aac' =>'video.png'
+            
             , 'text/plain'=>'text.png'
+
             , 'application/x-rar-compressed'=>'zip.png'
+            , 'application/x-7z-compressed'=>'zip.png'
             , 'application/zip'=>'zip.png'
+            , 'application/java-archive'=>'zip.png'
+            , 'application/epub+zip'=>'zip.png'
+            , 'application/x-bzip'=>'zip.png'
+            , 'application/x-bzip2'=>'zip.png'
         );
         if (isset($_GET['forcethumb']) && isset($ftypes[ $file[0]['mime_type'] ])){
             header("Content-type: image/png");
             readfile(dirname(__FILE__).'/images//'. $ftypes[ $file[0]['mime_type'] ] );             
             return;
         }
+        
+        // any file with mime type != 'image/*'
+        $m = explode('/', $file[0]['mime_type']);
+        if (isset($_GET['forcethumb']) &&  (reset($m) != 'image')  ){
+            header("Content-type: image/png");
+            readfile(dirname(__FILE__).'/images/unknown.png' );             
+            return;
+        }
+                
         //$ftype = strtolower(end(explode('/', $file[0]['mime_type'])));
         //if (in_array( array('pdf'), $ftype))
         header('Pragma: public');

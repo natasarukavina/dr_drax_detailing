@@ -37,8 +37,10 @@
     <div xx class="buttonBar">
         <button disabled={{imgSelect?false:true}} on-click="delete">Delete file
         </button>    
+        {{#if show_confirm_btn}}
         <button primary style="width: 14rem;" on-click="confirm">Confirm
         </button>    
+        {{/if}}
     </div>
             
 </section>
@@ -146,6 +148,7 @@ component.exports = {
     ,onrender: function () {
         var self = this;
         self.set('HOSTNAME', HOSTNAME);
+        self.set('show_confirm_btn', !(self.root == self.parent) );
 
         this.on('showFullScreen', function(o){
             self.set('showFullScreenObj', o);
@@ -257,7 +260,8 @@ component.exports = {
                 imgSelect:null,
                 drag:false,
                 showFullScreen:false,
-                showFullScreenObj:{}
+                showFullScreenObj:{},
+                show_confirm_btn:true
             }
         }
     };

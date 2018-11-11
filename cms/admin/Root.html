@@ -1,40 +1,45 @@
 
 <nav style="z-index: 1044;" id="nav">
+        <header>
+                <!-- you can leave this empty if you don't want a title -->
+                <a on-click="@this.set('selectedModule',null)">
+                    <img src="favicon.png">
+                    {{selectedModule?selected_tablename:'Admin Panel'}}
+                </a>
+                
+            </header>
     <!-- this label allows the checkbox to be activated by clicking anywhere in the nav -->
     <label>
         <!-- checkbox required for responsiven menu -->
         <input type="checkbox">
         
         <!-- bareCSS will use the header to contain the hamburger menu -->
-        <header>
-            <!-- you can leave this empty if you don't want a title -->
-            <a>
-                <img src="favicon.png">
-                {{selectedModule?selected_tablename:'Admin Panel'}}
-            </a>
-            
-        </header>
+
         
         <!-- the main navigation items are anchor links within an unordered list -->
         <ul>
         
             <li>
-                <a  on-click="@this.set('selectedModule','ImageBrowser')" style="{{selectedModule=='ImageBrowser'?'border-color: #679;':''}}" >Media</a>
+                <a  on-click="@this.set('selectedModule',null)" style="{{!selectedModule?'border-color: #679;':''}}" ><span class="glyphicon glyphicon-home"></span> Home</a>
             </li>
         
+            <li>
+                <a  on-click="@this.set('selectedModule','ImageBrowser')" style="{{selectedModule=='ImageBrowser'?'border-color: #679;':''}}" ><span class="glyphicon glyphicon-picture"></span> Media</a>
+            </li>
+            
             <!-- Only SA can update schema-->
             {{#if _session_user_role == 2}}
             <li>
-                <a style="{{selectedModule=='Schema'?'border-color: #679;':''}}">Schema</a>                
+                <a style="{{selectedModule=='Schema'?'border-color: #679;':''}}"><span class="glyphicon glyphicon-tasks"></span> Schema</a>                
                 <menu>
-                    <menuitem><a style="text-transform: capitalize;" on-click="@this.set('showSchemaNew',true)" id="newSchema" >Add New Schema</a></menuitem>
+                    <menuitem><a style="text-transform: capitalize;" on-click="@this.set('showSchemaNew',true)" id="newSchema" ><span class="glyphicon glyphicon-plus"></span> Add New Schema</a></menuitem>
                     {{#each sqlite_schema}}                        
-                    <menuitem style="{{(selectedModule=='Schema' && selected_tablename==.name)?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="@this.fire('onModuleSelect',@this.event,'Schema', .name)" >{{.name}}</a></menuitem>
+                    <menuitem style="{{(selectedModule=='Schema' && selected_tablename==.name)?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="@this.fire('onModuleSelect',@this.event,'Schema', .name)" >{{.name}} ({{.nice_name}})</a></menuitem>
                     {{/each}}
                 </menu>
             </li>            
             {{/if}}
-
+<!--
             <li>
                 <a style="{{selectedModule=='TGrid'?'border-color: #679;':''}}">Tables</a>                
                 <menu>
@@ -47,15 +52,15 @@
                     {{/each}}
                 </menu>
             </li>       
-            
+-->            
 
             <li>
-                <a style="{{selectedModule=='UserList'?'border-color: #679;':''}}">Settings</a>                
+                <a style="{{selectedModule=='UserList'?'border-color: #679;':''}}"><span class="glyphicon glyphicon-cog"></span> Settings</a>                
                 <menu>
                     {{#if (_session_user_role == 2) || (_session_user_role == 4) || true}} <!--SA and Owner-->
-                    <menuitem style="{{(selectedModule=='UserList')?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="@this.fire('onModuleSelect',@this.event,'UserList', '')" >Users</a></menuitem>
+                    <menuitem style="{{(selectedModule=='UserList')?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="@this.fire('onModuleSelect',@this.event,'UserList', '')" ><span class="glyphicon glyphicon-user"></span> Users</a></menuitem>
                     {{/if}}
-                    <menuitem style="{{(selectedModule=='Login')?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="logout" >Sign out</a></menuitem>
+                    <menuitem style="{{(selectedModule=='Login')?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="logout" ><span class="glyphicon glyphicon-off"></span> Sign out</a></menuitem>
                 </menu>
             </li>       
                 
@@ -109,6 +114,16 @@ bottom: inherit;
 <Schema G={{.}} schema_name = {{selected_tablename}}></Schema>
 {{/if}}
 
+    <section style="padding-bottom:0; padding-top:2rem; flex: 1;display: flex;flex-flow: column;overflow: auto; display:{{selectedModule?'none':'flex'}}">
+    {{#each sqlite_tables}}
+        {{#if .is_multiple == 'false'}}
+        <button primary m-full style="background-color:{{(selected_tablename==.name)?'#235':'#679'}}; height:100%;font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem" on-click="@this.fire('onModuleSelect',@this.event,'TDetailsSingle', .name)" >{{.nice_name}}</button>
+        {{else}}
+        <button primary m-full style="background-color:{{(selected_tablename==.name)?'#235':'#679'}}; height:100%;font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem" on-click="@this.fire('onModuleSelect',@this.event,'TGrid', .name)" >{{.nice_name}}</button>
+        {{/if}}
+    {{/each}}
+    </section>                       
+
 
 {{#if showSchemaNew }}
 <modal show="{{showSchemaNew}}" zoomFrom="newSchema" title="Create New Schema" 
@@ -147,7 +162,7 @@ bottom: inherit;
 
         this.observe('is_logedin', function(n,o){
             if (n) self.fire('refresh');
-            self.set('selectedModule','TDetailsSingle'); // default (first), TODO
+            //self.set('selectedModule','TDetailsSingle'); // default (first), TODO
         }, {init:false})
 
         //this.fire('refresh')
@@ -183,7 +198,7 @@ bottom: inherit;
                 kvStore:{}, 
                 sqlite_tables:[],
                 sqlite_schema:[],
-                selected_tablename:'Home',
+                selected_tablename:'',
                 showSchemaNew:false,
 
             }

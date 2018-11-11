@@ -29,19 +29,12 @@
 <div class="container">
 
 
-{% set Sati = fetch('Akcije')%}
+{% set Sati = fetch('Galerija')%}
 
-<!-- Service: MainGalery iz {{_GET['twig_file_name']}} -->
 <br>
 {% for item in Sati %}
-<h2>{{ item.Naslov }}</h2> 
-  {% if item.Slika1 %}
-  <img style="height:20rem" src="image.php/?id={{ item.Slika1 }}">
-  {% endif %}
-  {% if item.Slika2 %}
-  <img style="height:20rem" src="image.php/?id={{ item.Slika2 }}">
-  {% endif %}
-{{item.Text | raw}}  
+<h2>{{ item.Naziv }}</h2> 
+{{item.radnik2_label}}  
     <hr>
 {% endfor %}
 

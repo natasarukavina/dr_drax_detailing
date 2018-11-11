@@ -60,16 +60,18 @@ bottom: inherit;" >
                 var selected_tablename = self.get('selected_tablename');
                 console.log('refreshing ' + selected_tablename);
 //                var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename)
+                var cols = self.get('G.schemas.'+selected_tablename+'.field');
+                self.set( 'columns', cols );
+                
                 var [resp,err] = await self.fetch2('?query='+ selected_tablename)
 //                if (columns) self.set('columns', columns)
-                var cols = self.get('G.schemas.'+selected_tablename+'.field');
                 if (!cols){
                     //var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename);
-                    var [columns, err] = await self.fetch2("?query=_engine_schema_column&table_name="+selected_tablename);
-                    
+                    var [columns, err] = await self.fetch2("?query=_engine_schema_column&table_name="+selected_tablename);                    
                     cols = columns;
                 }
-                if (resp) self.set( { rows: resp, columns: cols } )
+//                if (resp) self.set( { rows: resp, columns: cols } )
+                if (resp) self.set('rows', resp)
             })
             this.fire('refresh')
             /*

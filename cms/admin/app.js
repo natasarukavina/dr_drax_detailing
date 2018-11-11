@@ -267,12 +267,12 @@ Ractive.components.UserDetail              =  require('./user/UserDetail.html');
     
 
     document.addEventListener("backbutton", function(){
-        if (ractive.get('QRScannerActive')){
+       /* if (ractive.get('QRScannerActive')){
             ractive.set('QRScannerActive',false)
             //QRScanner.hide()
             QRScanner.destroy()
             return
-        } 
+        } */
         if (ractive.get('selectedModule')){
             ractive.set('selectedModule',null)
         } else navigator.app.exitApp();
@@ -288,3 +288,14 @@ window.onpopstate = function(){
     $("body").trigger(esc);
     //if (ractive.get('selectedModule')) ractive.set('selectedModule',null)
 }
+
+function keydownhandler(e){
+    //console.log('keydownhandler');
+    if (e.keyCode==27){
+        e.stopImmediatePropagation();
+        ractive.set('selectedModule',null)
+        return false;
+    }
+}
+//console.log(self.nodes.rmodal);
+$('body').on( "keydown", keydownhandler );
