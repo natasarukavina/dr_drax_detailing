@@ -18,14 +18,24 @@ $f = new Twig_SimpleFunction('fetch', function ($name, $params=array()) {
     return fetch($name, $params);
 });
 $twig->addFunction($f);
+
+/* transform /filename/param1/param2/... to ['filename', 'param1', 'param2'] and assign it to $_GET */
+$kpath = array_filter(explode("/", $_SERVER['REDIRECT_URL']));
+$index = 0;
+foreach($kpath as $key) {
+    $_GET[$index] = $key;
+    $index++;
+}
+
 $twig->addGlobal('_GET', $_GET);
+
 $twig->addGlobal('_POST', $_POST);// todo add SESSION var
 //$template = $twig->load(isset($_GET['twig_file_name'])?$_GET['twig_file_name'].'.twig':'index.twig');
 
 //$dogs = fetch('Projekat') ;
 //print_r(fetch_twig_templates());
 //$templatename = isset($_GET['twig_file_name'])?$_GET['twig_file_name']:'index'; //from db
-$templatename = isset($_GET['twig_file_name'])?$_GET['twig_file_name'].'.twig':'index.twig'; // from fs
+$templatename = isset($_GET['0'])?$_GET['0'].'.twig':'index.twig'; // from fs
 
 //echo $templatename;
 //$template = $twig->load(isset($_GET['twig_file_name'])?$_GET['twig_file_name'].'.twig':'index.twig');

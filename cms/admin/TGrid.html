@@ -29,7 +29,7 @@
 class="animated fadeInRight" showOverlay="{{false}}" style="
 height: initial;
 width: auto;
-left: 50%;
+left: 30%;
 right: 0;
 top: 5rem;
 bottom: 0;" >
@@ -62,7 +62,7 @@ bottom: inherit;" >
 //                var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename)
                 var cols = self.get('G.schemas.'+selected_tablename+'.field');
                 self.set( 'columns', cols );
-                
+
                 var [resp,err] = await self.fetch2('?query='+ selected_tablename)
 //                if (columns) self.set('columns', columns)
                 if (!cols){

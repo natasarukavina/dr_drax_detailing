@@ -58,13 +58,17 @@
                 <a style="{{selectedModule=='UserList'?'border-color: #679;':''}}"><span class="glyphicon glyphicon-cog"></span> Settings</a>                
                 <menu>
                     {{#if (_session_user_role == 2) || (_session_user_role == 4) || true}} <!--SA and Owner-->
-                    <menuitem style="{{(selectedModule=='UserList')?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="@this.fire('onModuleSelect',@this.event,'UserList', '')" ><span class="glyphicon glyphicon-user"></span> Users</a></menuitem>
+                    <menuitem style="{{(selectedModule=='UserList')?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="@this.fire('onModuleSelect',@this.event,'UserList', '')" >
+                        <span class="glyphicon glyphicon-user">
+                            <span class="glyphicon glyphicon-user" style="position: absolute;left: 5px;top: 1px;color: #679;"></span>
+                        </span> 
+                        Users</a></menuitem>
                     {{/if}}
                     <menuitem style="{{(selectedModule=='Login')?'border-color: #679;':''}}"><a style="text-transform: capitalize;" on-click="logout" ><span class="glyphicon glyphicon-off"></span> Sign out</a></menuitem>
+                    <menuitem id="showAbout" ><a style="text-transform: capitalize;" on-click="@this.toggle('showAbout')" ><span class="glyphicon glyphicon-info-sign"></span> About</a></menuitem>
                 </menu>
             </li>       
-                
-                
+                   
 <!--
             <li on-click="@this.set('selectedModule','settings')"><a style="{{selectedModule=='settings'?'border-color: #679;':''}}">Settings</a></li>            
             <li on-click="logout" ><a style="{{selectedModule=='Login'?'border-color: #679;':''}}" >Sign out</a></li>        
@@ -139,6 +143,20 @@ bottom: inherit;
 </modal>
 {{/if}}
 
+{{#if showAbout }}
+<modal show="{{showAbout}}" zoomFrom="showAbout" title="About" 
+class="animated fadeInRight" showOverlay="{{false}}" showHeader="{{true}}" style="
+height: 20em;
+width: 30em;
+left: calc(50% - 15em);
+right: inherit;
+top: calc(50% - 10em);
+bottom: inherit;
+" >
+    <About show="{{showAbout}}"></About>
+</modal>
+{{/if}}
+
 <script>
   component.exports = {
     onrender: function () {
@@ -188,7 +206,7 @@ bottom: inherit;
             document.location = document.location;
         })
 
-        this.observe('selectedModule selected_tablename', function(n,o){
+        this.observe('selectedModule selected_tablename showAbout', function(n,o){
             setTimeout( function(){  self.set('menuOpen', false) },100);
         }, {init:false, defer:true})        
     },        
@@ -203,7 +221,8 @@ bottom: inherit;
                 sqlite_schema:[],
                 selected_tablename:'',
                 showSchemaNew:false,
-                menuOpen:false
+                menuOpen:false,
+                showAbout:false
 
             }
         }

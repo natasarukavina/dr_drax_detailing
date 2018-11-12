@@ -17258,10 +17258,38 @@
 	return Ractive;
 
 }));
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(3)))
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/*global window, global*/
@@ -17352,34 +17380,6 @@ function consoleAssert(expression) {
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
 
 /***/ }),
 /* 3 */
@@ -17999,7 +17999,7 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(7), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(7), __webpack_require__(2)))
 
 /***/ }),
 /* 5 */
@@ -28610,6 +28610,7 @@ Ractive.components.Selectize               =  __webpack_require__(31);
 Ractive.components.ShowImage               =  __webpack_require__(32);
 Ractive.components.UserList                =  __webpack_require__(33);
 Ractive.components.UserDetail              =  __webpack_require__(34);
+Ractive.components.About                   =  __webpack_require__(35);
 
 //document.addEventListener("deviceready", onDeviceReady, false);
 //if (!window.cordova) onDeviceReady()
@@ -28678,7 +28679,7 @@ function keydownhandler(e){
 //console.log(self.nodes.rmodal);
 $('body').on( "keydown", keydownhandler );
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 7 */
@@ -37795,7 +37796,7 @@ if (true) {
 
 	return $iziToast;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(2)))
 
 /***/ }),
 /* 18 */
@@ -37852,7 +37853,7 @@ var component = module;
             document.location = document.location;
         })
 
-        this.observe('selectedModule selected_tablename', function(n,o){
+        this.observe('selectedModule selected_tablename showAbout', function(n,o){
             setTimeout( function(){  self.set('menuOpen', false) },100);
         }, {init:false, defer:true})        
     },        
@@ -37867,16 +37868,17 @@ var component = module;
                 sqlite_schema:[],
                 selected_tablename:'',
                 showSchemaNew:false,
-                menuOpen:false
+                menuOpen:false,
+                showAbout:false
 
             }
         }
   };
   
-component.exports.template = {v:4,t:[{p:[2,1,1],t:7,e:"nav",m:[{n:"style",f:"z-index: 1044;",t:13},{n:"id",f:"nav",t:13}],f:[{p:[3,9,47],t:7,e:"header",f:[" ",{p:[5,17,148],t:7,e:"a",m:[{n:"style",f:"left: 0; top: 0; bottom: 0; padding: 1rem 2rem;",t:13}],f:[{p:[6,21,229],t:7,e:"img",m:[{n:"src",f:"favicon.png",t:13}]}," ",{t:2,x:{r:["selectedModule","selected_tablename"],s:"_0?_1:\"Admin Panel\""},p:[7,21,273]}]}]}," ",{p:[12,5,481],t:7,e:"label",f:[" ",{p:[14,9,553],t:7,e:"input",m:[{n:"type",f:"checkbox",t:13},{n:"id",f:"menuOpen",t:13},{n:"checked",f:[{t:2,r:"menuOpen",p:[14,54,598]}],t:13}]}," ",{p:[20,9,799],t:7,e:"ul",f:[{p:[22,13,825],t:7,e:"li",f:[{p:[23,17,846],t:7,e:"a",m:[{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"selectedModule\",null)]"}},t:70},{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"!_0?\"border-color: #679;\":\"\""},p:[23,72,901]}],t:13}],f:[{p:[23,119,948],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-home",t:13}]}," Home"]}]}," ",{p:[26,13,1043],t:7,e:"li",f:[{p:[27,17,1064],t:7,e:"a",m:[{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"selectedModule\",\"ImageBrowser\")]"}},t:70},{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"ImageBrowser\"?\"border-color: #679;\":\"\""},p:[27,82,1129]}],t:13}],f:[{p:[27,144,1191],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-picture",t:13}]}," Media"]}]}," ",{t:4,f:[{p:[32,13,1384],t:7,e:"li",f:[{p:[33,17,1405],t:7,e:"a",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"Schema\"?\"border-color: #679;\":\"\""},p:[33,27,1415]}],t:13}],f:[{p:[33,82,1470],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-tasks",t:13}]}," Schema"]}," ",{p:[34,17,1561],t:7,e:"menu",f:[{p:[35,21,1588],t:7,e:"menuitem",f:[{p:[35,31,1598],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"showSchemaNew\",true)]"}},t:70},{n:"id",f:"newSchema",t:13}],f:[{p:[35,129,1696],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-plus",t:13}]}," Add New Schema"]}]}," ",{t:4,f:[{p:[37,21,1861],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule","selected_tablename",".name"],s:"(_0==\"Schema\"&&_1==_2)?\"border-color: #679;\":\"\""},p:[37,38,1878]}],t:13}],f:[{p:[37,124,1964],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"Schema\",_1)]"}},t:70}],f:[{t:2,r:".name",p:[37,232,2072]}," (",{t:2,r:".nice_name",p:[37,243,2083]},")"]}]}],n:52,r:"sqlite_schema",p:[36,21,1793]}]}]}],n:50,x:{r:["_session_user_role"],s:"_0==2"},p:[31,13,1340]}," ",{p:[57,13,3167],t:7,e:"li",f:[{p:[58,17,3188],t:7,e:"a",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"UserList\"?\"border-color: #679;\":\"\""},p:[58,27,3198]}],t:13}],f:[{p:[58,84,3255],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-cog",t:13}]}," Settings"]}," ",{p:[59,17,3346],t:7,e:"menu",f:[{t:4,f:[" ",{p:[61,21,3484],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"(_0==\"UserList\")?\"border-color: #679;\":\"\""},p:[61,38,3501]}],t:13}],f:[{p:[61,97,3560],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"UserList\",\"\")]"}},t:70}],f:[{p:[61,204,3667],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-user",t:13}]}," Users"]}]}],n:50,x:{r:["_session_user_role"],s:"(_0==2)||(_0==4)||true"},p:[60,21,3373]}," ",{p:[63,21,3783],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"(_0==\"Login\")?\"border-color: #679;\":\"\""},p:[63,38,3800]}],t:13}],f:[{p:[63,94,3856],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:"logout",t:70}],f:[{p:[63,152,3914],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-off",t:13}]}," Sign out"]}]}]}]}," "]}]}]}," ",{t:4,f:[{p:[84,1,4668],t:7,e:"modal",m:[{n:"show",f:[{t:2,x:{r:[],s:"true"},p:[84,14,4681]}],t:13},{n:"title",f:"Login",t:13},{n:"zoomFrom",f:"nav",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[85,29,4734]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[85,51,4756]}],t:13},{n:"style",f:"\nheight: 20em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 10em);\nbottom: inherit;\n",t:13}],f:[{p:[93,5,4889],t:7,e:"Login",m:[{n:"G",f:[{t:2,r:".",p:[93,14,4898]}],t:13}]}]}],n:50,x:{r:["is_logedin"],s:"!_0"},p:[83,1,4648]},{t:4,f:[{p:[98,1,4969],t:7,e:"UserList",m:[{n:"G",f:[{t:2,r:".",p:[98,13,4981]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"UserList\""},p:[97,1,4932]},{t:4,f:[{p:[102,1,5042],t:7,e:"TGrid",m:[{n:"G",f:[{t:2,r:".",p:[102,10,5051]}],t:13},{n:"selected_tablename",f:[{t:2,r:"selected_tablename",p:[102,37,5078]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"TGrid\""},p:[101,1,5008]},{t:4,f:[{p:[106,1,5162],t:7,e:"TDetailsSingle",m:[{n:"G",f:[{t:2,r:".",p:[106,19,5180]}],t:13},{n:"selected_tablename",f:[{t:2,r:"selected_tablename",p:[106,46,5207]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"TDetailsSingle\""},p:[105,1,5119]},{t:4,f:[{p:[110,1,5298],t:7,e:"ImageBrowser",m:[{n:"G",f:[{t:2,r:".",p:[110,17,5314]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"ImageBrowser\""},p:[109,1,5257]},{t:4,f:[{p:[114,1,5380],t:7,e:"Schema",m:[{n:"G",f:[{t:2,r:".",p:[114,11,5390]}],t:13},{n:"schema_name",f:[{t:2,r:"selected_tablename",p:[114,31,5410]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"Schema\""},p:[113,1,5345]}," ",{p:[117,5,5456],t:7,e:"section",m:[{n:"style",f:["padding-bottom:0; padding-top:2rem; flex: 1;display: flex;flex-flow: column;overflow: auto; display:",{t:2,x:{r:["selectedModule"],s:"_0?\"none\":\"flex\""},p:[117,121,5572]}],t:13}],f:[{t:4,f:[{t:4,f:[{p:[120,9,5683],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"m-full",f:0,t:13},{n:"style",f:["background-color:",{t:2,x:{r:["selected_tablename",".name"],s:"(_0==_1)?\"#235\":\"#679\""},p:[120,56,5730]},"; height:100%;font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem"],t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"TDetailsSingle\",_1)]"}},t:70}],f:[{t:2,r:".nice_name",p:[120,263,5937]}]}],n:50,x:{r:[".is_multiple"],s:"_0==\"false\""},p:[119,9,5643]},{t:4,n:51,f:[{p:[122,9,5986],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"m-full",f:0,t:13},{n:"style",f:["background-color:",{t:2,x:{r:["selected_tablename",".name"],s:"(_0==_1)?\"#235\":\"#679\""},p:[122,56,6033]},"; height:100%;font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem"],t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"TGrid\",_1)]"}},t:70}],f:[{t:2,r:".nice_name",p:[122,254,6231]}]}],l:1}],n:52,r:"sqlite_tables",p:[118,5,5611]}]}," ",{t:4,f:[{p:[129,1,6348],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showSchemaNew",p:[129,14,6361]}],t:13},{n:"zoomFrom",f:"newSchema",t:13},{n:"title",f:"Create New Schema",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[130,43,6470]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[130,65,6492]}],t:13},{n:"style",f:"\nheight: 20em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 10em);\nbottom: inherit;\n",t:13}],f:[{p:[138,5,6625],t:7,e:"SchemaNew",m:[{n:"G",f:[{t:2,r:".",p:[138,18,6638]}],t:13},{n:"show",f:[{t:2,r:"showSchemaNew",p:[138,30,6650]}],t:13}]}]}],n:50,r:"showSchemaNew",p:[128,1,6325]}],e:{"_0?_1:\"Admin Panel\"":function (_0,_1){return(_0?_1:"Admin Panel");},"[_0.set(\"selectedModule\",null)]":function (_0){return([_0.set("selectedModule",null)]);},"!_0?\"border-color: #679;\":\"\"":function (_0){return(!_0?"border-color: #679;":"");},"[_0.set(\"selectedModule\",\"ImageBrowser\")]":function (_0){return([_0.set("selectedModule","ImageBrowser")]);},"_0==\"ImageBrowser\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="ImageBrowser"?"border-color: #679;":"");},"_0==\"Schema\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="Schema"?"border-color: #679;":"");},"[_0.set(\"showSchemaNew\",true)]":function (_0){return([_0.set("showSchemaNew",true)]);},"(_0==\"Schema\"&&_1==_2)?\"border-color: #679;\":\"\"":function (_0,_1,_2){return((_0=="Schema"&&_1==_2)?"border-color: #679;":"");},"[_0.fire(\"onModuleSelect\",_0.event,\"Schema\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"Schema",_1)]);},"_0==2":function (_0){return(_0==2);},"_0==\"UserList\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="UserList"?"border-color: #679;":"");},"(_0==\"UserList\")?\"border-color: #679;\":\"\"":function (_0){return((_0=="UserList")?"border-color: #679;":"");},"[_0.fire(\"onModuleSelect\",_0.event,\"UserList\",\"\")]":function (_0){return([_0.fire("onModuleSelect",_0.event,"UserList","")]);},"(_0==2)||(_0==4)||true":function (_0){return((_0==2)||(_0==4)||true);},"(_0==\"Login\")?\"border-color: #679;\":\"\"":function (_0){return((_0=="Login")?"border-color: #679;":"");},"true":function (){return(true);},"!_0":function (_0){return(!_0);},"_0==\"UserList\"":function (_0){return(_0=="UserList");},"_0==\"TGrid\"":function (_0){return(_0=="TGrid");},"_0==\"TDetailsSingle\"":function (_0){return(_0=="TDetailsSingle");},"_0==\"ImageBrowser\"":function (_0){return(_0=="ImageBrowser");},"_0==\"Schema\"":function (_0){return(_0=="Schema");},"_0?\"none\":\"flex\"":function (_0){return(_0?"none":"flex");},"(_0==_1)?\"#235\":\"#679\"":function (_0,_1){return((_0==_1)?"#235":"#679");},"[_0.fire(\"onModuleSelect\",_0.event,\"TDetailsSingle\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"TDetailsSingle",_1)]);},"_0==\"false\"":function (_0){return(_0=="false");},"[_0.fire(\"onModuleSelect\",_0.event,\"TGrid\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"TGrid",_1)]);}}};
+component.exports.template = {v:4,t:[{p:[2,1,1],t:7,e:"nav",m:[{n:"style",f:"z-index: 1044;",t:13},{n:"id",f:"nav",t:13}],f:[{p:[3,9,47],t:7,e:"header",f:[" ",{p:[5,17,148],t:7,e:"a",m:[{n:"style",f:"left: 0; top: 0; bottom: 0; padding: 1rem 2rem;",t:13}],f:[{p:[6,21,229],t:7,e:"img",m:[{n:"src",f:"favicon.png",t:13}]}," ",{t:2,x:{r:["selectedModule","selected_tablename"],s:"_0?_1:\"Admin Panel\""},p:[7,21,273]}]}]}," ",{p:[12,5,481],t:7,e:"label",f:[" ",{p:[14,9,553],t:7,e:"input",m:[{n:"type",f:"checkbox",t:13},{n:"id",f:"menuOpen",t:13},{n:"checked",f:[{t:2,r:"menuOpen",p:[14,54,598]}],t:13}]}," ",{p:[20,9,799],t:7,e:"ul",f:[{p:[22,13,825],t:7,e:"li",f:[{p:[23,17,846],t:7,e:"a",m:[{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"selectedModule\",null)]"}},t:70},{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"!_0?\"border-color: #679;\":\"\""},p:[23,72,901]}],t:13}],f:[{p:[23,119,948],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-home",t:13}]}," Home"]}]}," ",{p:[26,13,1043],t:7,e:"li",f:[{p:[27,17,1064],t:7,e:"a",m:[{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"selectedModule\",\"ImageBrowser\")]"}},t:70},{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"ImageBrowser\"?\"border-color: #679;\":\"\""},p:[27,82,1129]}],t:13}],f:[{p:[27,144,1191],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-picture",t:13}]}," Media"]}]}," ",{t:4,f:[{p:[32,13,1384],t:7,e:"li",f:[{p:[33,17,1405],t:7,e:"a",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"Schema\"?\"border-color: #679;\":\"\""},p:[33,27,1415]}],t:13}],f:[{p:[33,82,1470],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-tasks",t:13}]}," Schema"]}," ",{p:[34,17,1561],t:7,e:"menu",f:[{p:[35,21,1588],t:7,e:"menuitem",f:[{p:[35,31,1598],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"showSchemaNew\",true)]"}},t:70},{n:"id",f:"newSchema",t:13}],f:[{p:[35,129,1696],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-plus",t:13}]}," Add New Schema"]}]}," ",{t:4,f:[{p:[37,21,1861],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule","selected_tablename",".name"],s:"(_0==\"Schema\"&&_1==_2)?\"border-color: #679;\":\"\""},p:[37,38,1878]}],t:13}],f:[{p:[37,124,1964],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"Schema\",_1)]"}},t:70}],f:[{t:2,r:".name",p:[37,232,2072]}," (",{t:2,r:".nice_name",p:[37,243,2083]},")"]}]}],n:52,r:"sqlite_schema",p:[36,21,1793]}]}]}],n:50,x:{r:["_session_user_role"],s:"_0==2"},p:[31,13,1340]}," ",{p:[57,13,3167],t:7,e:"li",f:[{p:[58,17,3188],t:7,e:"a",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"UserList\"?\"border-color: #679;\":\"\""},p:[58,27,3198]}],t:13}],f:[{p:[58,84,3255],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-cog",t:13}]}," Settings"]}," ",{p:[59,17,3346],t:7,e:"menu",f:[{t:4,f:[" ",{p:[61,21,3484],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"(_0==\"UserList\")?\"border-color: #679;\":\"\""},p:[61,38,3501]}],t:13}],f:[{p:[61,97,3560],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"UserList\",\"\")]"}},t:70}],f:[{p:[62,25,3692],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-user",t:13}],f:[{p:[63,29,3760],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-user",t:13},{n:"style",f:"position: absolute;left: 5px;top: 1px;color: #679;",t:13}]}]}," Users"]}]}],n:50,x:{r:["_session_user_role"],s:"(_0==2)||(_0==4)||true"},p:[60,21,3373]}," ",{p:[67,21,3992],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"(_0==\"Login\")?\"border-color: #679;\":\"\""},p:[67,38,4009]}],t:13}],f:[{p:[67,94,4065],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:"logout",t:70}],f:[{p:[67,152,4123],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-off",t:13}]}," Sign out"]}]}," ",{p:[68,21,4213],t:7,e:"menuitem",m:[{n:"id",f:"showAbout",t:13}],f:[{p:[68,47,4239],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.toggle(\"showAbout\")]"}},t:70}],f:[{p:[68,124,4316],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-info-sign",t:13}]}," About"]}]}]}]}," "]}]}]}," ",{t:4,f:[{p:[88,1,5059],t:7,e:"modal",m:[{n:"show",f:[{t:2,x:{r:[],s:"true"},p:[88,14,5072]}],t:13},{n:"title",f:"Login",t:13},{n:"zoomFrom",f:"nav",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[89,29,5125]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[89,51,5147]}],t:13},{n:"style",f:"\nheight: 20em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 10em);\nbottom: inherit;\n",t:13}],f:[{p:[97,5,5280],t:7,e:"Login",m:[{n:"G",f:[{t:2,r:".",p:[97,14,5289]}],t:13}]}]}],n:50,x:{r:["is_logedin"],s:"!_0"},p:[87,1,5039]},{t:4,f:[{p:[102,1,5360],t:7,e:"UserList",m:[{n:"G",f:[{t:2,r:".",p:[102,13,5372]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"UserList\""},p:[101,1,5323]},{t:4,f:[{p:[106,1,5433],t:7,e:"TGrid",m:[{n:"G",f:[{t:2,r:".",p:[106,10,5442]}],t:13},{n:"selected_tablename",f:[{t:2,r:"selected_tablename",p:[106,37,5469]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"TGrid\""},p:[105,1,5399]},{t:4,f:[{p:[110,1,5553],t:7,e:"TDetailsSingle",m:[{n:"G",f:[{t:2,r:".",p:[110,19,5571]}],t:13},{n:"selected_tablename",f:[{t:2,r:"selected_tablename",p:[110,46,5598]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"TDetailsSingle\""},p:[109,1,5510]},{t:4,f:[{p:[114,1,5689],t:7,e:"ImageBrowser",m:[{n:"G",f:[{t:2,r:".",p:[114,17,5705]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"ImageBrowser\""},p:[113,1,5648]},{t:4,f:[{p:[118,1,5771],t:7,e:"Schema",m:[{n:"G",f:[{t:2,r:".",p:[118,11,5781]}],t:13},{n:"schema_name",f:[{t:2,r:"selected_tablename",p:[118,31,5801]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"Schema\""},p:[117,1,5736]}," ",{p:[121,5,5847],t:7,e:"section",m:[{n:"style",f:["padding-bottom:0; padding-top:2rem; flex: 1;display: flex;flex-flow: column;overflow: auto; display:",{t:2,x:{r:["selectedModule"],s:"_0?\"none\":\"flex\""},p:[121,121,5963]}],t:13}],f:[{t:4,f:[{t:4,f:[{p:[124,9,6074],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"m-full",f:0,t:13},{n:"style",f:["background-color:",{t:2,x:{r:["selected_tablename",".name"],s:"(_0==_1)?\"#235\":\"#679\""},p:[124,56,6121]},"; height:100%;font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem"],t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"TDetailsSingle\",_1)]"}},t:70}],f:[{t:2,r:".nice_name",p:[124,263,6328]}]}],n:50,x:{r:[".is_multiple"],s:"_0==\"false\""},p:[123,9,6034]},{t:4,n:51,f:[{p:[126,9,6377],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"m-full",f:0,t:13},{n:"style",f:["background-color:",{t:2,x:{r:["selected_tablename",".name"],s:"(_0==_1)?\"#235\":\"#679\""},p:[126,56,6424]},"; height:100%;font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem"],t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"TGrid\",_1)]"}},t:70}],f:[{t:2,r:".nice_name",p:[126,254,6622]}]}],l:1}],n:52,r:"sqlite_tables",p:[122,5,6002]}]}," ",{t:4,f:[{p:[133,1,6739],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showSchemaNew",p:[133,14,6752]}],t:13},{n:"zoomFrom",f:"newSchema",t:13},{n:"title",f:"Create New Schema",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[134,43,6861]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[134,65,6883]}],t:13},{n:"style",f:"\nheight: 20em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 10em);\nbottom: inherit;\n",t:13}],f:[{p:[142,5,7016],t:7,e:"SchemaNew",m:[{n:"G",f:[{t:2,r:".",p:[142,18,7029]}],t:13},{n:"show",f:[{t:2,r:"showSchemaNew",p:[142,30,7041]}],t:13}]}]}],n:50,r:"showSchemaNew",p:[132,1,6716]},{t:4,f:[{p:[147,1,7110],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showAbout",p:[147,14,7123]}],t:13},{n:"zoomFrom",f:"showAbout",t:13},{n:"title",f:"About",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"false"},p:[148,43,7216]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[148,66,7239]}],t:13},{n:"style",f:"\nheight: 20em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 10em);\nbottom: inherit;\n",t:13}],f:[{p:[156,5,7372],t:7,e:"About",m:[{n:"show",f:[{t:2,r:"showAbout",p:[156,18,7385]}],t:13}]}]}],n:50,r:"showAbout",p:[146,1,7091]}],e:{"_0?_1:\"Admin Panel\"":function (_0,_1){return(_0?_1:"Admin Panel");},"[_0.set(\"selectedModule\",null)]":function (_0){return([_0.set("selectedModule",null)]);},"!_0?\"border-color: #679;\":\"\"":function (_0){return(!_0?"border-color: #679;":"");},"[_0.set(\"selectedModule\",\"ImageBrowser\")]":function (_0){return([_0.set("selectedModule","ImageBrowser")]);},"_0==\"ImageBrowser\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="ImageBrowser"?"border-color: #679;":"");},"_0==\"Schema\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="Schema"?"border-color: #679;":"");},"[_0.set(\"showSchemaNew\",true)]":function (_0){return([_0.set("showSchemaNew",true)]);},"(_0==\"Schema\"&&_1==_2)?\"border-color: #679;\":\"\"":function (_0,_1,_2){return((_0=="Schema"&&_1==_2)?"border-color: #679;":"");},"[_0.fire(\"onModuleSelect\",_0.event,\"Schema\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"Schema",_1)]);},"_0==2":function (_0){return(_0==2);},"_0==\"UserList\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="UserList"?"border-color: #679;":"");},"(_0==\"UserList\")?\"border-color: #679;\":\"\"":function (_0){return((_0=="UserList")?"border-color: #679;":"");},"[_0.fire(\"onModuleSelect\",_0.event,\"UserList\",\"\")]":function (_0){return([_0.fire("onModuleSelect",_0.event,"UserList","")]);},"(_0==2)||(_0==4)||true":function (_0){return((_0==2)||(_0==4)||true);},"(_0==\"Login\")?\"border-color: #679;\":\"\"":function (_0){return((_0=="Login")?"border-color: #679;":"");},"[_0.toggle(\"showAbout\")]":function (_0){return([_0.toggle("showAbout")]);},"true":function (){return(true);},"!_0":function (_0){return(!_0);},"_0==\"UserList\"":function (_0){return(_0=="UserList");},"_0==\"TGrid\"":function (_0){return(_0=="TGrid");},"_0==\"TDetailsSingle\"":function (_0){return(_0=="TDetailsSingle");},"_0==\"ImageBrowser\"":function (_0){return(_0=="ImageBrowser");},"_0==\"Schema\"":function (_0){return(_0=="Schema");},"_0?\"none\":\"flex\"":function (_0){return(_0?"none":"flex");},"(_0==_1)?\"#235\":\"#679\"":function (_0,_1){return((_0==_1)?"#235":"#679");},"[_0.fire(\"onModuleSelect\",_0.event,\"TDetailsSingle\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"TDetailsSingle",_1)]);},"_0==\"false\"":function (_0){return(_0=="false");},"[_0.fire(\"onModuleSelect\",_0.event,\"TGrid\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"TGrid",_1)]);},"false":function (){return(false);}}};
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 19 */
@@ -38221,7 +38223,7 @@ component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"div",m:[{n:"style",f:["di
 component.exports.css = ".subTitle{background-color:#679;color:#fff;position:sticky;top:0;z-index:1;padding:4px}select:active,select:focus,select:hover{background-color:#fff!important}.highlight{background-color:#d4d7dd!important}.highlight::after{content:\"\";position:absolute;width:1px;height:100%;background-color:#679;top:0;left:0;bottom:0}.flexGridRow,.flexGridRowDUMMY:nth-child(odd){background-color:#fff}.flexGridHead,.rowcel{width:20%;margin:0;padding:4px;word-break:break-all;word-wrap:break-word;white-space:pre-line;cursor:pointer}.flexGridHead{font-weight:700;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.flexGridRow{box-sizing:border-box;display:box;display:flex;align-items:center}.oddRow{background-color:#eee}.flexGridRow:hover{background-color:#e8e8e8}.truncate{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.green{color:green}.red{color:red}.textAlign-INTEGER,.textAlign-NUMBER,.textAlign-NUMERIC,.textAlign-RANGE{text-align:right}.textAlign-center{text-align:center}";
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 20 */
@@ -38499,7 +38501,7 @@ component.exports.template = {v:4,t:[{t:4,f:[{p:[2,1,20],t:7,e:"div",m:[{n:"clas
 component.exports.css = ".modal-title{margin:6px;color:#fff;line-height:1.7;height:3.5rem}.modal-title-span{width:calc(100% - 10rem);display:inline-block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.roverlay{position:fixed;top:0;left:0;height:100%;width:100%;background-color:rgba(0,0,0,.3);z-index:1040}.rmodal{width:80%;height:80%;position:fixed;top:10%;left:10%;background-color:#fff;border-radius:5px;z-index:1041;overflow:visible;border:1px solid gray;box-shadow:6px 6px 6px #444;display:flex;flex-flow:column}.rmodalShowOverlay{box-shadow:0 0 5px 2px #222;z-index:1040}.rmodal-head{background-color:#679}.rmodal-body{flex:1;overflow:auto;max-height:none;position:relative}.noselect{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}";
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 21 */
@@ -38547,7 +38549,7 @@ var component = module;
 component.exports.template = {v:4,t:[{p:[2,1,1],t:7,e:"section",m:[{n:"style",f:"flex:1; padding-bottom:0; padding:1rem; overflow:auto",t:13}],f:[{p:[3,5,77],t:7,e:"label",f:["Username"]}," ",{p:[4,5,105],t:7,e:"input",m:[{n:"type",f:"text",t:13},{n:"placeholder",f:"email",t:13},{n:"value",f:[{t:2,r:"email",p:[4,50,150]}],t:13}]}," ",{p:[6,5,171],t:7,e:"label",f:["Password"]}," ",{p:[7,5,199],t:7,e:"input",m:[{n:"type",f:"password",t:13},{n:"placeholder",f:"password",t:13},{n:"value",f:[{t:2,r:"password",p:[7,57,251]}],t:13}]}," ",{p:[9,5,274],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"m-full",f:0,t:13},{n:"style",f:"width: 100%; margin-bottom: 0;",t:13},{n:"click",f:"tryLogin",t:70}],f:["Sign in"]}]}]};
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 22 */
@@ -38567,7 +38569,7 @@ var component = module;
 //                var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename)
                 var cols = self.get('G.schemas.'+selected_tablename+'.field');
                 self.set( 'columns', cols );
-                
+
                 var [resp,err] = await self.fetch2('?query='+ selected_tablename)
 //                if (columns) self.set('columns', columns)
                 if (!cols){
@@ -38634,10 +38636,10 @@ var component = module;
         }
       };
       
-component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"style",f:"padding-bottom:0; padding-top:2rem; display:flex; flex-flow: row; justify-content:space-between",t:13}],f:[{p:[2,5,118],t:7,e:"span",m:[{n:"style",f:"font-weight: bold",t:13}],f:[{p:[3,9,159],t:7,e:"tag",f:[{t:2,r:"fr.length",p:[3,14,164]}," item",{t:2,x:{r:["fr.length"],s:"_0==1?\"\":\"s\""},p:[3,32,182]}]}]}," ",{p:[5,5,234],t:7,e:"span",m:[{n:"style",f:"flex: 1; text-align: center; font-weight: bold; text-transform: uppercase;",t:13}],f:[{t:2,r:".selected_tablename",p:[6,9,332]}]}," ",{p:[8,5,372],t:7,e:"button",m:[{n:"style",f:"padding: 9px; margin: 0;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"addNew\",true)]"}},t:70},{n:"id",f:"addNew",t:13}],f:[{p:[9,9,470],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-plus",t:13}]}," Add new"]}]}," ",{p:[14,1,559],t:7,e:"section",m:[{n:"style",f:"flex:1; padding-bottom:1rem; padding-top:0; overflow:auto",t:13}],f:[{p:[15,5,639],t:7,e:"div",m:[{n:"id",f:"testbtn",t:13},{n:"style",f:"display:box; display:flex; height:100%; overflow:auto; flex:1",t:13}],f:[{p:[16,9,736],t:7,e:"f2table",m:[{n:"style",f:"width:100%",t:13},{n:"rows",f:[{t:2,r:"rows",p:[16,42,769]}],t:13},{n:"visible",f:"true",t:13},{n:"headerFixedHeight",f:[{t:2,x:{r:[],s:"false"},p:[16,84,811]}],t:13},{n:"alternateColor",f:[{t:2,x:{r:[],s:"true"},p:[16,110,837]}],t:13},{n:"columns",f:[{t:2,r:"columns",p:[17,21,868]}],t:13},{n:"ipp",f:"50",t:13},{n:"refresh",f:[{t:2,r:"refresh",p:[17,50,897]}],t:13},{n:"fr",f:[{t:2,r:"fr",p:[17,65,912]}],t:13},{n:"row",f:[{t:2,r:"row",p:[17,76,923]}],t:13},{n:"group_by",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"group_by"]},p:[18,23,954]}],t:13},{n:"group_by_order_asc",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"group_by_order_asc"]},p:[19,33,1032]}],t:13},{n:"variableRowHeight",f:[{t:2,x:{r:[],s:"false"},p:[20,31,1118]}],t:13},{n:"showSearch",f:[{t:2,x:{r:[],s:"true"},p:[20,52,1139]}],t:13},{n:"showPaginator",f:[{t:2,x:{r:[],s:"true"},p:[20,75,1162]}],t:13},{n:"showHeaders",f:[{t:2,x:{r:[],s:"true"},p:[20,96,1183]}],t:13},{n:"loading",f:[{t:2,r:"loading",p:[20,113,1200]}],t:13},{n:"nodata",f:[{t:2,x:{r:[],s:"false"},p:[20,132,1219]}],t:13}],f:[]}," "]}]}," ",{t:4,f:[{p:[28,1,1332],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showDetails",p:[28,14,1345]}],t:13},{n:"zoomFrom",f:[{t:2,r:"currFilterIndex",p:[28,41,1372]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[28,66,1397]}],t:13},{n:"title",f:[{t:2,r:"selected_tablename",p:[28,81,1412]}," details"],t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"false"},p:[29,43,1487]}],t:13},{n:"style",f:"\nheight: initial;\nwidth: auto;\nleft: 50%;\nright: 0;\ntop: 5rem;\nbottom: 0;",t:13}],f:[{p:[36,5,1586],t:7,e:"TDetails",m:[{n:"row",f:[{t:2,r:"row",p:[36,19,1600]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"true"},p:[36,34,1615]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[36,48,1629]}],t:13},{n:"show",f:[{t:2,r:"showDetails",p:[36,66,1647]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[36,93,1674]}],t:13}]}]}],n:50,r:"showDetails",p:[27,1,1312]},{t:4,f:[{p:[41,1,1742],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"addNew",p:[41,14,1755]}],t:13},{n:"zoomFrom",f:"addNew",t:13},{n:"cw",f:[{t:2,r:"cw",p:[41,48,1789]}],t:13},{n:"title",f:["Add new ",{t:2,r:"selected_tablename",p:[41,71,1812]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[41,108,1849]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[48,5,1981],t:7,e:"TDetails",m:[{n:"show",f:[{t:2,r:"addNew",p:[48,21,1997]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"false"},p:[48,40,2016]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[48,55,2031]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[48,77,2053]}],t:13}]}]}],n:50,r:"addNew",p:[40,1,1727]}],e:{"_0==1?\"\":\"s\"":function (_0){return(_0==1?"":"s");},"[_0.set(\"addNew\",true)]":function (_0){return([_0.set("addNew",true)]);},"false":function (){return(false);},"true":function (){return(true);}}};
+component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"style",f:"padding-bottom:0; padding-top:2rem; display:flex; flex-flow: row; justify-content:space-between",t:13}],f:[{p:[2,5,118],t:7,e:"span",m:[{n:"style",f:"font-weight: bold",t:13}],f:[{p:[3,9,159],t:7,e:"tag",f:[{t:2,r:"fr.length",p:[3,14,164]}," item",{t:2,x:{r:["fr.length"],s:"_0==1?\"\":\"s\""},p:[3,32,182]}]}]}," ",{p:[5,5,234],t:7,e:"span",m:[{n:"style",f:"flex: 1; text-align: center; font-weight: bold; text-transform: uppercase;",t:13}],f:[{t:2,r:".selected_tablename",p:[6,9,332]}]}," ",{p:[8,5,372],t:7,e:"button",m:[{n:"style",f:"padding: 9px; margin: 0;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"addNew\",true)]"}},t:70},{n:"id",f:"addNew",t:13}],f:[{p:[9,9,470],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-plus",t:13}]}," Add new"]}]}," ",{p:[14,1,559],t:7,e:"section",m:[{n:"style",f:"flex:1; padding-bottom:1rem; padding-top:0; overflow:auto",t:13}],f:[{p:[15,5,639],t:7,e:"div",m:[{n:"id",f:"testbtn",t:13},{n:"style",f:"display:box; display:flex; height:100%; overflow:auto; flex:1",t:13}],f:[{p:[16,9,736],t:7,e:"f2table",m:[{n:"style",f:"width:100%",t:13},{n:"rows",f:[{t:2,r:"rows",p:[16,42,769]}],t:13},{n:"visible",f:"true",t:13},{n:"headerFixedHeight",f:[{t:2,x:{r:[],s:"false"},p:[16,84,811]}],t:13},{n:"alternateColor",f:[{t:2,x:{r:[],s:"true"},p:[16,110,837]}],t:13},{n:"columns",f:[{t:2,r:"columns",p:[17,21,868]}],t:13},{n:"ipp",f:"50",t:13},{n:"refresh",f:[{t:2,r:"refresh",p:[17,50,897]}],t:13},{n:"fr",f:[{t:2,r:"fr",p:[17,65,912]}],t:13},{n:"row",f:[{t:2,r:"row",p:[17,76,923]}],t:13},{n:"group_by",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"group_by"]},p:[18,23,954]}],t:13},{n:"group_by_order_asc",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"group_by_order_asc"]},p:[19,33,1032]}],t:13},{n:"variableRowHeight",f:[{t:2,x:{r:[],s:"false"},p:[20,31,1118]}],t:13},{n:"showSearch",f:[{t:2,x:{r:[],s:"true"},p:[20,52,1139]}],t:13},{n:"showPaginator",f:[{t:2,x:{r:[],s:"true"},p:[20,75,1162]}],t:13},{n:"showHeaders",f:[{t:2,x:{r:[],s:"true"},p:[20,96,1183]}],t:13},{n:"loading",f:[{t:2,r:"loading",p:[20,113,1200]}],t:13},{n:"nodata",f:[{t:2,x:{r:[],s:"false"},p:[20,132,1219]}],t:13}],f:[]}," "]}]}," ",{t:4,f:[{p:[28,1,1332],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showDetails",p:[28,14,1345]}],t:13},{n:"zoomFrom",f:[{t:2,r:"currFilterIndex",p:[28,41,1372]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[28,66,1397]}],t:13},{n:"title",f:[{t:2,r:"selected_tablename",p:[28,81,1412]}," details"],t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"false"},p:[29,43,1487]}],t:13},{n:"style",f:"\nheight: initial;\nwidth: auto;\nleft: 30%;\nright: 0;\ntop: 5rem;\nbottom: 0;",t:13}],f:[{p:[36,5,1586],t:7,e:"TDetails",m:[{n:"row",f:[{t:2,r:"row",p:[36,19,1600]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"true"},p:[36,34,1615]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[36,48,1629]}],t:13},{n:"show",f:[{t:2,r:"showDetails",p:[36,66,1647]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[36,93,1674]}],t:13}]}]}],n:50,r:"showDetails",p:[27,1,1312]},{t:4,f:[{p:[41,1,1742],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"addNew",p:[41,14,1755]}],t:13},{n:"zoomFrom",f:"addNew",t:13},{n:"cw",f:[{t:2,r:"cw",p:[41,48,1789]}],t:13},{n:"title",f:["Add new ",{t:2,r:"selected_tablename",p:[41,71,1812]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[41,108,1849]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[48,5,1981],t:7,e:"TDetails",m:[{n:"show",f:[{t:2,r:"addNew",p:[48,21,1997]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"false"},p:[48,40,2016]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[48,55,2031]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[48,77,2053]}],t:13}]}]}],n:50,r:"addNew",p:[40,1,1727]}],e:{"_0==1?\"\":\"s\"":function (_0){return(_0==1?"":"s");},"[_0.set(\"addNew\",true)]":function (_0){return([_0.set("addNew",true)]);},"false":function (){return(false);},"true":function (){return(true);}}};
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 23 */
@@ -38741,7 +38743,7 @@ component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t
 component.exports.css = ".l{width:14rem}.f{display:flex;align-items:center}.componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%}.buttonBar{display:flex;justify-content:space-between;margin-top:2rem}";
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 24 */
@@ -38823,7 +38825,7 @@ component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t
 component.exports.css = ".l{width:14rem}.f{display:flex;align-items:center}.componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%}.buttonBar{display:flex;justify-content:space-between;margin-top:2rem}";
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 25 */
@@ -38965,7 +38967,7 @@ component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t
 component.exports.css = ".upload,card{text-align:center}.upload{width:22rem;margin:0;cursor:pointer;color:#679;display:inline-block;padding:1.4rem 2rem;background:#fff;border:1px solid #679;border-radius:2px;box-shadow:0 0 0 transparent;text-transform:uppercase;text-decoration:none;font-size:1.2rem;font-weight:700;line-height:1rem;-webkit-appearance:none}.upload:hover{box-shadow:2px 2px 4px rgba(0,0,0,.3);background:#f4f5f6}.inputfile{width:.1px;height:.1px;opacity:0;overflow:hidden;position:absolute;z-index:-1}card{height:220px;transition:box-shadow 1s}card:hover{box-shadow:0 1px 4px 0 rgba(0,0,0,1)}.carddesc{height:54px;overflow:auto}.img{background-repeat:no-repeat;background-position:center center;background-size:contain;width:100%;height:144px;margin-bottom:1rem}.componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%}.buttonBar{display:flex;justify-content:space-between;margin-top:2rem}.subheader{color:#679;font-size:1.8rem;margin-right:.5rem;margin-left:.5rem}.hr{flex:1;background:1px #679;height:1px}";
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 26 */
@@ -39047,7 +39049,7 @@ component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t
 component.exports.css = ".green{color:green}.red{color:red}.tabz{transition:border-color .5s;border-radius:0;border:0;border-bottom:solid 1px #fff}.tabz:hover{box-shadow:none!important;background:0!important;border-bottom-color:#679!important}";
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 27 */
@@ -39099,7 +39101,7 @@ component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t
 component.exports.css = ".componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%}.buttonBar{display:flex;justify-content:space-between;margin-top:2rem}.subheader{color:#679;font-size:1.8rem}.hr{flex:1;background:1px #679;height:1px;margin-left:.5rem}";
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
 /* 28 */
@@ -39215,7 +39217,7 @@ component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t
 component.exports.css = ".componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%}.buttonBar{display:flex;justify-content:space-between;margin-top:2rem}.subheader{color:#679;font-size:1.8rem}.hr{flex:1;background:1px #679;height:1px;margin-left:.5rem}";
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 29 */
@@ -39277,7 +39279,7 @@ component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t
 component.exports.css = "#mapid{height:40rem;flex:1;margin:1rem}.componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%;max-width:unset}";
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 30 */
@@ -39360,7 +39362,7 @@ var component = module;
 component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"div",m:[{n:"class",f:[{t:2,r:"class",p:[1,13,12]}],t:13},{n:"id",f:"summernote",t:13},{n:"style",f:[{t:2,r:"style",p:[1,48,47]}],t:13}]}," ",{t:4,f:[{p:[5,1,90],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFileBrowse",p:[5,14,103]}],t:13},{n:"zoomFrom",f:"summernote",t:13},{n:"cw",f:[{t:2,r:"cw",p:[5,60,149]}],t:13},{n:"title",f:"Browse",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[6,43,215]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[13,5,347],t:7,e:"ImageBrowser",m:[{n:"path",f:[{t:2,r:"pathvarname",p:[13,25,367]}],t:13},{n:"show",f:[{t:2,r:"showFileBrowse",p:[13,48,390]}],t:13}]}]}],n:50,r:"showFileBrowse",p:[4,1,67]}],e:{"true":function (){return(true);}}};
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 31 */
@@ -39593,7 +39595,7 @@ var component = module;
 component.exports.template = {v:4,t:[{p:[3,1,49],t:7,e:"select",m:[{n:"value",f:[{t:2,r:"value",p:[3,16,64]}],t:13},{n:"style",f:[{t:2,r:"style",p:[3,35,83]}],t:13},{n:"class",f:[{t:2,r:"class",p:[3,53,101]}],t:13},{n:"size",f:[{t:2,r:"size",p:[3,71,119]}],t:13},{n:"id",f:"selectize",t:13},{n:"multiple",f:[{t:2,r:"multiple",p:[3,106,154]}],t:13}],f:[]}]};
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
 /* 32 */
@@ -39620,7 +39622,7 @@ var component = module;
 component.exports.template = {v:4,t:[{p:[7,1,264],t:7,e:"div",m:[{n:"style",f:"text-align:center;position: relative; height:100%; padding-top: 1em;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.add(\"cycleId\",1)]"}},t:70}],f:[{p:[8,5,379],t:7,e:"img",m:[{n:"src",f:[{t:2,r:"HOSTNAME",p:[8,15,389]},"image.php?id=",{t:2,r:"imgObj.id",p:[8,40,414]}],t:13},{n:"style",f:["max-width:",{t:2,rx:{r:"cycleType",m:[{r:["cycleId"],s:"_0%2"}]},p:[8,72,446]},";"],t:13}]}]}],e:{"[_0.add(\"cycleId\",1)]":function (_0){return([_0.add("cycleId",1)]);},"_0%2":function (_0){return(_0%2);}}};
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
 /* 33 */
@@ -39683,7 +39685,7 @@ var component = module;
 component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"style",f:"padding-bottom:0; padding-top:2rem; display:flex; flex-flow: row; justify-content:space-between",t:13}],f:[{p:[2,9,122],t:7,e:"span",m:[{n:"style",f:"font-weight: bold",t:13}],f:[{p:[3,13,167],t:7,e:"tag",f:[{t:2,r:"fr.length",p:[3,18,172]}," user",{t:2,x:{r:["fr.length"],s:"_0==1?\"\":\"s\""},p:[3,36,190]}]}]}," ",{p:[5,9,250],t:7,e:"span",m:[{n:"style",f:"flex: 1; text-align: center; font-weight: bold; text-transform: uppercase;",t:13}],f:[{t:2,r:".selected_tablename",p:[6,13,352]}]}," ",{p:[8,9,400],t:7,e:"button",m:[{n:"style",f:"padding: 9px; margin: 0;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"addNew\",true)]"}},t:70},{n:"id",f:"addNew",t:13}],f:[{p:[9,13,502],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-plus",t:13}]}," Add new user"]}]}," ",{p:[14,5,616],t:7,e:"section",m:[{n:"style",f:"flex:1; padding-bottom:1rem; padding-top:0; overflow:auto",t:13}],f:[{p:[15,9,700],t:7,e:"div",m:[{n:"id",f:"testbtn",t:13},{n:"style",f:"display:box; display:flex; height:100%; overflow:auto; flex:1",t:13}],f:[{p:[16,13,801],t:7,e:"f2table",m:[{n:"style",f:"width:100%",t:13},{n:"rows",f:[{t:2,r:"rows",p:[16,46,834]}],t:13},{n:"visible",f:"true",t:13},{n:"headerFixedHeight",f:[{t:2,x:{r:[],s:"false"},p:[16,88,876]}],t:13},{n:"alternateColor",f:[{t:2,x:{r:[],s:"true"},p:[16,114,902]}],t:13},{n:"columns",f:[{t:2,r:"columns",p:[17,25,937]}],t:13},{n:"ipp",f:"50",t:13},{n:"refresh",f:[{t:2,r:"refresh",p:[17,54,966]}],t:13},{n:"fr",f:[{t:2,r:"fr",p:[17,69,981]}],t:13},{n:"row",f:[{t:2,r:"row",p:[17,80,992]}],t:13},{n:"variableRowHeight",f:[{t:2,x:{r:[],s:"false"},p:[18,35,1035]}],t:13},{n:"showSearch",f:[{t:2,x:{r:[],s:"true"},p:[18,56,1056]}],t:13},{n:"showPaginator",f:[{t:2,x:{r:[],s:"true"},p:[18,79,1079]}],t:13},{n:"showHeaders",f:[{t:2,x:{r:[],s:"true"},p:[18,100,1100]}],t:13},{n:"loading",f:[{t:2,r:"loading",p:[18,117,1117]}],t:13},{n:"nodata",f:[{t:2,x:{r:[],s:"false"},p:[18,136,1136]}],t:13}],f:[]}," "]}]}," ",{t:4,f:[{p:[26,5,1281],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showDetails",p:[26,18,1294]}],t:13},{n:"zoomFrom",f:[{t:2,r:"currFilterIndex",p:[26,45,1321]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[26,70,1346]}],t:13},{n:"title",f:"User details",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"false"},p:[27,47,1422]}],t:13},{n:"style",f:"\n    height: initial;\n    width: auto;\n    left: 50%;\n    right: 0;\n    top: 5rem;\n    bottom: 0;",t:13}],f:[{p:[34,9,1549],t:7,e:"UserDetail",m:[{n:"row",f:[{t:2,r:"row",p:[34,25,1565]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"true"},p:[34,40,1580]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[34,54,1594]}],t:13},{n:"show",f:[{t:2,r:"showDetails",p:[34,72,1612]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[34,99,1639]}],t:13}]}]}],n:50,r:"showDetails",p:[25,5,1257]}," ",{t:4,f:[{p:[39,5,1729],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"addNew",p:[39,18,1742]}],t:13},{n:"zoomFrom",f:"addNew",t:13},{n:"cw",f:[{t:2,r:"cw",p:[39,52,1776]}],t:13},{n:"title",f:"Add new user",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[39,94,1818]}],t:13},{n:"style",f:"\n    height: 44em;\n    width: 50em;\n    left: calc(50% - 25em);\n    right: inherit;\n    top: calc(50% - 22em);\n    bottom: inherit;",t:13}],f:[{p:[46,9,1978],t:7,e:"UserDetail",m:[{n:"show",f:[{t:2,r:"addNew",p:[46,27,1996]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"false"},p:[46,46,2015]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[46,61,2030]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[46,83,2052]}],t:13}]}]}],n:50,r:"addNew",p:[38,5,1710]}],e:{"_0==1?\"\":\"s\"":function (_0){return(_0==1?"":"s");},"[_0.set(\"addNew\",true)]":function (_0){return([_0.set("addNew",true)]);},"false":function (){return(false);},"true":function (){return(true);}}};
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 34 */
@@ -39748,7 +39750,27 @@ component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t
 component.exports.css = ".l{width:14rem}.f{display:flex;align-items:center}.componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%}.buttonBar{display:flex;justify-content:space-between;margin-top:2rem}";
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
+var component = module;
+
+  component.exports = {
+    onrender: function () {},        
+    data:function() {
+            return {
+            }
+        }
+  };
+  
+component.exports.template = {v:4,t:[{p:[2,1,1],t:7,e:"section",m:[{n:"style",f:"flex:1; padding-bottom:0.5rem; padding-top:4.5rem; overflow:auto; text-align: center;",t:13}],f:[{p:[3,1,105],t:7,e:"h2",f:["Evolvit Headless CMS"]}," ",{p:[4,1,135],t:7,e:"p",f:["Author: ",{p:[4,12,146],t:7,e:"a",m:[{n:"href",f:"mailto:vujovichigor@gmail.com",t:13}],f:["Igor Vujovic"]}]},{p:[4,68,202],t:7,e:"p",f:[]},{p:[5,1,206],t:7,e:"p",f:["Source: ",{p:[5,12,217],t:7,e:"a",m:[{n:"href",f:"https://github.com/vujovicigor/evolvitcms",t:13},{n:"target",f:"_blank",t:13}],f:["EvolvitCms"]}]},{p:[5,94,299],t:7,e:"p",f:[]}]}]};
+module.exports = Ractive.extend(component.exports);
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ })
 /******/ ]);

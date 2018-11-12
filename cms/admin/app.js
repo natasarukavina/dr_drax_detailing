@@ -232,6 +232,7 @@ Ractive.components.Selectize               =  require('./Selectize.html');
 Ractive.components.ShowImage               =  require('./ShowImage.html');
 Ractive.components.UserList                =  require('./user/UserList.html');
 Ractive.components.UserDetail              =  require('./user/UserDetail.html');
+Ractive.components.About                   =  require('./About.html');
 
 //document.addEventListener("deviceready", onDeviceReady, false);
 //if (!window.cordova) onDeviceReady()

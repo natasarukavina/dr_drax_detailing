@@ -4,6 +4,7 @@
 
     try{
         $db = new PDO('sqlite:'.dirname(__FILE__).'/db/baza2.sqlite');
+        $db->exec("ATTACH DATABASE '".dirname(__FILE__).'/db/userfiles.sqlite'."' AS userfiles");
     } 
     catch(PDOException $e) { 
         die('Unable to open database connection'); 
@@ -210,7 +211,7 @@
             readfile(dirname(__FILE__).'/images//'. $ftypes[ $file[0]['mime_type'] ] );             
             return;
         }
-        
+
         // any file with mime type != 'image/*'
         $m = explode('/', $file[0]['mime_type']);
         if (isset($_GET['forcethumb']) &&  (reset($m) != 'image')  ){
