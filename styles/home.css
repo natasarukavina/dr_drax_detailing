@@ -1,3 +1,26 @@
+.titles {
+  font-size: 24px;
+  font-weight: 300;
+  color: #f92525;
+}
+.sub_titles {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.71;
+  color: #000000;
+}
+.sub_titles-link {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.link {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+}
 .home {
   display: flex;
   flex-direction: column;
@@ -69,9 +92,6 @@
 }
 .home--part2--vesti--title {
   width: 80%;
-  font-size: 24px;
-  font-weight: 300;
-  color: #f92525;
   padding-bottom: 20px;
   border-bottom: 1px solid #000000;
 }
@@ -83,28 +103,6 @@
 .home--part2--vesti--naslovi-1 {
   border-bottom: 2px solid #d0d0d0;
   padding: 25px 0;
-}
-.home--part2--vesti--naslovi .naslov {
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 1.71;
-  color: #000000;
-}
-.home--part2--vesti--naslovi .naslov-link {
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 1.71;
-  color: #000000;
-}
-.home--part2--vesti--naslovi .slika {
-  max-width: 100%;
-  padding-top: 25px;
-}
-.home--part2--vesti--naslovi .link {
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: bold;
-  color: #000000;
 }
 .more {
   font-size: 14px;

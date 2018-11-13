@@ -36,3 +36,6 @@
   max-width: 100%;
   padding-top: 25px;
 }
+.vesti {
+  display: flex;
+}
