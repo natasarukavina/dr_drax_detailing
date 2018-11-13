@@ -2,11 +2,26 @@
     <div style="display:flex;">
         <button class="tabz" xx style="border-bottom-color:{{selectedTab=='Info'?'#679':'#fff'}}" default type="button" on-click="@this.set('selectedTab','Info')" >Info</button>
         <button class="tabz" xx style="border-bottom-color:{{selectedTab=='Fields'?'#679':'#fff'}}" default type="button" on-click="@this.set('selectedTab','Fields')" >Fields</button>
+        <button class="tabz" xx style="border-bottom-color:{{selectedTab=='PHP'?'#679':'#fff'}}" default type="button" on-click="@this.set('selectedTab','PHP')" >PHP Template</button>
+        <button class="tabz" xx style="border-bottom-color:{{selectedTab=='TWIG'?'#679':'#fff'}}" default type="button" on-click="@this.set('selectedTab','TWIG')" >TWIG Template</button>
 <!--
         <button class="tabz" xx style="border-bottom-color:{{selectedTab=='List View'?'#679':'#fff'}}" default type="button" on-click="@this.set('selectedTab','List View')" >List View</button>
         <button class="tabz" xx style="border-bottom-color:{{selectedTab=='Detail View'?'#679':'#fff'}}" default type="button" on-click="@this.set('selectedTab','Detail View')" >Detail View</button>
 -->
     </div>
+    <!-- PHP Templates -->
+    {{#if selectedTab=='PHP'}}
+    <div style="flex:1; overflow: auto;">
+        <pre><code>{{php}}</code></pre>
+    </div>
+    {{/if}}
+
+    <!-- TWIG Templates -->
+    {{#if selectedTab=='TWIG'}}
+    <div style="flex:1; overflow: auto;">
+        <pre><code>{{twig}}</code></pre>
+    </div>
+    {{/if}}
 
     <!-- Info -->
     {{#if selectedTab=='Info'}}
@@ -208,7 +223,11 @@ bottom: inherit;
                 var tablename = self.get('schema_name');
                 var [resp, err] = await fetch2('?query=_engine_schema&tablename=' + tablename)
                 if (resp && resp.length==1) 
-                    self.set('row', resp[0])    
+                    self.set('row', resp[0]);
+                var [t, err] = await fetch2('?query=_generate_template&tablename=' + tablename)
+                //console.log('t',t);                        
+                self.set('php', t.php);
+                self.set('twig', t.twig);
             })
             this.fire('refresh');
 
@@ -264,6 +283,8 @@ bottom: inherit;
                 , showSchemaFiledUpdate:false
                 , selected_row:{}
                 , G:{}
+                , php:''
+                , twig: ''
             }
         }
     }
