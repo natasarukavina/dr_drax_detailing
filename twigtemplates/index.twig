@@ -8,27 +8,27 @@
                 {# <img style="height:335px; width: 100%;" src="image.php/?id={{ IstaknutaAkcija.Slika1 }}"> #}
                 <div style="background-image: url('image.php/?id={{IstaknutaAkcija.Slika1}}'); background-size: cover;
                 background-repeat: no-repeat;     background-position: center; height: 335px;"></div>
-                <div class="title">{{ IstaknutaAkcija.Naslov }}</div> 
+                <div class="title">{{ IstaknutaAkcija.Naslov }}</div>
                 <div class="text">{{IstaknutaAkcija.Text | raw}}  </div>
                 <div class="more">Vidi ceo tekst</div>
-            
+
         </div>
         <div class="home--part-2">
                 <div class="suzi-akcije"> SUZI Akcije</div>
                 <div class="overflow">
                         {% for item in fetch('Akcije') %}
-                        <div class="naslov">{{ item.Naslov }}</div> 
+                        <div class="naslov">{{ item.Naslov }}</div>
                         {% endfor %}
                 </div>
         </div>
     </div>
     <div class="home--part2">
         <div class="home--part2--vesti">
-            <div class="home--part2--vesti--title">SUZI Vesti</div>
+            <div class="home--part2--vesti--title titles">SUZI Vesti</div>
             <div class="home--part2--vesti--naslovi">
                     {% for vesti_suzi in fetch('Vesti_suzi') %}
                     <div class="home--part2--vesti--naslovi-1">
-                        <div class="naslov">{{ vesti_suzi.Naslov }}</div> 
+                        <div class="naslov sub_titles">{{ vesti_suzi.Naslov }}</div>
                         {% if vesti_suzi.Slika %}
                         <img class="slika" src="image.php/?id={{ vesti_suzi.Slika }}">
                         {% endif %}
@@ -38,11 +38,11 @@
             <a class="more" href= "vesti">Sva SUZI obaveštenja...</a>
         </div>
         <div class="home--part2--vesti">
-                <div class="home--part2--vesti--title">Vesti iz sveta</div>
+                <div class="home--part2--vesti--title titles">Vesti iz sveta</div>
                 <div class="home--part2--vesti--naslovi">
                     {% for vesti_svet in fetch('Vesti_svet') %}
                     <div class="home--part2--vesti--naslovi-1">
-                        <div class="naslov">{{ vesti_svet.Naslov }}</div> 
+                        <div class="sub_titles">{{ vesti_svet.Naslov }}</div>
                         {% if vesti_svet.Slika1 %}
                         <img class="slika" src="image.php/?id={{ vesti_svet.Slika1 }}">
                         {% endif %}
@@ -52,11 +52,11 @@
                 <a class="more" href= "vesti">Sve vesti iz sveta...</a>
         </div>
         <div class="home--part2--vesti">
-                <div class="home--part2--vesti--title">Suzi prikazi</div>
+                <div class="home--part2--vesti--title titles">Suzi prikazi</div>
                 <div class="home--part2--vesti--naslovi">
                     {% for vesti_prikazi in fetch('Prikazi') %}
                     <div class="home--part2--vesti--naslovi-1">
-                        <div class="naslov">{{ vesti_prikazi.Naslov }}</div> 
+                        <div class="sub_titles">{{ vesti_prikazi.Naslov }}</div>
                         {% if vesti_prikazi.Slika1 %}
                         <img class="slika" src="image.php/?id={{ vesti_prikazi.Slika1 }}">
                         {% endif %}
@@ -68,22 +68,22 @@
     </div>
     <div class="home--part2">
         <div class="home--part2--vesti">
-            <div class="home--part2--vesti--title">SUZI Obaveštenja</div>
+            <div class="home--part2--vesti--title titles">SUZI Obaveštenja</div>
             <div class="home--part2--vesti--naslovi">
                     {% for suzi_obavestenja in fetch('Obavestenja') %}
                     <div class="home--part2--vesti--naslovi-1">
-                        <div class="naslov">{{ suzi_obavestenja.Naslov }}</div> 
+                        <div class="sub_titles">{{ suzi_obavestenja.Naslov }}</div>
                     </div>
                     {% endfor %}
             </div>
             <a class="more" href= "#">Sva SUZI obaveštenja...</a>
         </div>
         <div class="home--part2--vesti">
-                <div class="home--part2--vesti--title">SUZI eGlasnik</div>
+                <div class="home--part2--vesti--title titles">SUZI eGlasnik</div>
                 <div class="home--part2--vesti--naslovi">
                     {% for suzi_eGlasnik in fetch('eGlasnik') %}
                     <div class="home--part2--vesti--naslovi-1">
-                        <div class="naslov">{{ suzi_eGlasnik.Naslov }}</div> 
+                        <div class="sub_titles">{{ suzi_eGlasnik.Naslov }}</div>
                         {% if suzi_eGlasnik.Slika1 %}
                         <img class="slika" src="image.php/?id={{ suzi_eGlasnik.Slika1 }}">
                         {% endif %}
@@ -93,11 +93,11 @@
                 <a class="more" href= "#">Prethodni brojevi...</a>
         </div>
         <div class="home--part2--vesti">
-                <div class="home--part2--vesti--title">Korisni linkovi</div>
+                <div class="home--part2--vesti--title titles">Korisni linkovi</div>
                 <div class="home--part2--vesti--naslovi">
                     {% for korisni_linkovi in fetch('KorisniLinkovi') %}
                     <div class="home--part2--vesti--naslovi-1">
-                        <div class="naslov-link">{{ korisni_linkovi.Naslov }}</div> 
+                        <div class="sub_titles-link">{{ korisni_linkovi.Naslov }}</div>
                         <a class="link" href="{{ korisni_linkovi.Link }}">{{ korisni_linkovi.Link }}</a>
                     </div>
                     {% endfor %}
@@ -108,4 +108,3 @@
 </div>
 
 {% endblock %}
-
