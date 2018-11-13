@@ -207,7 +207,7 @@ bottom: inherit;" >
 
         this.on('refresh', async function(){
             var selected_tablename = self.get('selected_tablename');
-            console.log('refreshing ' + selected_tablename);
+            //console.log('refreshing ' + selected_tablename);
             self.set('loading', true)
             //TODO
             var [columns, err] = await fetch2("?query=_engine_schema_column&table_name="+selected_tablename)

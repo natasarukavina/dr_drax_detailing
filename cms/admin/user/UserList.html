@@ -51,12 +51,12 @@
         <script>
           component.exports = {
             onrender: async function () {
-                console.log('TGrid onrender')
+                //console.log('TGrid onrender')
                 var self = this;
                 window.TGrid = self;
                 this.on('refresh', async function(){
                     var selected_tablename = self.get('selected_tablename');
-                    console.log('refreshing ' + selected_tablename);
+                    //console.log('refreshing ' + selected_tablename);
                     var [resp,err] = await self.fetch2('?query='+ selected_tablename)
                     if (resp) self.set('rows', resp )
                 })

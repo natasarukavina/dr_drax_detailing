@@ -28466,20 +28466,20 @@ Ractive.prototype.focusFirstElement = function(self){
     console.log('focusFirstElement', self, focusableElements)
     if (!ISMOBILE && focusableElements && focusableElements.length>0) focusableElements[0].focus();
     self.keydownhandler = function(e){
-        console.log(e)
+        //console.log(e)
         if (e.target && (e.target.type == "textarea" || e.target.className == "note-editable")) return;
         if (e.keyCode==13){
             var defaultButton = self.el.querySelectorAll('[primary]')[0];
             if (!defaultButton) return true;
             e.stopImmediatePropagation();
             defaultButton.click();
-            console.log('Enter')
+            //console.log('Enter')
             return false;
         }        
     }
     $(self.el).on( "keydown", self.keydownhandler );
     self.on('unrender', function(e){
-        console.log('unrender, unmounting keydown handler')
+        //console.log('unrender, unmounting keydown handler')
         $(self.el).off( "keydown", self.keydownhandler );
     })
 }
@@ -28504,7 +28504,7 @@ Ractive.components[ 'Checkbox' ] = Ractive.extend( {
 		value_computed:  {
 	    	get:  function () { 
 	    	    var r=this.get( "checked" )==="true" || this.get( "checked" )===true;
-	    	    console.log('Checkbox',r,this.get( "checked" ));
+	    	    //console.log('Checkbox',r,this.get( "checked" ));
 	    	    return r;
 	    	    //return this.get( "checked" )==="true" || this.get( "checked" )===true; 
 	    	    
@@ -37810,7 +37810,7 @@ var component = module;
         var self = this;
 
         this.on('refresh', async function(){
-            console.log('refreshing sqlite tables')
+            //console.log('refreshing sqlite tables')
             var [resp,err] = await fetch2("?query=_cms_tables_list_get")
             if (resp) self.set('sqlite_tables', resp)
             if (resp) self.set('sqlite_schema', resp)
@@ -37971,7 +37971,7 @@ var component = module;
             this.on('tableclickhandler', function (event,nodeid){
                 //console.log('orgtableclickhandler', this.event);
                 
-                console.log('orgtableclickhandler', event,nodeid,);
+                //console.log('orgtableclickhandler', event,nodeid,);
                 if (event.original.target.nodeName == 'A') return ;// skip if <a href..
                 $(self.nodes['fgr'+nodeid]).addClass(self.get('highlightClass'));  // da bi ga  odma iscrtao
                 //$(self.nodes['fgr'+nodeid]).children().first().css( "background-color", "darkorange" );
@@ -38171,7 +38171,7 @@ var component = module;
                     
                     if (group_by || currentSortField !== '')
                         r.sort(function(a,b) {
-                            console.log('a[group_by] == b[group_by]', a[group_by] , b[group_by])
+                            //console.log('a[group_by] == b[group_by]', a[group_by] , b[group_by])
                             if (!group_by || a[group_by] == b[group_by])
                                 return currentSortField == ''?0:( cast2num(a[currentSortField]) < cast2num(b[currentSortField])?-1*currentSortAsc:currentSortAsc );
                             return a[group_by] < b[group_by]? -1*group_by_order_asc:1*group_by_order_asc;
@@ -38555,17 +38555,17 @@ module.exports = Ractive.extend(component.exports);
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
+/* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
 var component = module;
 
       component.exports = {
         onrender: async function () {
-            console.log('TGrid onrender')
+            //console.log('TGrid onrender')
             var self = this;
             window.TGrid = self;
             this.on('refresh', async function(){
                 var selected_tablename = self.get('selected_tablename');
-                console.log('refreshing ' + selected_tablename);
+                //console.log('refreshing ' + selected_tablename);
 //                var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename)
                 var cols = self.get('G.schemas.'+selected_tablename+'.field');
                 self.set( 'columns', cols );
@@ -38639,7 +38639,7 @@ var component = module;
 component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"style",f:"padding-bottom:0; padding-top:2rem; display:flex; flex-flow: row; justify-content:space-between",t:13}],f:[{p:[2,5,118],t:7,e:"span",m:[{n:"style",f:"font-weight: bold",t:13}],f:[{p:[3,9,159],t:7,e:"tag",f:[{t:2,r:"fr.length",p:[3,14,164]}," item",{t:2,x:{r:["fr.length"],s:"_0==1?\"\":\"s\""},p:[3,32,182]}]}]}," ",{p:[5,5,234],t:7,e:"span",m:[{n:"style",f:"flex: 1; text-align: center; font-weight: bold; text-transform: uppercase;",t:13}],f:[{t:2,r:".selected_tablename",p:[6,9,332]}]}," ",{p:[8,5,372],t:7,e:"button",m:[{n:"style",f:"padding: 9px; margin: 0;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"addNew\",true)]"}},t:70},{n:"id",f:"addNew",t:13}],f:[{p:[9,9,470],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-plus",t:13}]}," Add new"]}]}," ",{p:[14,1,559],t:7,e:"section",m:[{n:"style",f:"flex:1; padding-bottom:1rem; padding-top:0; overflow:auto",t:13}],f:[{p:[15,5,639],t:7,e:"div",m:[{n:"id",f:"testbtn",t:13},{n:"style",f:"display:box; display:flex; height:100%; overflow:auto; flex:1",t:13}],f:[{p:[16,9,736],t:7,e:"f2table",m:[{n:"style",f:"width:100%",t:13},{n:"rows",f:[{t:2,r:"rows",p:[16,42,769]}],t:13},{n:"visible",f:"true",t:13},{n:"headerFixedHeight",f:[{t:2,x:{r:[],s:"false"},p:[16,84,811]}],t:13},{n:"alternateColor",f:[{t:2,x:{r:[],s:"true"},p:[16,110,837]}],t:13},{n:"columns",f:[{t:2,r:"columns",p:[17,21,868]}],t:13},{n:"ipp",f:"50",t:13},{n:"refresh",f:[{t:2,r:"refresh",p:[17,50,897]}],t:13},{n:"fr",f:[{t:2,r:"fr",p:[17,65,912]}],t:13},{n:"row",f:[{t:2,r:"row",p:[17,76,923]}],t:13},{n:"group_by",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"group_by"]},p:[18,23,954]}],t:13},{n:"group_by_order_asc",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"group_by_order_asc"]},p:[19,33,1032]}],t:13},{n:"variableRowHeight",f:[{t:2,x:{r:[],s:"false"},p:[20,31,1118]}],t:13},{n:"showSearch",f:[{t:2,x:{r:[],s:"true"},p:[20,52,1139]}],t:13},{n:"showPaginator",f:[{t:2,x:{r:[],s:"true"},p:[20,75,1162]}],t:13},{n:"showHeaders",f:[{t:2,x:{r:[],s:"true"},p:[20,96,1183]}],t:13},{n:"loading",f:[{t:2,r:"loading",p:[20,113,1200]}],t:13},{n:"nodata",f:[{t:2,x:{r:[],s:"false"},p:[20,132,1219]}],t:13}],f:[]}," "]}]}," ",{t:4,f:[{p:[28,1,1332],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showDetails",p:[28,14,1345]}],t:13},{n:"zoomFrom",f:[{t:2,r:"currFilterIndex",p:[28,41,1372]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[28,66,1397]}],t:13},{n:"title",f:[{t:2,r:"selected_tablename",p:[28,81,1412]}," details"],t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"false"},p:[29,43,1487]}],t:13},{n:"style",f:"\nheight: initial;\nwidth: auto;\nleft: 30%;\nright: 0;\ntop: 5rem;\nbottom: 0;",t:13}],f:[{p:[36,5,1586],t:7,e:"TDetails",m:[{n:"row",f:[{t:2,r:"row",p:[36,19,1600]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"true"},p:[36,34,1615]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[36,48,1629]}],t:13},{n:"show",f:[{t:2,r:"showDetails",p:[36,66,1647]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[36,93,1674]}],t:13}]}]}],n:50,r:"showDetails",p:[27,1,1312]},{t:4,f:[{p:[41,1,1742],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"addNew",p:[41,14,1755]}],t:13},{n:"zoomFrom",f:"addNew",t:13},{n:"cw",f:[{t:2,r:"cw",p:[41,48,1789]}],t:13},{n:"title",f:["Add new ",{t:2,r:"selected_tablename",p:[41,71,1812]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[41,108,1849]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[48,5,1981],t:7,e:"TDetails",m:[{n:"show",f:[{t:2,r:"addNew",p:[48,21,1997]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"false"},p:[48,40,2016]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[48,55,2031]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[48,77,2053]}],t:13}]}]}],n:50,r:"addNew",p:[40,1,1727]}],e:{"_0==1?\"\":\"s\"":function (_0){return(_0==1?"":"s");},"[_0.set(\"addNew\",true)]":function (_0){return([_0.set("addNew",true)]);},"false":function (){return(false);},"true":function (){return(true);}}};
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
 /* 23 */
@@ -38761,7 +38761,7 @@ var component = module;
 
         this.on('refresh', async function(){
             var selected_tablename = self.get('selected_tablename');
-            console.log('refreshing ' + selected_tablename);
+            //console.log('refreshing ' + selected_tablename);
             self.set('loading', true)
             //TODO
             var [columns, err] = await fetch2("?query=_engine_schema_column&table_name="+selected_tablename)
@@ -38831,12 +38831,12 @@ module.exports = Ractive.extend(component.exports);
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
+/* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
 var component = module;
 
 component.exports = {
     onteardown: function(){
-        console.log('imgbroews teardown', this)
+        //console.log('imgbroews teardown', this)
         this.nodes.dropArea.removeEventListener("drop", this.handleDrop, false);
         this.nodes.dropArea.removeEventListener("dragover", this.handleDragover, false);
         this.nodes.dropArea.removeEventListener("dragleave", this.handleDragleave, false);
@@ -38854,7 +38854,7 @@ component.exports = {
         })
         //this.focusFirstElement();
         this.handleDragenter = function (e) {
-            console.log('Dragenter')
+            //console.log('Dragenter')
             self.set('drag', true)
         }
         this.handleDragleave = function (e) {
@@ -38913,7 +38913,7 @@ component.exports = {
                     
             }
             if (resp) resp.text().then(function(id){
-                console.log('iidd uploada',id)
+                //console.log('iidd uploada',id)
                 self.set('imgSelect', id)
             })
             self.fire('refresh')
@@ -38967,7 +38967,7 @@ component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t
 component.exports.css = ".upload,card{text-align:center}.upload{width:22rem;margin:0;cursor:pointer;color:#679;display:inline-block;padding:1.4rem 2rem;background:#fff;border:1px solid #679;border-radius:2px;box-shadow:0 0 0 transparent;text-transform:uppercase;text-decoration:none;font-size:1.2rem;font-weight:700;line-height:1rem;-webkit-appearance:none}.upload:hover{box-shadow:2px 2px 4px rgba(0,0,0,.3);background:#f4f5f6}.inputfile{width:.1px;height:.1px;opacity:0;overflow:hidden;position:absolute;z-index:-1}card{height:220px;transition:box-shadow 1s}card:hover{box-shadow:0 1px 4px 0 rgba(0,0,0,1)}.carddesc{height:54px;overflow:auto}.img{background-repeat:no-repeat;background-position:center center;background-size:contain;width:100%;height:144px;margin-bottom:1rem}.componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%}.buttonBar{display:flex;justify-content:space-between;margin-top:2rem}.subheader{color:#679;font-size:1.8rem;margin-right:.5rem;margin-left:.5rem}.hr{flex:1;background:1px #679;height:1px}";
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
 /* 26 */
@@ -39291,7 +39291,7 @@ module.exports = Ractive.extend(component.exports);
 /* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
+/* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
 var component = module;
 
   component.exports ={
@@ -39335,8 +39335,6 @@ var component = module;
                 callbacks: {
                 onFocus: function(e) {  $('.note-dialog').parents().removeClass('animated');  },  //modal fix                  
                 onChange: function (contents, $editable) {
-                    console.log( 'contents',contents)
-                    console.log( 'editable',$editable)
                     self.set('fromParent',false);
                     self.set('code',contents);
                     self.set('fromParent',true);
@@ -39368,7 +39366,7 @@ var component = module;
 component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"div",m:[{n:"class",f:[{t:2,r:"class",p:[1,13,12]}],t:13},{n:"id",f:"summernote",t:13},{n:"style",f:[{t:2,r:"style",p:[1,48,47]}],t:13}]}," ",{t:4,f:[{p:[5,1,90],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFileBrowse",p:[5,14,103]}],t:13},{n:"zoomFrom",f:"summernote",t:13},{n:"cw",f:[{t:2,r:"cw",p:[5,60,149]}],t:13},{n:"title",f:"Browse",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[6,43,215]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[13,5,347],t:7,e:"ImageBrowser",m:[{n:"path",f:[{t:2,r:"pathvarname",p:[13,25,367]}],t:13},{n:"show",f:[{t:2,r:"showFileBrowse",p:[13,48,390]}],t:13}]}]}],n:50,r:"showFileBrowse",p:[4,1,67]}],e:{"true":function (){return(true);}}};
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
 /* 31 */
@@ -39634,17 +39632,17 @@ module.exports = Ractive.extend(component.exports);
 /* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
+/* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
 var component = module;
 
           component.exports = {
             onrender: async function () {
-                console.log('TGrid onrender')
+                //console.log('TGrid onrender')
                 var self = this;
                 window.TGrid = self;
                 this.on('refresh', async function(){
                     var selected_tablename = self.get('selected_tablename');
-                    console.log('refreshing ' + selected_tablename);
+                    //console.log('refreshing ' + selected_tablename);
                     var [resp,err] = await self.fetch2('?query='+ selected_tablename)
                     if (resp) self.set('rows', resp )
                 })
@@ -39691,7 +39689,7 @@ var component = module;
 component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"style",f:"padding-bottom:0; padding-top:2rem; display:flex; flex-flow: row; justify-content:space-between",t:13}],f:[{p:[2,9,122],t:7,e:"span",m:[{n:"style",f:"font-weight: bold",t:13}],f:[{p:[3,13,167],t:7,e:"tag",f:[{t:2,r:"fr.length",p:[3,18,172]}," user",{t:2,x:{r:["fr.length"],s:"_0==1?\"\":\"s\""},p:[3,36,190]}]}]}," ",{p:[5,9,250],t:7,e:"span",m:[{n:"style",f:"flex: 1; text-align: center; font-weight: bold; text-transform: uppercase;",t:13}],f:[{t:2,r:".selected_tablename",p:[6,13,352]}]}," ",{p:[8,9,400],t:7,e:"button",m:[{n:"style",f:"padding: 9px; margin: 0;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"addNew\",true)]"}},t:70},{n:"id",f:"addNew",t:13}],f:[{p:[9,13,502],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-plus",t:13}]}," Add new user"]}]}," ",{p:[14,5,616],t:7,e:"section",m:[{n:"style",f:"flex:1; padding-bottom:1rem; padding-top:0; overflow:auto",t:13}],f:[{p:[15,9,700],t:7,e:"div",m:[{n:"id",f:"testbtn",t:13},{n:"style",f:"display:box; display:flex; height:100%; overflow:auto; flex:1",t:13}],f:[{p:[16,13,801],t:7,e:"f2table",m:[{n:"style",f:"width:100%",t:13},{n:"rows",f:[{t:2,r:"rows",p:[16,46,834]}],t:13},{n:"visible",f:"true",t:13},{n:"headerFixedHeight",f:[{t:2,x:{r:[],s:"false"},p:[16,88,876]}],t:13},{n:"alternateColor",f:[{t:2,x:{r:[],s:"true"},p:[16,114,902]}],t:13},{n:"columns",f:[{t:2,r:"columns",p:[17,25,937]}],t:13},{n:"ipp",f:"50",t:13},{n:"refresh",f:[{t:2,r:"refresh",p:[17,54,966]}],t:13},{n:"fr",f:[{t:2,r:"fr",p:[17,69,981]}],t:13},{n:"row",f:[{t:2,r:"row",p:[17,80,992]}],t:13},{n:"variableRowHeight",f:[{t:2,x:{r:[],s:"false"},p:[18,35,1035]}],t:13},{n:"showSearch",f:[{t:2,x:{r:[],s:"true"},p:[18,56,1056]}],t:13},{n:"showPaginator",f:[{t:2,x:{r:[],s:"true"},p:[18,79,1079]}],t:13},{n:"showHeaders",f:[{t:2,x:{r:[],s:"true"},p:[18,100,1100]}],t:13},{n:"loading",f:[{t:2,r:"loading",p:[18,117,1117]}],t:13},{n:"nodata",f:[{t:2,x:{r:[],s:"false"},p:[18,136,1136]}],t:13}],f:[]}," "]}]}," ",{t:4,f:[{p:[26,5,1281],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showDetails",p:[26,18,1294]}],t:13},{n:"zoomFrom",f:[{t:2,r:"currFilterIndex",p:[26,45,1321]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[26,70,1346]}],t:13},{n:"title",f:"User details",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"false"},p:[27,47,1422]}],t:13},{n:"style",f:"\n    height: initial;\n    width: auto;\n    left: 50%;\n    right: 0;\n    top: 5rem;\n    bottom: 0;",t:13}],f:[{p:[34,9,1549],t:7,e:"UserDetail",m:[{n:"row",f:[{t:2,r:"row",p:[34,25,1565]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"true"},p:[34,40,1580]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[34,54,1594]}],t:13},{n:"show",f:[{t:2,r:"showDetails",p:[34,72,1612]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[34,99,1639]}],t:13}]}]}],n:50,r:"showDetails",p:[25,5,1257]}," ",{t:4,f:[{p:[39,5,1729],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"addNew",p:[39,18,1742]}],t:13},{n:"zoomFrom",f:"addNew",t:13},{n:"cw",f:[{t:2,r:"cw",p:[39,52,1776]}],t:13},{n:"title",f:"Add new user",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[39,94,1818]}],t:13},{n:"style",f:"\n    height: 44em;\n    width: 50em;\n    left: calc(50% - 25em);\n    right: inherit;\n    top: calc(50% - 22em);\n    bottom: inherit;",t:13}],f:[{p:[46,9,1978],t:7,e:"UserDetail",m:[{n:"show",f:[{t:2,r:"addNew",p:[46,27,1996]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"false"},p:[46,46,2015]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[46,61,2030]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[46,83,2052]}],t:13}]}]}],n:50,r:"addNew",p:[38,5,1710]}],e:{"_0==1?\"\":\"s\"":function (_0){return(_0==1?"":"s");},"[_0.set(\"addNew\",true)]":function (_0){return([_0.set("addNew",true)]);},"false":function (){return(false);},"true":function (){return(true);}}};
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
 /* 34 */

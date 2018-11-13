@@ -295,7 +295,7 @@ select:hover, select:active, select:focus { background-color:#fff !important;}
             this.on('tableclickhandler', function (event,nodeid){
                 //console.log('orgtableclickhandler', this.event);
                 
-                console.log('orgtableclickhandler', event,nodeid,);
+                //console.log('orgtableclickhandler', event,nodeid,);
                 if (event.original.target.nodeName == 'A') return ;// skip if <a href..
                 $(self.nodes['fgr'+nodeid]).addClass(self.get('highlightClass'));  // da bi ga  odma iscrtao
                 //$(self.nodes['fgr'+nodeid]).children().first().css( "background-color", "darkorange" );
@@ -495,7 +495,7 @@ select:hover, select:active, select:focus { background-color:#fff !important;}
                     
                     if (group_by || currentSortField !== '')
                         r.sort(function(a,b) {
-                            console.log('a[group_by] == b[group_by]', a[group_by] , b[group_by])
+                            //console.log('a[group_by] == b[group_by]', a[group_by] , b[group_by])
                             if (!group_by || a[group_by] == b[group_by])
                                 return currentSortField == ''?0:( cast2num(a[currentSortField]) < cast2num(b[currentSortField])?-1*currentSortAsc:currentSortAsc );
                             return a[group_by] < b[group_by]? -1*group_by_order_asc:1*group_by_order_asc;

@@ -163,7 +163,7 @@ bottom: inherit;
         var self = this;
 
         this.on('refresh', async function(){
-            console.log('refreshing sqlite tables')
+            //console.log('refreshing sqlite tables')
             var [resp,err] = await fetch2("?query=_cms_tables_list_get")
             if (resp) self.set('sqlite_tables', resp)
             if (resp) self.set('sqlite_schema', resp)

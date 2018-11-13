@@ -88,20 +88,20 @@ Ractive.prototype.focusFirstElement = function(self){
     console.log('focusFirstElement', self, focusableElements)
     if (!ISMOBILE && focusableElements && focusableElements.length>0) focusableElements[0].focus();
     self.keydownhandler = function(e){
-        console.log(e)
+        //console.log(e)
         if (e.target && (e.target.type == "textarea" || e.target.className == "note-editable")) return;
         if (e.keyCode==13){
             var defaultButton = self.el.querySelectorAll('[primary]')[0];
             if (!defaultButton) return true;
             e.stopImmediatePropagation();
             defaultButton.click();
-            console.log('Enter')
+            //console.log('Enter')
             return false;
         }        
     }
     $(self.el).on( "keydown", self.keydownhandler );
     self.on('unrender', function(e){
-        console.log('unrender, unmounting keydown handler')
+        //console.log('unrender, unmounting keydown handler')
         $(self.el).off( "keydown", self.keydownhandler );
     })
 }
@@ -126,7 +126,7 @@ Ractive.components[ 'Checkbox' ] = Ractive.extend( {
 		value_computed:  {
 	    	get:  function () { 
 	    	    var r=this.get( "checked" )==="true" || this.get( "checked" )===true;
-	    	    console.log('Checkbox',r,this.get( "checked" ));
+	    	    //console.log('Checkbox',r,this.get( "checked" ));
 	    	    return r;
 	    	    //return this.get( "checked" )==="true" || this.get( "checked" )===true; 
 	    	    
