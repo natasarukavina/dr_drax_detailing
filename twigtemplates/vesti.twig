@@ -1,4 +1,39 @@
 {% extends "base.twig" %}
-{% block content %}
 
+{% block content %}
+  {% set vesti_svet = fetch("Vesti_svet") %}
+  {% set vesti_suzi = fetch("Vesti_suzi") %}
+  {% set suzi_prikazi = fetch("Prikazi") %}
+
+  <div class="vesti">
+    <div class="vest--suzi">
+      <div class="vest--suzi-naslov">SUZI Vesti</div>
+      {% for suzi in vesti_suzi %}
+      <div class="vest--suzi-vest">
+        <div class="vest--suzi-vest--link"><a href="vest/?vest={{suzi.id}}">{{ suzi.Naslov }}</a></div>
+        <div class="vest--suzi-vest--datum">{{ suzi.Datum }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="vest--svet">
+      <div class="vest--svet-naslov">Vesti iz sveta</div>
+      {% for svet in vesti_svet %}
+      <div class="vest--svet-vest">
+        <div><a href="vest/?vest={{svet.id}}">{{ svet.Naslov }}</a></div>
+        <div class="" style="background-image: url('img/{{ svet.Slika1 }}');"></div>
+        <div class="vest--suzi-vest--datum">{{ svet.Datum }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="vest--prikazi">
+      <div class="vest--prikazi-naslov">SUZI prikazi</div>
+      {% for prikaz in suzi_prikazi %}
+      <div class="vest--svet-vest">
+        <div><a href="vest/?vest={{prikaz.id}}">{{ prikaz.Naslov }}</a></div>
+        <div class="" style="background-image: url('img/{{ prikaz.Slika1 }}');"></div>
+        <div class="vest--suzi-vest--datum">{{ prikaz.Datum }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 {% endblock %}
