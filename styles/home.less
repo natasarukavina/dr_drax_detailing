@@ -1,0 +1,66 @@
+.home{
+    display: flex;
+    flex-direction: column;
+    padding: 60px 90px;
+    &--part{
+        // padding: 60px 0;
+        height: 600px;
+        display: flex;
+        justify-content: space-between;
+        &-istaknuta-akcija{
+            width: 63%;
+            border-bottom: 2px solid #d0d0d0;
+            .title{
+                font-size: 18px;
+                font-weight: bold;
+                color: #202124;
+                padding: 20px 0;
+            }
+            .text{
+                font-size: 14px;
+                line-height: 1.71;
+                color: #000000;
+                height: 90px;
+                overflow: hidden;
+            }
+            .more{
+              font-size: 14px;
+              line-height: 1.71;
+              font-weight: bold;
+              color: #f92525;
+              padding: 20px 0;  
+            }
+        }
+        &-2{
+           width: 32%; 
+           border-bottom: 2px solid #d0d0d0;
+           display: flex;
+           flex-direction: column;
+           .suzi-akcije{
+            font-size: 24px;
+            color: #f92525;
+           }
+           .overflow{
+               overflow: auto;
+               flex: 1;
+           }
+           .naslov{
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1.71;
+            color: #000000;
+            padding: 40px 0;
+            margin-right: 10px;
+            border-bottom: 2px solid #d0d0d0;
+           
+            &:last-child{
+                border-bottom: none;
+            }
+           }
+        }
+        &--vesti{
+            width: 33%;
+            align-items: center;
+        }
+    }
+}
