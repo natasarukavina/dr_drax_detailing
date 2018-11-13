@@ -2,7 +2,7 @@
 .home{
     display: flex;
     flex-direction: column;
-    padding: 60px 90px;
+    padding: 60px 90px 0;
     &--part{
         // padding: 60px 0;
         height: 600px;
@@ -23,13 +23,6 @@
                 color: @black;
                 height: 90px;
                 overflow: hidden;
-            }
-            .more{
-              font-size: 14px;
-              line-height: 1.71;
-              font-weight: bold;
-              color: @red;
-              padding: 20px 0;  
             }
         }
         &-2{
@@ -59,10 +52,23 @@
             }
            }
         }
+        
+        
+    }
+    &--part2{
+        height: 700px;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid @black;
+        &:last-child{
+            border-bottom: none;
+        }
         &--vesti{
             width: 33%;
-            align-items: center;
-            margin: 60px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin: 60px 0 30px;
             &--title{
                 width: 80%;
                 font-size: 24px;
@@ -73,19 +79,44 @@
             }
             &--naslovi{
                 width: 80%;
+                overflow: auto;
+                flex: 1;
+                &-1{
+                    border-bottom: 2px solid @gray-light;
+                    padding: 25px 0;
+                }
                 .naslov{
                     font-size: 14px;
                     font-weight: bold;
                     line-height: 1.71;
                     color: @black;
-                    border-bottom: 2px solid @gray-light;
-                    padding: 20px 0;
-                    &:last-child{
-                        border-bottom: none;
-            }
+                    &-link{
+                        font-size: 14px;
+                        font-weight: normal;
+                        line-height: 1.71;
+                        color: @black;
+                    }
+                }
+                .slika{
+                    max-width: 100%;
+                    padding-top: 25px;
+                }
+                .link{
+                    text-decoration: none;
+                    font-size: 14px;
+                    font-weight: bold;
+                    color: @black;
                 }
             }
         }
-        
     }
 }
+.more{
+    font-size: 14px;
+    line-height: 1.71;
+    font-weight: bold;
+    color: @red;
+    padding: 20px 0;
+    text-decoration: none;
+    cursor: pointer;  
+  }
