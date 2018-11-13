@@ -1,41 +1,6 @@
 {% extends "base.twig" %}
 
 {% block content %}
-{# <div class="container">
-
-{% set Akcije = fetch('Akcije')%}
-
-<!-- Service: MainGalery iz {{_GET['twig_file_name']}} -->
-<br>
-{% for item in Akcije %}
-<h2>{{ item.Naslov }}</h2> 
-  {% if item.Slika1 %}
-  <img style="height:20rem" src="image.php/?id={{ item.Slika1 }}">
-  {% endif %}
-  {% if item.Slika2 %}
-  <img style="height:20rem" src="image.php/?id={{ item.Slika2 }}">
-  {% endif %}
-{{item.Text | raw}}  
-    <hr>
-{% endfor %}
-
-</div>
-
-
-<div class="container">
-<h2>Korisni linkovi</h2>
-{% set KorisniLinkovi = fetch('KorisniLinkovi')%}
-
-<!-- Service: MainGalery iz {{_GET['twig_file_name']}} -->
-<br>
-{% for item in KorisniLinkovi %}
-<h3>{{ item.Naslov }}</h3> 
-<a href="{{item.Link}}" target="_blank"> {{ item.Naslov }}</a>
-
-    <hr>
-{% endfor %}
-
-</div> #}
 <div class="home">
     <div class="home--part">
         <div class="home--part-istaknuta-akcija">
