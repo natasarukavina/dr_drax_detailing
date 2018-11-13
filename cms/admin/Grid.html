@@ -16,18 +16,17 @@
 <script>
   component.exports = {
 onrender: function () {
-        console.log('Grid onrender')
         var self = this;
         window.Grid = self;
         self.observe('selectedModule', function(){
-            console.log('observe("selectedModule")')
+           // console.log('observe("selectedModule")')
             setTimeout(function(){ // !!!???
                 self.add('refresh',1);
                 self.update();
             }, 1)
         })
         this.on('onModuleSelect', function(e){
-            console.log('refreshing', self.get('selectedModule'))
+            //console.log('refreshing', self.get('selectedModule'))
             e.original.preventDefault();
             e.original.stopPropagation();
             socket.emit('get_rows', self.get('selectedModule'));

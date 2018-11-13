@@ -139,7 +139,7 @@ card:hover {
 <script>
 component.exports = {
     onteardown: function(){
-        console.log('imgbroews teardown', this)
+        //console.log('imgbroews teardown', this)
         this.nodes.dropArea.removeEventListener("drop", this.handleDrop, false);
         this.nodes.dropArea.removeEventListener("dragover", this.handleDragover, false);
         this.nodes.dropArea.removeEventListener("dragleave", this.handleDragleave, false);
@@ -157,7 +157,7 @@ component.exports = {
         })
         //this.focusFirstElement();
         this.handleDragenter = function (e) {
-            console.log('Dragenter')
+            //console.log('Dragenter')
             self.set('drag', true)
         }
         this.handleDragleave = function (e) {
@@ -216,7 +216,7 @@ component.exports = {
                     
             }
             if (resp) resp.text().then(function(id){
-                console.log('iidd uploada',id)
+                //console.log('iidd uploada',id)
                 self.set('imgSelect', id)
             })
             self.fire('refresh')

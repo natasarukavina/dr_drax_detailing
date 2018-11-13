@@ -56,8 +56,6 @@ bottom: inherit;" >
                 callbacks: {
                 onFocus: function(e) {  $('.note-dialog').parents().removeClass('animated');  },  //modal fix                  
                 onChange: function (contents, $editable) {
-                    console.log( 'contents',contents)
-                    console.log( 'editable',$editable)
                     self.set('fromParent',false);
                     self.set('code',contents);
                     self.set('fromParent',true);
