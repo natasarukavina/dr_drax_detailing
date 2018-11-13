@@ -18,9 +18,13 @@
   font-weight: 300;
   src: url('fonts/Raleway/Raleway-Light.ttf');
 }
+@font-face {
+  font-family: Raleway;
+  font-weight: normal;
+  src: url('fonts/Raleway/Raleway-Regular.ttf');
+}
 .head {
   height: 100px;
-  width: 100%;
   border-bottom: 1px solid #d0d0d0;
   padding: 0 90px;
   display: flex;
@@ -85,7 +89,7 @@
 .home {
   display: flex;
   flex-direction: column;
-  padding: 60px 90px;
+  padding: 60px 90px 0;
 }
 .home--part {
   height: 600px;
@@ -108,13 +112,6 @@
   color: #000000;
   height: 90px;
   overflow: hidden;
-}
-.home--part-istaknuta-akcija .more {
-  font-size: 14px;
-  line-height: 1.71;
-  font-weight: bold;
-  color: #f92525;
-  padding: 20px 0;
 }
 .home--part-2 {
   width: 30%;
@@ -142,12 +139,23 @@
 .home--part-2 .naslov:last-child {
   border-bottom: none;
 }
-.home--part--vesti {
-  width: 33%;
-  align-items: center;
-  margin: 60px 0;
+.home--part2 {
+  height: 700px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #000000;
 }
-.home--part--vesti--title {
+.home--part2:last-child {
+  border-bottom: none;
+}
+.home--part2--vesti {
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 60px 0 30px;
+}
+.home--part2--vesti--title {
   width: 80%;
   font-size: 24px;
   font-weight: 300;
@@ -155,17 +163,43 @@
   padding-bottom: 20px;
   border-bottom: 1px solid #000000;
 }
-.home--part--vesti--naslovi {
+.home--part2--vesti--naslovi {
   width: 80%;
+  overflow: auto;
+  flex: 1;
 }
-.home--part--vesti--naslovi .naslov {
+.home--part2--vesti--naslovi-1 {
+  border-bottom: 2px solid #d0d0d0;
+  padding: 25px 0;
+}
+.home--part2--vesti--naslovi .naslov {
   font-size: 14px;
   font-weight: bold;
   line-height: 1.71;
   color: #000000;
-  border-bottom: 2px solid #d0d0d0;
-  padding: 20px 0;
 }
-.home--part--vesti--naslovi .naslov:last-child {
-  border-bottom: none;
+.home--part2--vesti--naslovi .naslov-link {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.home--part2--vesti--naslovi .slika {
+  max-width: 100%;
+  padding-top: 25px;
+}
+.home--part2--vesti--naslovi .link {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+}
+.more {
+  font-size: 14px;
+  line-height: 1.71;
+  font-weight: bold;
+  color: #f92525;
+  padding: 20px 0;
+  text-decoration: none;
+  cursor: pointer;
 }
