@@ -35,7 +35,7 @@ $twig->addGlobal('_POST', $_POST);// todo add SESSION var
 //$dogs = fetch('Projekat') ;
 //print_r(fetch_twig_templates());
 //$templatename = isset($_GET['twig_file_name'])?$_GET['twig_file_name']:'index'; //from db
-$templatename = isset($_GET['0'])?$_GET['0'].'.twig':'index.twig'; // from fs
+$templatename = isset($_GET['twig_file_name'])?$_GET['twig_file_name'].'.twig':'index.twig'; // from fs
 
 //echo $templatename;
 //$template = $twig->load(isset($_GET['twig_file_name'])?$_GET['twig_file_name'].'.twig':'index.twig');

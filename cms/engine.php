@@ -18,11 +18,11 @@
     $db->sqliteCreateCollation('SR_LATIN_CMP', 'SR_LATIN_CMP');  // !!! UNDOCUMENTED PDO FUNCTION
 
 
-    $coll = collator_create( 'sr_Latn_RS' ); // en_US
+    //$coll = collator_create( 'sr_Latn_RS' ); // en_US
     function SR_LATIN_CMP($s1, $s2){
-        //return strcmp($s1, $s2);
-        global $coll;     
-        return collator_compare( $coll, $s1, $s2 );
+        return strcmp($s1, $s2);
+        //global $coll;     
+        //return collator_compare( $coll, $s1, $s2 );
     }
 
     function explode_by_index($string, $index){
