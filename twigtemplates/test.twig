@@ -1,0 +1,19 @@
+{% set Vesti_suzi = fetch("Vesti_suzi") %}
+<h2>Vesti / SUZI</h2>
+<table border=1 style="width:100%">
+<tr>
+  <td>id</td>
+  <td>Naslov</td>
+  <td>Text</td>
+  <td>Datum</td>
+</tr>
+{% for item in Vesti_suzi %}
+<tr>
+  <td> {{item.id}} </td>
+  <td> {{item.Naslov}} </td>
+  <td> {{item.Text}} </td>
+  <td> {{item.Datum}} </td>
+</tr>
+{% endfor %}
+</table>
+</div>
