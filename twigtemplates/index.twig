@@ -24,8 +24,8 @@
     </div>
     <div class="home--part">
         <div class="home--part--vesti">
-            <div>SUZI Vesti</div>
-            <div>
+            <div class="home--part--vesti--title">SUZI Vesti</div>
+            <div class="home--part--vesti--naslovi">
                     {% for vesti_suzi in fetch('Vesti_suzi') %}
                     <div class="naslov">{{ vesti_suzi.Naslov }}</div> 
                     {% if vest.Slika %}
@@ -36,12 +36,12 @@
             <a href= "vesti">Sva SUZI obaveštenja...</a>
         </div>
         <div class="home--part--vesti">
-                <div>Vesti iz sveta</div>
+                <div class="home--part--vesti--title">Vesti iz sveta</div>
                 <div></div>
                 <a href= "vesti">Sve vesti iz sveta...</a>
         </div>
         <div class="home--part--vesti">
-                <div>Suzi prikazi</div>
+                <div class="home--part--vesti--title">Suzi prikazi</div>
                 <div></div>
                 <a href= "vesti">Svi prikazi...</a>
         </div>

@@ -1,3 +1,4 @@
+@import 'variables.less';
 .home{
     display: flex;
     flex-direction: column;
@@ -8,18 +9,18 @@
         display: flex;
         justify-content: space-between;
         &-istaknuta-akcija{
-            width: 63%;
-            border-bottom: 2px solid #d0d0d0;
+            width: 66%;
+            border-bottom: 2px solid @gray-light;
             .title{
                 font-size: 18px;
                 font-weight: bold;
-                color: #202124;
+                color: @gray-dark;
                 padding: 20px 0;
             }
             .text{
                 font-size: 14px;
                 line-height: 1.71;
-                color: #000000;
+                color: @black;
                 height: 90px;
                 overflow: hidden;
             }
@@ -27,18 +28,18 @@
               font-size: 14px;
               line-height: 1.71;
               font-weight: bold;
-              color: #f92525;
+              color: @red;
               padding: 20px 0;  
             }
         }
         &-2{
-           width: 32%; 
-           border-bottom: 2px solid #d0d0d0;
+           width: 30%; 
+           border-bottom: 2px solid @gray-light;
            display: flex;
            flex-direction: column;
            .suzi-akcije{
             font-size: 24px;
-            color: #f92525;
+            color: @red;
            }
            .overflow{
                overflow: auto;
@@ -48,10 +49,10 @@
             font-size: 14px;
             font-weight: bold;
             letter-spacing: 1.71;
-            color: #000000;
+            color: @black;
             padding: 40px 0;
             margin-right: 10px;
-            border-bottom: 2px solid #d0d0d0;
+            border-bottom: 2px solid @gray-light;
            
             &:last-child{
                 border-bottom: none;
@@ -61,6 +62,30 @@
         &--vesti{
             width: 33%;
             align-items: center;
+            margin: 60px 0;
+            &--title{
+                width: 80%;
+                font-size: 24px;
+                font-weight: 300;
+                color: @red;
+                padding-bottom: 20px;
+                border-bottom: 1px solid @black;
+            }
+            &--naslovi{
+                width: 80%;
+                .naslov{
+                    font-size: 14px;
+                    font-weight: bold;
+                    line-height: 1.71;
+                    color: @black;
+                    border-bottom: 2px solid @gray-light;
+                    padding: 20px 0;
+                    &:last-child{
+                        border-bottom: none;
+            }
+                }
+            }
         }
+        
     }
 }
