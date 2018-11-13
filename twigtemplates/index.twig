@@ -1,39 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
+{% extends "base.twig" %}
 
+{% block content %}
+{# <div class="container">
 
-
-
-        <div class="head--meni">
-            <a href="index" class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">O nama</a>
-            <a href="akcije" class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
-            <a href="vesti" class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
-            <a href="#" class="head--meni-title">Komisije</a>
-            <a href="#" class="head--meni-title">Publikacije</a>
-            <a href="#" class="head--meni-title">Članovi</a>
-            <a href="#" class="head--meni-title">Kontakt</a>
-        </div>
-
-
-
-
-<div class="container">
-
-
-{% set Sati = fetch('Akcije')%}
+{% set Akcije = fetch('Akcije')%}
 
 <!-- Service: MainGalery iz {{_GET['twig_file_name']}} -->
 <br>
-{% for item in Sati %}
+{% for item in Akcije %}
 <h2>{{ item.Naslov }}</h2> 
   {% if item.Slika1 %}
   <img style="height:20rem" src="image.php/?id={{ item.Slika1 }}">
@@ -45,8 +19,74 @@
     <hr>
 {% endfor %}
 
-
 </div>
 
-</body>
-</html>
+
+<div class="container">
+<h2>Korisni linkovi</h2>
+{% set KorisniLinkovi = fetch('KorisniLinkovi')%}
+
+<!-- Service: MainGalery iz {{_GET['twig_file_name']}} -->
+<br>
+{% for item in KorisniLinkovi %}
+<h3>{{ item.Naslov }}</h3> 
+<a href="{{item.Link}}" target="_blank"> {{ item.Naslov }}</a>
+
+    <hr>
+{% endfor %}
+
+</div> #}
+<div class="home">
+    <div class="home--part">
+        <div class="home--part-istaknuta-akcija">
+                {% set IstaknutaAkcija =  fetch('IstaknutaAkcija') %}
+                {# <img style="height:335px; width: 100%;" src="image.php/?id={{ IstaknutaAkcija.Slika1 }}"> #}
+                <div style="background-image: url('image.php/?id={{IstaknutaAkcija.Slika1}}'); background-size: cover;
+                background-repeat: no-repeat;     background-position: center; height: 335px;"></div>
+                <div class="title">{{ IstaknutaAkcija.Naslov }}</div> 
+                <div class="text">{{IstaknutaAkcija.Text | raw}}  </div>
+                <div class="more">Vidi ceo tekst</div>
+            
+        </div>
+        <div class="home--part-2">
+                <div class="suzi-akcije"> SUZI Akcije</div>
+                <div class="overflow">
+                        {% for item in fetch('Akcije') %}
+                        <div class="naslov">{{ item.Naslov }}</div> 
+                        {% endfor %}
+                </div>
+        </div>
+    </div>
+    <div class="home--part">
+        <div class="home--part--vesti">
+            <div>SUZI Vesti</div>
+            <div>
+                    {% for vesti_suzi in fetch('Vesti_suzi') %}
+                    <div class="naslov">{{ vesti_suzi.Naslov }}</div> 
+                    {% if vest.Slika %}
+                    <img src="image.php/?id={{ vesti_suzi.Slika }}">
+                    {% endif %}
+                    {% endfor %}
+            </div>
+            <a href= "vesti">Sva SUZI obaveštenja...</a>
+        </div>
+        <div class="home--part--vesti">
+                <div>Vesti iz sveta</div>
+                <div></div>
+                <a href= "vesti">Sve vesti iz sveta...</a>
+        </div>
+        <div class="home--part--vesti">
+                <div>Suzi prikazi</div>
+                <div></div>
+                <a href= "vesti">Svi prikazi...</a>
+        </div>
+    </div>
+    <div class="home--part"> 
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+
+{% endblock %}
+

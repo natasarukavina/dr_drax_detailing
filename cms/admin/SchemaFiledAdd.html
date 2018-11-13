@@ -49,7 +49,7 @@
         {{#if row.field_type=='DROPDOWN' || row.field_type=='MULTISELECT' }}
         <div col='1/1'>
             <label style="width:14em">Lookup table</label>
-            <Select style="display: inline-block; width:calc(99% - 14em);" url="?query=cms_tables_list_get" value={{row.lookup_table}} labelf="name" valuef="name" >
+            <Select style="display: inline-block; width:calc(99% - 14em);" url="?query=_cms_tables_list_get" value={{row.lookup_table}} labelf="name" valuef="name" >
                 <option disabled selected value="" >Pick</option>
             </Select>
         </div>

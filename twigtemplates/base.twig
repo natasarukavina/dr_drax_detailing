@@ -1,14 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>SUZI</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bare-css@2.0.3/css/bare.min.css">
+  {# <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> #}
+  <link rel="stylesheet" type="text/css" href="styles/style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  {# <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> #}
 </head>
 <body>
-<section>
-    {% block content %}{% endblock %}
-</section>
+
+    <div class="head">
+        <div class="head--logo">
+            <div class="head--logo-slika">
+                <img src="images/suzi.png" alt="logo">
+            </div>
+            <div class="head--logo-text">
+                <p style="color: #ff0000;">Srpsko udruženje za zemljotresno inženjerstvo</br>
+                Serbian Association for Earthquake Engineering</p>
+                <p style="font-weight: bold;">Member of IAEE</p>
+            </div>
+        </div>
+        <div class="head--meni">
+            <a href="index" class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">O nama</a>
+            <a href="akcije" class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
+            <a href="vesti" class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
+            <a href="#" class="head--meni-title">Komisije</a>
+            <a href="#" class="head--meni-title">Publikacije</a>
+            <a href="#" class="head--meni-title">Članovi</a>
+            <a href="#" class="head--meni-title">Kontakt</a>
+        </div>
+    </div>
+
+{% block content %}{% endblock %}
+
+    <div class="footer">
+        <div class="footer--suzi">2018 SUZI</div>
+        <div class="footer--suzi">Sponzori SUZI</div>
+        <div class="footer--suzi" style="border-right: none;">Prijatelji SUZI</div>
+        <div class="footer--icons">
+            <a href="#"><img src="images/Facebook.svg"></a>
+            <a href="#"><img src="images/Linkedin.svg"></a>
+            <a href="#"><img src="images/Twitter.svg"></a>
+        </div>
+    </div>
 </body>
 </html>
