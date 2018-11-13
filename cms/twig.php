@@ -3,10 +3,25 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include("engine.php");
 require_once 'vendor/autoload.php';
+
+function getBaseUrl() 
+{
+    // output: /myproject/index.php
+    $currentPath = $_SERVER['PHP_SELF']; 
+    // output: Array ( [dirname] => /myproject [basename] => index.php [extension] => php [filename] => index ) 
+    $pathInfo = pathinfo($currentPath);     
+    // output: localhost
+    $hostName = $_SERVER['HTTP_HOST']; 
+    // output: http://
+    $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
+    // return: http://localhost/myproject/
+    return $protocol.$hostName. dirname($pathInfo['dirname']);
+}
 //$templates_assoc = fetch_twig_templates();
 //print_r($templates_assoc);
 // todo: 404 if req name not in templates_assoc
 //$loader = new Twig_Loader_Array( $templates_assoc);
+
 $loader = new Twig_Loader_Filesystem('../twigtemplates');
 $twig = new Twig_Environment($loader, array(
     'cache' => 'twigcache',
@@ -28,8 +43,9 @@ foreach($kpath as $key) {
 }
 
 $twig->addGlobal('_GET', $_GET);
-
 $twig->addGlobal('_POST', $_POST);// todo add SESSION var
+$twig->addGlobal('_BASE', getBaseUrl());
+
 //$template = $twig->load(isset($_GET['twig_file_name'])?$_GET['twig_file_name'].'.twig':'index.twig');
 
 //$dogs = fetch('Projekat') ;

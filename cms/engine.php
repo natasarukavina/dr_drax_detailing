@@ -17,21 +17,23 @@
     $db->sqliteCreateCollation('NATURAL_CMP', 'strnatcmp');  // !!! UNDOCUMENTED PDO FUNCTION
     $db->sqliteCreateCollation('SR_LATIN_CMP', 'SR_LATIN_CMP');  // !!! UNDOCUMENTED PDO FUNCTION
 
+    $coll = null;
+    if(function_exists('collator_create')){
+        $coll = collator_create( 'sr_Latn_RS' ); // en_US
+    }
 
-    //$coll = collator_create( 'sr_Latn_RS' ); // en_US
     function SR_LATIN_CMP($s1, $s2){
-        return strcmp($s1, $s2);
-        //global $coll;     
-        //return collator_compare( $coll, $s1, $s2 );
+        global $coll;     
+        if (is_null($coll))
+            return strcmp($s1, $s2);
+        else
+            return collator_compare( $coll, $s1, $s2 );
     }
 
     function explode_by_index($string, $index){
         $arr = explode(",", $string);
         return $arr[$index];
     }
-
-    //$result = $db->query('SELECT "keywords, kv, ..." as keywords, "opizzz" as description ')->fetchAll(PDO::FETCH_ASSOC);
-    //$SITE = reset($result);
     
     function remove_extra_params($sql, $in_params){
         $res = array();
