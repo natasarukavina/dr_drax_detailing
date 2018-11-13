@@ -109,6 +109,11 @@
   line-height: 1.71;
   color: #000000;
 }
+.dates {
+  font-size: 14px;
+  line-height: 24px;
+  color: #9b9b9b;
+}
 .link {
   text-decoration: none;
   font-size: 14px;
@@ -210,4 +215,7 @@
   padding: 20px 0;
   text-decoration: none;
   cursor: pointer;
+}
+.vesti {
+  display: flex;
 }
