@@ -93,7 +93,7 @@
   justify-content: space-between;
 }
 .home--part-istaknuta-akcija {
-  width: 63%;
+  width: 66%;
   border-bottom: 2px solid #d0d0d0;
 }
 .home--part-istaknuta-akcija .title {
@@ -117,7 +117,7 @@
   padding: 20px 0;
 }
 .home--part-2 {
-  width: 32%;
+  width: 30%;
   border-bottom: 2px solid #d0d0d0;
   display: flex;
   flex-direction: column;
@@ -145,4 +145,12 @@
 .home--part--vesti {
   width: 33%;
   align-items: center;
+  margin: 60px 0;
+}
+.home--part--vesti--title {
+  font-size: 24px;
+  font-weight: 300;
+  color: #f92525;
+  padding-bottom: 20px;
+  border-bottom: 1.5px solid #000000;
 }
