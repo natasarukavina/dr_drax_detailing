@@ -69,3 +69,43 @@
     }
   }
 }
+.vest{
+  min-height: calc(~"100vh - 100px - 65px");
+  // display: flex;
+
+  // justify-content: space-between;
+  padding: 4% 90px;
+  &--title {
+    width: 65%;
+    height: 35px;
+    // border-bottom: 1px solid @black;
+  }
+  &--container {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 2%;
+    &-title {
+      width: 100%;
+    }
+    &-imgs {
+      display: flex;
+      height: 350px;
+      justify-content: space-between;
+      align-items: center;
+      img {
+        height: 300px;
+        width: 400px;
+        padding-top: 2%;
+      }
+    }
+    &-text {
+      width: 100%;
+      padding: 2% 0px;
+      p{
+        margin-top: 22px;
+      }
+    }
+  }
+}
