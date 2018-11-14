@@ -3,6 +3,16 @@
   padding: 0;
   font-family: 'Raleway', sans-serif;
 }
+p {
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
 body {
   min-height: 100vh;
   display: flex;
@@ -58,16 +68,27 @@ body {
   margin: 0;
 }
 .head--meni {
+  height: 100%;
+  align-items: center;
   display: flex;
   flex: 1;
   justify-content: space-evenly;
   padding-left: 10%;
 }
 .head--meni-title {
+  height: 100%;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 13px;
   font-weight: bold;
   color: #000000;
   text-decoration: none;
+}
+.active {
+  color: #f92525;
+  border-bottom: 2.5px solid #f92525;
 }
 .footer {
   height: 65px;
@@ -109,7 +130,7 @@ body {
   line-height: 1.71;
   color: #000000;
 }
-.sub_titles link {
+.sub_titles a {
   font-size: 14px;
   font-weight: normal;
   line-height: 1.71;
@@ -222,7 +243,6 @@ body {
   text-decoration: none;
   cursor: pointer;
 }
-<<<<<<< HEAD
 .oNama {
   height: 100%;
   display: flex;
@@ -262,8 +282,108 @@ body {
   font-weight: bold;
   color: #000000;
 }
+<<<<<<< HEAD
+.akcije {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 285px);
+  padding: 60px 90px;
+}
+.akcije--left {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+}
+.akcije--left--suzi {
+  width: 80%;
+  padding: 25px 0;
+  border-bottom: 1px solid #000000;
+}
+.akcije--left--naslov {
+  width: 90%;
+  padding: 30px 0;
+  border-bottom: 2px solid #d0d0d0;
+}
+.akcije--left--naslov:last-child {
+  border-bottom: none;
+}
+.akcije--right {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #979797;
+}
+.clicked {
+  color: #f92525;
+}
 =======
+
 >>>>>>> master
 .vesti {
+  min-height: calc(100vh - 100px - 65px);
   display: flex;
+  justify-content: space-between;
+  padding: 4% 90px;
+}
+.vesti--suzi {
+  width: 30%;
+}
+.vesti--suzi-naslov {
+  width: 100%;
+  height: 35px;
+  border-bottom: 1px solid #000000;
+}
+.vesti--suzi-vest {
+  width: 100%;
+  padding: 25px 0px 5px 0px;
+  border-bottom: 1px solid #d0d0d0;
+}
+.vesti--suzi-vest--link {
+  width: 100%;
+}
+.vesti--suzi-vest--datum {
+  width: 100%;
+  padding: 6px 0px;
+}
+.vesti--svet {
+  width: 30%;
+}
+.vesti--svet-naslov {
+  width: 100%;
+  height: 35px;
+  border-bottom: 1px solid #000000;
+}
+.vesti--svet-vest {
+  border-bottom: 1px solid #d0d0d0;
+  padding: 25px 0px 3px 0px;
+}
+.vesti--svet-vest--naslov {
+  width: 100%;
+}
+.vesti--svet-vest--image {
+  padding-top: 25px;
+}
+.vesti--svet-vest--datum {
+  padding: 6px 0px;
+}
+.vesti--prikazi {
+  width: 30%;
+}
+.vesti--prikazi-naslov {
+  width: 100%;
+  height: 35px;
+  border-bottom: 1px solid #000000;
+}
+.vesti--prikazi-vest {
+  padding: 25px 0px 5px 0px;
+  border-bottom: 1px solid #d0d0d0;
+}
+.vesti--prikazi-vest--naslov {
+  width: 100%;
+}
+.vesti--prikazi-vest--image {
+  padding-top: 25px;
+}
+.vesti--prikazi-vest--datum {
+  padding: 6px 0px;
 }

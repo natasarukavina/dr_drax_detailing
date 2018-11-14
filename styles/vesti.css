@@ -15,7 +15,7 @@
   line-height: 1.71;
   color: #000000;
 }
-.sub_titles link {
+.sub_titles a {
   font-size: 14px;
   font-weight: normal;
   line-height: 1.71;
@@ -37,5 +37,70 @@
   padding-top: 25px;
 }
 .vesti {
+  min-height: calc(100vh - 100px - 65px);
   display: flex;
+  justify-content: space-between;
+  padding: 4% 90px;
+}
+.vesti--suzi {
+  width: 30%;
+}
+.vesti--suzi-naslov {
+  width: 100%;
+  height: 35px;
+  border-bottom: 1px solid #000000;
+}
+.vesti--suzi-vest {
+  width: 100%;
+  padding: 25px 0px 5px 0px;
+  border-bottom: 1px solid #d0d0d0;
+}
+.vesti--suzi-vest--link {
+  width: 100%;
+}
+.vesti--suzi-vest--datum {
+  width: 100%;
+  padding: 6px 0px;
+}
+.vesti--svet {
+  width: 30%;
+}
+.vesti--svet-naslov {
+  width: 100%;
+  height: 35px;
+  border-bottom: 1px solid #000000;
+}
+.vesti--svet-vest {
+  border-bottom: 1px solid #d0d0d0;
+  padding: 25px 0px 3px 0px;
+}
+.vesti--svet-vest--naslov {
+  width: 100%;
+}
+.vesti--svet-vest--image {
+  padding-top: 25px;
+}
+.vesti--svet-vest--datum {
+  padding: 6px 0px;
+}
+.vesti--prikazi {
+  width: 30%;
+}
+.vesti--prikazi-naslov {
+  width: 100%;
+  height: 35px;
+  border-bottom: 1px solid #000000;
+}
+.vesti--prikazi-vest {
+  padding: 25px 0px 5px 0px;
+  border-bottom: 1px solid #d0d0d0;
+}
+.vesti--prikazi-vest--naslov {
+  width: 100%;
+}
+.vesti--prikazi-vest--image {
+  padding-top: 25px;
+}
+.vesti--prikazi-vest--datum {
+  padding: 6px 0px;
 }
