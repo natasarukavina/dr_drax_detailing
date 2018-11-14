@@ -1,14 +1,71 @@
 @import 'variables';
 
 .vesti {
+  min-height: calc(~"100vh - 100px - 65px");
   display: flex;
+  justify-content: space-between;
+  padding: 4% 90px;
   &--suzi {
-
+    width: 30%;
+    &-naslov {
+      width: 100%;
+      height: 35px;
+      border-bottom: 1px solid @black;
+    }
+    &-vest {
+      width: 100%;
+      padding: 25px 0px 5px 0px;
+      border-bottom: 1px solid @gray-light;
+      &--link {
+        width: 100%;
+      }
+      &--datum{
+        width: 100%;
+        padding: 6px 0px;
+      }
+    }
   }
   &--svet {
-
+    width: 30%;
+    &-naslov {
+      width: 100%;
+      height: 35px;
+      border-bottom: 1px solid @black;
+    }
+    &-vest {
+      border-bottom: 1px solid @gray-light;
+      padding: 25px 0px 3px 0px;
+      &--naslov{
+        width: 100%;
+        // height: 46px;
+      }
+      &--image {
+        padding-top: 25px;
+      }
+      &--datum {
+        padding: 6px 0px;
+      }
+    }
   }
-  &--prkazi {
-
+  &--prikazi {
+    width: 30%;
+    &-naslov {
+      width: 100%;
+      height: 35px;
+      border-bottom: 1px solid @black;
+    }
+    &-vest {
+      padding: 25px 0px 5px 0px;
+      border-bottom: 1px solid @gray-light;
+      &--naslov{
+        width: 100%;
+      }
+      &--image {
+        padding-top: 25px;
+      }
+      &--datum {
+        padding: 6px 0px;
+      }
+    }
   }
 }
