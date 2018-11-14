@@ -282,7 +282,6 @@ body {
   font-weight: bold;
   color: #000000;
 }
-<<<<<<< HEAD
 .akcije {
   display: flex;
   width: 100%;
@@ -316,9 +315,6 @@ body {
 .clicked {
   color: #f92525;
 }
-=======
-
->>>>>>> master
 .vesti {
   min-height: calc(100vh - 100px - 65px);
   display: flex;
