@@ -8,18 +8,14 @@
             <div>
                 {% set tip = _GET['tip']?_GET['tip']:'1'%}
                     {% for item in fetch('Akcije') %}
-                            <div class="sub_titles akcije--left--naslov {{(item.id==tip)?'clicked':''}}"><a href="akcije?tip={{item.id}}">{{ item.Naslov }}</a></div>
+                            <div class="sub_titles akcije--left--naslov"><a class="{{(item.id==tip)?'clicked':''}}" href="akcije?tip={{item.id}}">{{ item.Naslov }}</a></div>
                     {% endfor %}
             </div>
         </div>
         <div class="akcije--right">
             {% set Akcije = fetch("Akcije", { 'id':tip } )[0] %}
-            <div style="flex:2">
-            <div>{{Akcije.Slika1}}</div>
-            
-            <p>{{Akcije.Text}}</p>
-            
-            
+            <img class="akcije--right--slika" src="image.php/?id={{Akcije.Slika1}}">
+            <div class="akcije--right--text">{{Akcije.Text | raw }}</div>
 
         </div>
         </div>
