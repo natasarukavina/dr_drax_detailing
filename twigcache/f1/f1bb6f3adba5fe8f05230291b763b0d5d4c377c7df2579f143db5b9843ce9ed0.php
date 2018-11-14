@@ -53,7 +53,7 @@ class __TwigTemplate_8b4a36bc17c5aa1906182b1859cf65772e52027ba346ace55f73bb9b5ab
         // line 12
         echo twig_get_attribute($this->env, $this->source, ($context["IstaknutaAkcija"] ?? null), "Text", array());
         echo "  </div>
-                <div class=\"more\">Vidi ceo tekst</div>
+                <div class=\"more\"><a href=\"akcije\">Vidi ceo tekst...</a></div>
 
         </div>
         <div class=\"home--part-2\">
@@ -65,9 +65,11 @@ class __TwigTemplate_8b4a36bc17c5aa1906182b1859cf65772e52027ba346ace55f73bb9b5ab
         $context['_seq'] = twig_ensure_traversable(call_user_func_array($this->env->getFunction('fetch')->getCallable(), array("Akcije")));
         foreach ($context['_seq'] as $context["_key"] => $context["item"]) {
             // line 20
-            echo "                        <div class=\"naslov\">";
+            echo "                        <div class=\"naslov\"><a href=\"akcije?tip=";
+            echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["item"], "id", array()), "html", null, true);
+            echo "\">";
             echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["item"], "Naslov", array()), "html", null, true);
-            echo "</div>
+            echo "</a></div>
                         ";
         }
         $_parent = $context['_parent'];
@@ -288,7 +290,7 @@ class __TwigTemplate_8b4a36bc17c5aa1906182b1859cf65772e52027ba346ace55f73bb9b5ab
 
     public function getDebugInfo()
     {
-        return array (  270 => 104,  259 => 101,  255 => 100,  252 => 99,  248 => 98,  240 => 92,  233 => 90,  227 => 88,  225 => 87,  221 => 86,  218 => 85,  214 => 84,  206 => 78,  197 => 75,  194 => 74,  190 => 73,  180 => 65,  173 => 63,  167 => 61,  165 => 60,  161 => 59,  158 => 58,  154 => 57,  146 => 51,  139 => 49,  133 => 47,  131 => 46,  127 => 45,  124 => 44,  120 => 43,  112 => 37,  105 => 35,  99 => 33,  97 => 32,  93 => 31,  90 => 30,  86 => 29,  77 => 22,  68 => 20,  64 => 19,  54 => 12,  50 => 11,  44 => 9,  42 => 8,  40 => 7,  35 => 4,  32 => 3,  15 => 1,);
+        return array (  272 => 104,  261 => 101,  257 => 100,  254 => 99,  250 => 98,  242 => 92,  235 => 90,  229 => 88,  227 => 87,  223 => 86,  220 => 85,  216 => 84,  208 => 78,  199 => 75,  196 => 74,  192 => 73,  182 => 65,  175 => 63,  169 => 61,  167 => 60,  163 => 59,  160 => 58,  156 => 57,  148 => 51,  141 => 49,  135 => 47,  133 => 46,  129 => 45,  126 => 44,  122 => 43,  114 => 37,  107 => 35,  101 => 33,  99 => 32,  95 => 31,  92 => 30,  88 => 29,  79 => 22,  68 => 20,  64 => 19,  54 => 12,  50 => 11,  44 => 9,  42 => 8,  40 => 7,  35 => 4,  32 => 3,  15 => 1,);
     }
 
     public function getSourceContext()

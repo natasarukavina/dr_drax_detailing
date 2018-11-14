@@ -41,56 +41,47 @@ class __TwigTemplate_d87ee8f8e77a14667d63843e1b6390da96cc921cda309edfe6f9e1d74f2
 <body>
 
     <div class=\"head\">
-        <div class=\"head--logo\">
-            <div class=\"head--logo-slika\">
-                <a href=\"index\"><img src=\"images/suzi.png\" alt=\"logo\"></a>
-            </div>
-            <div class=\"head--logo-text\">
-                <p style=\"color: #ff0000;\">Srpsko udruženje za zemljotresno inženjerstvo</br>
-                Serbian Association for Earthquake Engineering</p>
-                <p style=\"font-weight: bold;\">Member of IAEE</p>
-            </div>
-        </div>
+        <a style=\"margin-top: 10px;\" href=\"index\"><img src=\"images/suzi logo-2.svg\" alt=\"logo\"></a>
         <div class=\"head--meni\">
 
             <a href=\"o_nama\"         class=\"head--meni-title ";
-        // line 28
+        // line 19
         if ((twig_lower_filter($this->env, (($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5 = ($context["_GET"] ?? null)) && is_array($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5) || $__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5 instanceof ArrayAccess ? ($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5["twig_file_name"] ?? null) : null)) == "o_nama")) {
             echo " active ";
         }
         echo "\">O nama</a>
             <a href=\"akcije\"        class=\"head--meni-title ";
-        // line 29
+        // line 20
         if ((twig_lower_filter($this->env, (($__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a = ($context["_GET"] ?? null)) && is_array($__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a) || $__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a instanceof ArrayAccess ? ($__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a["twig_file_name"] ?? null) : null)) == "akcije")) {
             echo " active ";
         }
         echo "\">Akcije</a>
             <a href=\"vesti\"         class=\"head--meni-title ";
-        // line 30
+        // line 21
         if ((twig_lower_filter($this->env, (($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57 = ($context["_GET"] ?? null)) && is_array($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57) || $__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57 instanceof ArrayAccess ? ($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57["twig_file_name"] ?? null) : null)) == "vesti")) {
             echo " active ";
         }
         echo "\">Vesti</a>
             <a href=\"komisije\"      class=\"head--meni-title ";
-        // line 31
+        // line 22
         if ((twig_lower_filter($this->env, (($__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9 = ($context["_GET"] ?? null)) && is_array($__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9) || $__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9 instanceof ArrayAccess ? ($__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9["twig_file_name"] ?? null) : null)) == "komisije")) {
             echo " active ";
         }
         echo "\">Komisije</a>
             <a href=\"publikacije\"   class=\"head--meni-title ";
-        // line 32
+        // line 23
         if ((twig_lower_filter($this->env, (($__internal_add9db1f328aaed12ef1a33890510da978cc9cf3e50f6769d368473a9c90c217 = ($context["_GET"] ?? null)) && is_array($__internal_add9db1f328aaed12ef1a33890510da978cc9cf3e50f6769d368473a9c90c217) || $__internal_add9db1f328aaed12ef1a33890510da978cc9cf3e50f6769d368473a9c90c217 instanceof ArrayAccess ? ($__internal_add9db1f328aaed12ef1a33890510da978cc9cf3e50f6769d368473a9c90c217["twig_file_name"] ?? null) : null)) == "publikacije")) {
             echo " active ";
         }
         echo "\">Publikacije</a>
             <a href=\"clanovi\"       class=\"head--meni-title ";
-        // line 33
+        // line 24
         if ((twig_lower_filter($this->env, (($__internal_128c19eb75d89ae9acc1294da2e091b433005202cb9b9351ea0c5dd5f69ee105 = ($context["_GET"] ?? null)) && is_array($__internal_128c19eb75d89ae9acc1294da2e091b433005202cb9b9351ea0c5dd5f69ee105) || $__internal_128c19eb75d89ae9acc1294da2e091b433005202cb9b9351ea0c5dd5f69ee105 instanceof ArrayAccess ? ($__internal_128c19eb75d89ae9acc1294da2e091b433005202cb9b9351ea0c5dd5f69ee105["twig_file_name"] ?? null) : null)) == "clanovi")) {
             echo " active ";
         }
         echo "\">Članovi</a>
             <a href=\"kontakt\"       class=\"head--meni-title ";
-        // line 34
+        // line 25
         if ((twig_lower_filter($this->env, (($__internal_921de08f973aabd87ecb31654784e2efda7404f12bd27e8e56991608c76e7779 = ($context["_GET"] ?? null)) && is_array($__internal_921de08f973aabd87ecb31654784e2efda7404f12bd27e8e56991608c76e7779) || $__internal_921de08f973aabd87ecb31654784e2efda7404f12bd27e8e56991608c76e7779 instanceof ArrayAccess ? ($__internal_921de08f973aabd87ecb31654784e2efda7404f12bd27e8e56991608c76e7779["twig_file_name"] ?? null) : null)) == "kontakt")) {
             echo " active ";
         }
@@ -100,9 +91,9 @@ class __TwigTemplate_d87ee8f8e77a14667d63843e1b6390da96cc921cda309edfe6f9e1d74f2
     </div>
 
 ";
-        // line 39
+        // line 30
         $this->displayBlock('content', $context, $blocks);
-        // line 40
+        // line 31
         echo "
     <div class=\"footer\">
         <div class=\"footer--suzi\">2018 SUZI</div>
@@ -119,7 +110,7 @@ class __TwigTemplate_d87ee8f8e77a14667d63843e1b6390da96cc921cda309edfe6f9e1d74f2
 ";
     }
 
-    // line 39
+    // line 30
     public function block_content($context, array $blocks = array())
     {
     }
@@ -136,7 +127,7 @@ class __TwigTemplate_d87ee8f8e77a14667d63843e1b6390da96cc921cda309edfe6f9e1d74f2
 
     public function getDebugInfo()
     {
-        return array (  123 => 39,  106 => 40,  104 => 39,  94 => 34,  88 => 33,  82 => 32,  76 => 31,  70 => 30,  64 => 29,  58 => 28,  40 => 12,  36 => 9,  29 => 4,  24 => 1,);
+        return array (  114 => 30,  97 => 31,  95 => 30,  85 => 25,  79 => 24,  73 => 23,  67 => 22,  61 => 21,  55 => 20,  49 => 19,  40 => 12,  36 => 9,  29 => 4,  24 => 1,);
     }
 
     public function getSourceContext()
