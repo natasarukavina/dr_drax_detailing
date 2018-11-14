@@ -1,0 +1,38 @@
+{% extends "base.twig" %}
+
+{% block content %}
+  {% set Publikacije_Suzi = fetch("Publikacije_Suzi") %}
+  {% set Publikacije_Ostale = fetch("Publikacije_Ostale") %}
+  {% set eGlasnik = fetch("eGlasnik") %}
+
+  <div class="vesti">
+    <div class="vesti--suzi">
+      <div class="vesti--suzi-naslov titles">SUZI Publikacije</div>
+      {% for suzi in Publikacije_Suzi %}
+      <div class="vesti--suzi-vest">
+        <div class="vesti--suzi-vest--link sub_titles">{{suzi.Autor}}: {{ suzi.Naziv }} , {{suzi.Izdavac}}</div>
+        <div class=""><a href='img/{{suzi.Link}}' download="{{suzi.Naziv}}" >Preuzmi publikaciju</a></div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="vesti--svet">
+      <div class="vesti--svet-naslov titles">Ostale Publikacije</div>
+      {% for svet in Publikacije_Ostale %}
+      <div class="vesti--svet-vest">
+        <div class="vesti--suzi-vest--link sub_titles">{{svet.Autor}}: {{ svet.Naziv }} , {{svet.Izdavac}}</div>
+        <div class=""><a href='img/{{svet.Link}}' download="{{svet.Naziv}}">Preuzmi publikaciju</a></div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="vesti--prikazi">
+      <div class="vesti--prikazi-naslov titles">SUZI prikazi</div>
+      {% for prikaz in eGlasnik %}
+      <div class="vesti--prikazi-vest">
+        <div class="vesti--prikazi-vest--naslov sub_titles"><a href="suzi-prikaz/?vest={{prikaz.id}}">{{ prikaz.Naslov }}</a></div>
+        <img class="vesti--prikazi-vest--image slika" src="img/{{ prikaz.Slika1 }}"></img>
+        <div class="vesti--prikazi-vest--datum dates">{{ prikaz.Datum }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
