@@ -40,25 +40,37 @@ $f = new Twig_SimpleFunction('fetch', function ($name, $params=array()) {
 $twig->addFunction($f);
 
 /* transform /filename/param1/param2/... to ['filename', 'param1', 'param2'] and assign it to $_GET */
-print_r($_SERVER);
-echo getBaseUrl() ;
-$kpath = array_filter(explode("/", $_SERVER['REDIRECT_URL']));
+//print_r($_SERVER);
+$p = parse_url($_SERVER['REQUEST_URI']);
+if (!isset($p['query'])) $p['query']='';
+if (!isset($p['path']))  $p['path']='';
+//list($path, $query) =
+$pathArr = array_filter(explode('/', $p['path']));
+//print_r( $pathArr );
+//$queryArr = array_filter(explode('&', $p['query']));
+parse_str($p['query'], $queryArr);
+//print_r( $queryArr );
+
 $index = 0;
-foreach($kpath as $key) {
-    $_GET[$index] = $key;
+foreach($pathArr as $key) {
+    $queryArr[$index] = $key;
     $index++;
 }
+
+$_GET = array_merge($_GET, $queryArr);
+$_GET['twig_file_name'] = $_GET[0];
 
 $twig->addGlobal('_GET', $_GET);
 $twig->addGlobal('_POST', $_POST);// todo add SESSION var
 $twig->addGlobal('_BASE', getBaseUrl());
+
 
 //$template = $twig->load(isset($_GET['twig_file_name'])?$_GET['twig_file_name'].'.twig':'index.twig');
 
 //$dogs = fetch('Projekat') ;
 //print_r(fetch_twig_templates());
 //$templatename = isset($_GET['twig_file_name'])?$_GET['twig_file_name']:'index'; //from db
-$templatename = isset($_GET['twig_file_name'])?$_GET['twig_file_name'].'.twig':'index.twig'; // from fs
+$templatename = isset($_GET['0'])?$_GET['0'].'.twig':'index.twig'; // from fs
 
 //echo $templatename;
 //$template = $twig->load(isset($_GET['twig_file_name'])?$_GET['twig_file_name'].'.twig':'index.twig');
