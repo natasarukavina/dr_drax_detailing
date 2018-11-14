@@ -144,7 +144,7 @@ a {
 .home {
   display: flex;
   flex-direction: column;
-  padding: 60px 90px 0;
+  padding: 4% 90px 0;
 }
 .home--part {
   height: 600px;
@@ -312,6 +312,9 @@ a {
   font-weight: 300;
   line-height: 1.69;
   color: #000000;
+}
+.akcije--right--text * {
+  font-size: initial !important;
 }
 .clicked {
   color: #f92525 !important;
