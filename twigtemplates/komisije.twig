@@ -1,7 +1,7 @@
 {% extends "base.twig" %}
 {% block content %}
 
-    {% set tip = _GET['tip']?_GET['tip']:'3' %}
+    {# {% set tip = _GET['tip']?_GET['tip']:'3' %}
     <div style="display:flex ">
         <ul style="flex:1">
             {% for item in fetch("Komisija") %}
@@ -24,7 +24,7 @@
                     <td> {{item.TipKomisije}} </td>
                     <td> {{item.TipKomisije_label}} </td>
 #}
-                    <td> {{item.Ime}} </td>
+                    {# <td> {{item.Ime}} </td>
                     <td> {{item.Period}} </td>
                     </tr>
                 {% endif %}
@@ -34,6 +34,40 @@
             <p>{{Komisija.Aktivnosti}}</p>
 
         </div>
+    </div> #}
+
+    <div class="komisije">
+        {% set tip = _GET['tip']?_GET['tip']:'3' %}
+            <div class="komisije--left">
+                    {% for item in fetch("Komisija") %}
+                    <div class="komisije--left--naslov"><a class="{{(item.id==tip)?'clicked':''}}" href="komisije?tip={{item.id}}"> {{item.Naziv}}</a></div>
+                    {% endfor %}
+            </div>
+            <div class="komisije--right">
+                {% set Komisija = fetch("Komisija", { 'id':tip } )[0] %}
+                    <div class="komisije--right--naziv">{{Komisija.Naziv}}</div>
+                    <div class="komisije--right--deo">
+                        <div class="komisije--right--deo-title">Oblast rada</div>
+                        <div class="komisije--right--deo-text">{{Komisija.Opis}}</div>
+                    </div>
+                    <div class="komisije--right--deo"> 
+                        <div class="komisije--right--deo-title">Članovi</div>
+                        <div class="komisije--right--text"> 
+                            {% for item in fetch("Clanovi_komisije") %}
+                                {% if (item.TipKomisije == tip) %}
+                                <div class="komisije--right--deo-table">
+                                    <div class="komisije--right--deo-text">{{item.Ime}}</div>
+                                    <div style="margin-left: 10px;" class="komisije--right--deo-text">{{item.Period}}</div>
+                                </div>
+                                {% endif %}
+                            {% endfor %} 
+                        </div>
+                    </div>
+                    <div class="komisije--right--deo"> 
+                        <div class="komisije--right--deo-title">Aktivnosti</div>
+                        <div class="komisije--right--deo-text">{{Komisija.Aktivnosti}}</div>
+                    </div>
+            </div>
     </div>
 
 {% endblock %}

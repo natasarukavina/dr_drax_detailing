@@ -32,6 +32,11 @@
   line-height: 22px;
   color: #000000;
 }
+.plain-text-red {
+  font-size: 13px;
+  line-height: 22px;
+  color: #ff0000;
+}
 .dates {
   font-size: 14px;
   line-height: 24px;

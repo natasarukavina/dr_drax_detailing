@@ -1,0 +1,139 @@
+.titles {
+  font-size: 24px;
+  font-weight: 300;
+  color: #f92525;
+  line-height: 28px;
+}
+.titles-2 {
+  font-size: 24px;
+  line-height: 28px;
+  color: #202124;
+}
+.sub_titles {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.71;
+  color: #000000;
+}
+.sub_titles-link {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.sub_titles a {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.plain-text {
+  font-size: 13px;
+  line-height: 22px;
+  color: #000000;
+}
+.plain-text-red {
+  font-size: 13px;
+  line-height: 22px;
+  color: #ff0000;
+}
+.dates {
+  font-size: 14px;
+  line-height: 24px;
+  color: #9b9b9b;
+}
+.link {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+}
+.slika {
+  max-width: 100%;
+  padding-top: 25px;
+}
+.clanovi {
+  min-height: calc(100vh - 100px - 65px);
+  padding: 4% 90px;
+}
+.clanovi--opis {
+  min-height: 50%;
+}
+.clanovi--opis-paragraf {
+  margin-bottom: 2%;
+}
+.clanovi--pridruzi {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #000000;
+}
+.clanovi--pridruzi-button {
+  height: 26px;
+  width: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f92525;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 14px;
+  color: #ffffff;
+}
+.clanovi--spisak {
+  min-height: 50%;
+  display: flex;
+  justify-content: space-around;
+}
+.clanovi--spisak-tip {
+  width: 30%;
+}
+.clanovi--spisak-tip--naslov {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  padding: 1px 0px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #a8a8a8;
+}
+.clanovi--spisak-tip--red {
+  font-size: 18px;
+  padding: 15px 0px;
+}
+.clanovi--spisak-tip--red a {
+  font-size: inherit;
+}
+.clanovi--spisak-telo {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+.clanovi--spisak-telo--header {
+  min-height: 120px;
+  display: flex;
+  padding: 1px 0px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #a8a8a8;
+}
+.clanovi--spisak-telo--header-naslov {
+  width: 50%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+}
+.clanovi--spisak-telo--red {
+  display: flex;
+  padding: 15px 0px;
+}
+.clanovi--spisak-telo--red-naslov {
+  width: 50%;
+  height: 120px;
+}
+.clanovi--spisak-telo--red-osoba {
+  width: 50%;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
+}

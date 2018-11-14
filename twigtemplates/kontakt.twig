@@ -1,22 +1,16 @@
 {% extends "base.twig" %}
 
 {% block content %}
-  <div>
-    <h2>Kontaktirajte nas</h2>
-    <div style="display:flex">
-        <div>
-        <p>Srpsko udruženje za zemljotresno inženjerstvo – SUZI</p>
-        <p>Bulevar Kralja Aleksandra 73, Beograd<br>
-            c/o Gradjevinski fakultet
-        </p>
-        <p> eMail: hello@suzi-saee.rs <br>
-            www.suzi-saee.rs
-        </p>
-        </div>
-    
-        <div style="flex:1; height:500px" id="mapid">
-        </div>
-    </div>    
+  <div class="kontakt" >
+    <div class="kontakt--left">
+        <div class="titles">Kontaktirajte nas</div>
+        <div class="kontakt--left--info">Srpsko udruženje za zemljotresno inženjerstvo – SUZI</div>
+        <div class="kontakt--left--info">Bulevar Kralja Aleksandra 73, Beograd<br>
+            c/o Gradjevinski fakultet</div>
+        <div class="kontakt--left--info">eMail: hello@suzi-saee.rs <br>
+            www.suzi-saee.rs</div>
+    </div>
+    <div class="kontakt--right" id="mapid"></div>
   </div>
 
 
