@@ -320,6 +320,9 @@ img {
 .akcije--right--slika {
   max-height: 450px;
 }
+.akcije--right--naslov {
+  color: #f92525;
+}
 .akcije--right--text {
   margin-top: 3%;
   font-size: 13px;
@@ -334,7 +337,7 @@ img {
   color: #f92525 !important;
 }
 .vesti {
-  min-height: calc(100vh - 100px - 65px);
+  flex: 1;
   display: flex;
   justify-content: space-between;
   padding: 4% 90px;
@@ -402,7 +405,7 @@ img {
   padding: 6px 0px;
 }
 .vest {
-  min-height: calc(100vh - 100px - 65px);
+  flex: 1;
   padding: 4% 90px;
 }
 .vest--title {

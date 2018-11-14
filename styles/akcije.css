@@ -84,6 +84,9 @@
 .akcije--right--slika {
   max-height: 450px;
 }
+.akcije--right--naslov {
+  color: #f92525;
+}
 .akcije--right--text {
   margin-top: 3%;
   font-size: 13px;
