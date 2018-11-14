@@ -1,0 +1,58 @@
+{% extends "base.twig" %}
+{% block content %}
+    <div>
+        <p>
+            Članovi SUZI su svi zainteresovani inženjeri, geolozi, seizmolozi, arhitekte i urbanisti, edukatori, istraživači, ekonomisti, sociolozi, predstavnici državnih institucija, opštinski kadrovi zaduženi za primenu propisa i gradjevinsku inspekciju, pripadnici službi za hitne intervencije u kriznim situacijama, i pripradnici ostalih struka koje zemljotresi dotiču i koji se bave uzrocima i posledicama zemljotresa.
+        </p>
+        <p>
+            Prema Statutu SUZI: Članom se postaje popunjavanjem pristupnice i prijemom od strane Upravnog odbora. Član Udruženja može biti svako lice koje prihvata ciljeve Udruženja i Statut i podnese prijavu za učlanjenje Upravnom odboru Udruženja. Svi članovi Udruženja se upisuju u evidenciju koju vodi Generalni sekretar Udruženja. Članovi Udruženja plaćaju godišnju članarinu.
+        </p>
+        <p>
+            Članovi Udruženja mogu biti:
+        </p>
+        <p>
+            1) Redovni članovi – oni koji ispunjavaju uslove iz prethodnog stava
+        </p>
+        <p>
+            2) Počasni članovi: renomirani stručnjaci koji su svojim zalaganjem dali doprinos razvoju, unapređenju, i/ili širenju zemljotresnog inženjerstva u zemlji i/ili svetu.
+            Počasne članove bira Skupština na predlog Upravnog odbora;
+        </p>
+        <p>
+            3) Mladi članovi – članovi do 35 god starosti koji nisu studenti;
+        </p>
+        <p>
+            4) Članovi studenti.
+        </p>
+    </div>
+
+
+    {% set tip = _GET['tip']?_GET['tip']:'Redovni'%}
+    <div style="display:flex ">
+        <ul>
+            {% for item in fetch("TipClana") %}
+            <li class="{{(item.Naziv==tip)?'active':''}}"><a href="clanovi?tip={{item.Naziv}}"> {{item.Naziv}}</a></li>
+            {% endfor %}
+        </ul>
+        
+        <table border=1 style="width:100%">
+        <tr>
+        <td>Ime</td>
+        <td>Mejl</td>
+<!--        <td>Grupa</td> -->
+        </tr>
+        {% for item in fetch("Clanovi") %}
+            {% if (item.Grupa_label == tip) %}
+            <tr>
+            <td> {{item.Ime}} </td>
+            <td> {{item.Mejl}} </td>
+<!--            <td> {{item.Grupa_label}} </td> -->
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
+
+    </div>
+
+
+
+{% endblock %}

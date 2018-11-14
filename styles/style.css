@@ -222,6 +222,7 @@ body {
   text-decoration: none;
   cursor: pointer;
 }
+<<<<<<< HEAD
 .oNama {
   height: 100%;
   display: flex;
@@ -261,6 +262,8 @@ body {
   font-weight: bold;
   color: #000000;
 }
+=======
+>>>>>>> master
 .vesti {
   display: flex;
 }

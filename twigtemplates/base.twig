@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <base href="{{_BASE}}">
   <title>SUZI</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,13 +24,15 @@
             </div>
         </div>
         <div class="head--meni">
-            <a href="o_nama" class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='o_nama' %} active {%endif%}">O nama</a>
-            <a href="akcije" class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
-            <a href="vesti" class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
-            <a href="#" class="head--meni-title">Komisije</a>
-            <a href="#" class="head--meni-title">Publikacije</a>
-            <a href="#" class="head--meni-title">Članovi</a>
-            <a href="#" class="head--meni-title">Kontakt</a>
+
+            <a href="index"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">O nama</a>
+            <a href="akcije"        class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
+            <a href="vesti"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
+            <a href="komisije"      class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='komisije' %} active {%endif%}">Komisije</a>
+            <a href="publikacije"   class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active {%endif%}">Publikacije</a>
+            <a href="clanovi"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active {%endif%}">Članovi</a>
+            <a href="kontakt"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active {%endif%}">Kontakt</a>
+
         </div>
     </div>
 
