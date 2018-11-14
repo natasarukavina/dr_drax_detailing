@@ -1,0 +1,20 @@
+{% extends "base.twig" %}
+
+{% block content %}
+{% set id = _GET['vest'] %}
+{% set vesti_svet = fetch("Vesti_svet", {"id": id})[0] %}
+
+<div class="vest">
+  <div class="vest--title titles">Vesti iz sveta</div>
+  <div class="vest--container">
+    <div class="vest--container-title titles-2">{{vesti_svet.Naslov}}</div>
+    <div class="vest--container-imgs">
+      <img class="" src="img/{{ vesti_svet.Slika1 }}" alt="SUZI Vest" />{% if vesti_svet.Slika2 %}<img class="" src="img/{{ vesti_svet.Slika2 }}" />{% endif %}
+    </div>
+    <div class="vest--container-text plain-text">
+      {{vesti_svet.Text | raw}}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
