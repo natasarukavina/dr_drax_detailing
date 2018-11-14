@@ -15,11 +15,26 @@
   line-height: 1.71;
   color: #000000;
 }
+.sub_titles a {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.dates {
+  font-size: 14px;
+  line-height: 24px;
+  color: #9b9b9b;
+}
 .link {
   text-decoration: none;
   font-size: 14px;
   font-weight: bold;
   color: #000000;
+}
+.slika {
+  max-width: 100%;
+  padding-top: 25px;
 }
 .home {
   display: flex;
@@ -33,7 +48,7 @@
 }
 .home--part-istaknuta-akcija {
   width: 66%;
-  border-bottom: 2px solid #d0d0d0;
+  border-bottom: 1px solid #d0d0d0;
 }
 .home--part-istaknuta-akcija .title {
   font-size: 18px;
@@ -50,7 +65,7 @@
 }
 .home--part-2 {
   width: 30%;
-  border-bottom: 2px solid #d0d0d0;
+  border-bottom: 1px solid #d0d0d0;
   display: flex;
   flex-direction: column;
 }
@@ -69,7 +84,7 @@
   color: #000000;
   padding: 40px 0;
   margin-right: 10px;
-  border-bottom: 2px solid #d0d0d0;
+  border-bottom: 1px solid #d0d0d0;
 }
 .home--part-2 .naslov:last-child {
   border-bottom: none;
@@ -101,7 +116,7 @@
   flex: 1;
 }
 .home--part2--vesti--naslovi-1 {
-  border-bottom: 2px solid #d0d0d0;
+  border-bottom: 1px solid #d0d0d0;
   padding: 25px 0;
 }
 .more {

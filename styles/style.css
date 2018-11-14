@@ -46,25 +46,6 @@ a {
   align-items: center;
   justify-content: space-between;
 }
-.head--logo {
-  display: flex;
-  align-items: center;
-}
-.head--logo-slika {
-  padding-right: 20px;
-  border-right: 1px solid #ff0000;
-}
-.head--logo-text {
-  height: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-left: 20px;
-}
-.head--logo-text p {
-  font-size: 11px;
-  line-height: 1.18;
-}
 .head--meni {
   height: 100%;
   align-items: center;
@@ -86,7 +67,7 @@ a {
 }
 .active {
   color: #f92525;
-  border-bottom: 2.5px solid #f92525;
+  border-bottom: 3px solid #f92525;
 }
 .footer {
   height: 65px;
@@ -172,7 +153,7 @@ a {
 }
 .home--part-istaknuta-akcija {
   width: 66%;
-  border-bottom: 2px solid #d0d0d0;
+  border-bottom: 1px solid #d0d0d0;
 }
 .home--part-istaknuta-akcija .title {
   font-size: 18px;
@@ -189,7 +170,7 @@ a {
 }
 .home--part-2 {
   width: 30%;
-  border-bottom: 2px solid #d0d0d0;
+  border-bottom: 1px solid #d0d0d0;
   display: flex;
   flex-direction: column;
 }
@@ -208,7 +189,7 @@ a {
   color: #000000;
   padding: 40px 0;
   margin-right: 10px;
-  border-bottom: 2px solid #d0d0d0;
+  border-bottom: 1px solid #d0d0d0;
 }
 .home--part-2 .naslov:last-child {
   border-bottom: none;
@@ -240,7 +221,7 @@ a {
   flex: 1;
 }
 .home--part2--vesti--naslovi-1 {
-  border-bottom: 2px solid #d0d0d0;
+  border-bottom: 1px solid #d0d0d0;
   padding: 25px 0;
 }
 .more {
@@ -287,6 +268,8 @@ a {
   font-weight: normal;
 }
 .oNama--2--blok-pdf {
+  display: flex;
+  align-items: center;
   font-size: 9px;
   font-weight: bold;
   color: #000000;
@@ -309,7 +292,8 @@ a {
 .akcije--left--naslov {
   width: 90%;
   padding: 30px 0;
-  border-bottom: 2px solid #d0d0d0;
+  font-weight: bold;
+  border-bottom: 1px solid #d0d0d0;
 }
 .akcije--left--naslov:last-child {
   border-bottom: none;

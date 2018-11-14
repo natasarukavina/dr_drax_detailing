@@ -71,6 +71,8 @@
   font-weight: normal;
 }
 .oNama--2--blok-pdf {
+  display: flex;
+  align-items: center;
   font-size: 9px;
   font-weight: bold;
   color: #000000;
