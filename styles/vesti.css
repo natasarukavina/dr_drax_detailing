@@ -2,6 +2,12 @@
   font-size: 24px;
   font-weight: 300;
   color: #f92525;
+  line-height: 28px;
+}
+.titles-2 {
+  font-size: 24px;
+  line-height: 28px;
+  color: #202124;
 }
 .sub_titles {
   font-size: 14px;
@@ -19,6 +25,11 @@
   font-size: 14px;
   font-weight: normal;
   line-height: 1.71;
+  color: #000000;
+}
+.plain-text {
+  font-size: 13px;
+  line-height: 22px;
   color: #000000;
 }
 .dates {
@@ -103,4 +114,40 @@
 }
 .vesti--prikazi-vest--datum {
   padding: 6px 0px;
+}
+.vest {
+  min-height: calc(100vh - 100px - 65px);
+  padding: 4% 90px;
+}
+.vest--title {
+  width: 65%;
+  height: 35px;
+}
+.vest--container {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 2%;
+}
+.vest--container-title {
+  width: 100%;
+}
+.vest--container-imgs {
+  display: flex;
+  height: 350px;
+  justify-content: space-between;
+  align-items: center;
+}
+.vest--container-imgs img {
+  height: 300px;
+  width: 400px;
+  padding-top: 2%;
+}
+.vest--container-text {
+  width: 100%;
+  padding: 2% 0px;
+}
+.vest--container-text p {
+  margin-top: 22px;
 }

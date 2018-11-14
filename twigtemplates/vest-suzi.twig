@@ -1,0 +1,20 @@
+{% extends "base.twig" %}
+
+{% block content %}
+{% set id = _GET['vest'] %}
+{% set suzi_vesti = fetch("Vesti_suzi", {"id": id})[0] %}
+
+<div class="vest">
+  <div class="vest--title titles">SUZI Vesti</div>
+  <div class="vest--container">
+    <div class="vest--container-title titles-2">{{suzi_vesti.Naslov}}</div>
+    <div class="vest--container-imgs">
+      <img class="" src="img/{{ suzi_vesti.Slika1 }}" alt="SUZI Vest" />{% if suzi_vesti.Slika2 %}<img class="" src="img/{{ suzi_vesti.Slika2 }}" />{% endif %}
+    </div>
+    <div class="vest--container-text plain-text">
+      {{suzi_vesti.Text | raw}}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

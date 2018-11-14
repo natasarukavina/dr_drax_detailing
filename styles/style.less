@@ -8,7 +8,7 @@ body{
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    // justify-content: space-between;
 }
 
 p {
@@ -26,22 +26,22 @@ a {
 @font-face{
     font-family: Raleway;
     font-weight: bold;
-    src: url('fonts/Raleway/Raleway-Bold.ttf');
+    src: url('../fonts/Raleway/Raleway-Bold.ttf');
 }
 @font-face{
     font-family: Raleway;
     font-weight: 500;
-    src: url('fonts/Raleway/Raleway-Medium.ttf');
+    src: url('../fonts/Raleway/Raleway-Medium.ttf');
 }
 @font-face{
     font-family: Raleway;
     font-weight: 300;
-    src: url('fonts/Raleway/Raleway-Light.ttf');
+    src: url('../fonts/Raleway/Raleway-Light.ttf');
 }
 @font-face{
     font-family: Raleway;
     font-weight: normal;
-    src: url('fonts/Raleway/Raleway-Regular.ttf');
+    src: url('../fonts/Raleway/Raleway-Regular.ttf');
 }
 
 .head{
@@ -53,26 +53,6 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    &--logo{
-        display: flex;
-        align-items: center;
-        &-slika{
-            padding-right: 20px;
-            border-right: 1px solid @red-logo;
-        }
-        &-text{
-            height: 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            margin-left: 20px;
-            p{
-                font-size: 11px;
-                line-height: 1.18;
-                margin: 0; //zbog bootstrap-a
-            }
-        }
-    }
     &--meni{
         height: 100%;
         align-items: center;
@@ -96,7 +76,7 @@ a {
 
 .active{
     color: @red;
-    border-bottom: 2.5px solid @red;
+    border-bottom: 3px solid @red;
 }
 
 .footer{

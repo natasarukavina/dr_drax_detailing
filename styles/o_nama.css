@@ -15,7 +15,7 @@
   line-height: 1.71;
   color: #000000;
 }
-.sub_titles link {
+.sub_titles a {
   font-size: 14px;
   font-weight: normal;
   line-height: 1.71;
@@ -37,10 +37,10 @@
   padding-top: 25px;
 }
 .oNama {
-  height: 100%;
   display: flex;
+  flex: 1;
   flex-direction: column;
-  padding: 70px 90px;
+  padding: 4% 90px;
 }
 .oNama--1 {
   border-bottom: 1px solid #000000;
@@ -71,6 +71,8 @@
   font-weight: normal;
 }
 .oNama--2--blok-pdf {
+  display: flex;
+  align-items: center;
   font-size: 9px;
   font-weight: bold;
   color: #000000;

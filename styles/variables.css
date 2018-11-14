@@ -2,6 +2,12 @@
   font-size: 24px;
   font-weight: 300;
   color: #f92525;
+  line-height: 28px;
+}
+.titles-2 {
+  font-size: 24px;
+  line-height: 28px;
+  color: #202124;
 }
 .sub_titles {
   font-size: 14px;
@@ -19,6 +25,11 @@
   font-size: 14px;
   font-weight: normal;
   line-height: 1.71;
+  color: #000000;
+}
+.plain-text {
+  font-size: 13px;
+  line-height: 22px;
   color: #000000;
 }
 .dates {
