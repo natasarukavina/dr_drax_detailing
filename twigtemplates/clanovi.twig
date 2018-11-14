@@ -1,6 +1,7 @@
 {% extends "base.twig" %}
 {% block content %}
-    <div>
+  <div class="clanovi">
+    <div class="clanovi-opis">
         <p>
             Članovi SUZI su svi zainteresovani inženjeri, geolozi, seizmolozi, arhitekte i urbanisti, edukatori, istraživači, ekonomisti, sociolozi, predstavnici državnih institucija, opštinski kadrovi zaduženi za primenu propisa i gradjevinsku inspekciju, pripadnici službi za hitne intervencije u kriznim situacijama, i pripradnici ostalih struka koje zemljotresi dotiču i koji se bave uzrocima i posledicama zemljotresa.
         </p>
@@ -27,13 +28,13 @@
 
 
     {% set tip = _GET['tip']?_GET['tip']:'Redovni'%}
-    <div style="display:flex ">
+    <div class="clanovi-spisak" style="display:flex ">
         <ul>
             {% for item in fetch("TipClana") %}
             <li class="{{(item.Naziv==tip)?'active':''}}"><a href="clanovi?tip={{item.Naziv}}"> {{item.Naziv}}</a></li>
             {% endfor %}
         </ul>
-        
+
         <table style="width:100%">
         <tr>
         <td>Ime</td>
@@ -52,7 +53,7 @@
         </table>
 
     </div>
-
+  </div>
 
 
 {% endblock %}
