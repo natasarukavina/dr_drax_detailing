@@ -40,6 +40,8 @@ $f = new Twig_SimpleFunction('fetch', function ($name, $params=array()) {
 $twig->addFunction($f);
 
 /* transform /filename/param1/param2/... to ['filename', 'param1', 'param2'] and assign it to $_GET */
+print_r($_SERVER);
+echo getBaseUrl() ;
 $kpath = array_filter(explode("/", $_SERVER['REDIRECT_URL']));
 $index = 0;
 foreach($kpath as $key) {
