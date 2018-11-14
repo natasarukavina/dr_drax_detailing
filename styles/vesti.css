@@ -32,6 +32,11 @@
   line-height: 22px;
   color: #000000;
 }
+.plain-text-red {
+  font-size: 13px;
+  line-height: 22px;
+  color: #ff0000;
+}
 .dates {
   font-size: 14px;
   line-height: 24px;
@@ -48,7 +53,7 @@
   padding-top: 25px;
 }
 .vesti {
-  min-height: calc(100vh - 100px - 65px);
+  flex: 1;
   display: flex;
   justify-content: space-between;
   padding: 4% 90px;
@@ -116,7 +121,7 @@
   padding: 6px 0px;
 }
 .vest {
-  min-height: calc(100vh - 100px - 65px);
+  flex: 1;
   padding: 4% 90px;
 }
 .vest--title {

@@ -72,11 +72,11 @@
             <div class="home--part2--vesti--naslovi">
                     {% for suzi_obavestenja in fetch('Obavestenja') %}
                     <div class="home--part2--vesti--naslovi-1">
-                        <div class="sub_titles">{{ suzi_obavestenja.Naslov }}</div>
+                        <a href="obavestenja?tip={{suzi_obavestenja.id}}"><div class="sub_titles">{{ suzi_obavestenja.Naslov }}</div></a>
                     </div>
                     {% endfor %}
             </div>
-            <a class="more" href= "#">Sva SUZI obaveštenja...</a>
+            <a class="more" href= "obavestenja">Sva SUZI obaveštenja...</a>
         </div>
         <div class="home--part2--vesti">
                 <div class="home--part2--vesti--title titles">SUZI eGlasnik</div>
