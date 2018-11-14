@@ -58,7 +58,7 @@ foreach($pathArr as $key) {
 }
 
 $_GET = array_merge($_GET, $queryArr);
-$_GET['twig_file_name'] = $_GET[0];
+//$_GET['twig_file_name'] = $_GET[0];
 
 $twig->addGlobal('_GET', $_GET);
 $twig->addGlobal('_POST', $_POST);// todo add SESSION var
@@ -70,7 +70,7 @@ $twig->addGlobal('_BASE', getBaseUrl());
 //$dogs = fetch('Projekat') ;
 //print_r(fetch_twig_templates());
 //$templatename = isset($_GET['twig_file_name'])?$_GET['twig_file_name']:'index'; //from db
-$templatename = isset($_GET['twig_file_name'])?$_GET['twig_file_name0'].'.twig':'index.twig'; // from fs
+$templatename = isset($_GET['twig_file_name'])?$_GET['twig_file_name'].'.twig':'index.twig'; // from fs
 
 //echo $templatename;
 //$template = $twig->load(isset($_GET['twig_file_name'])?$_GET['twig_file_name'].'.twig':'index.twig');
