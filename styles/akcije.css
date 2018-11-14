@@ -54,7 +54,8 @@
 .akcije--left--naslov {
   width: 90%;
   padding: 30px 0;
-  border-bottom: 2px solid #d0d0d0;
+  font-weight: bold;
+  border-bottom: 1px solid #d0d0d0;
 }
 .akcije--left--naslov:last-child {
   border-bottom: none;
