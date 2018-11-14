@@ -1,0 +1,77 @@
+.titles {
+  font-size: 24px;
+  font-weight: 300;
+  color: #f92525;
+}
+.sub_titles {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.71;
+  color: #000000;
+}
+.sub_titles-link {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.sub_titles link {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.dates {
+  font-size: 14px;
+  line-height: 24px;
+  color: #9b9b9b;
+}
+.link {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+}
+.slika {
+  max-width: 100%;
+  padding-top: 25px;
+}
+.oNama {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 70px 90px;
+}
+.oNama--1 {
+  border-bottom: 1px solid #000000;
+}
+.oNama--1--text {
+  width: 80%;
+  font-size: 13px;
+  font-weight: normal;
+  color: #000000;
+  line-height: 1.85;
+  padding-bottom: 90px;
+}
+.oNama--2 {
+  display: flex;
+  flex-direction: column;
+  padding: 90px 0;
+}
+.oNama--2--blok {
+  display: flex;
+  padding: 20px 0;
+  width: 25%;
+  justify-content: space-between;
+  align-items: center;
+}
+.oNama--2--blok-naslov {
+  color: #000000;
+  font-size: 14px;
+  font-weight: normal;
+}
+.oNama--2--blok-pdf {
+  font-size: 9px;
+  font-weight: bold;
+  color: #000000;
+}
