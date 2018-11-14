@@ -1,1 +1,88 @@
 @import "variables";
+
+.clanovi {
+  min-height: calc(~"100vh - 100px - 65px");
+  padding: 4% 90px;
+  &--opis {
+    min-height: 50%;
+    &-paragraf {
+      margin-bottom: 2%;
+    }
+  }
+  &--pridruzi {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid @black;
+    &-button {
+      height: 26px;
+      width: 90px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: @red;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: 500;
+      line-height: 14px;
+      color: @white;
+    }
+  }
+  &--spisak {
+    min-height: 50%;
+    display: flex;
+    justify-content: space-around;
+    &-tip {
+      width: 30%;
+      &--naslov {
+        height: 120px;
+        display: flex;
+        align-items: center;
+        padding: 1px 0px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid @gray-border;
+      }
+      &--red {
+        font-size: 18px;
+        padding: 15px 0px;
+        a {
+          font-size: inherit;
+        }
+      }
+
+    }
+    &-telo {
+      width: 70%;
+      display: flex;
+      flex-direction: column;
+      &--header {
+        min-height: 120px;
+        display: flex;
+        padding: 1px 0px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #a8a8a8;
+        &-naslov {
+          width: 50%;
+          height: 120px;
+          display: flex;
+          align-items: center;
+        }
+      }
+      &--red {
+        display: flex;
+        padding: 15px 0px;
+        &-naslov {
+          width: 50%;
+          height: 120px;
+        }
+        &-osoba {
+          width: 50%;
+          font-size: 18px;
+          line-height: 24px;
+          color: @black;
+        }
+      }
+    }
+  }
+}
