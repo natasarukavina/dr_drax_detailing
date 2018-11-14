@@ -1,0 +1,71 @@
+.titles {
+  font-size: 24px;
+  font-weight: 300;
+  color: #f92525;
+}
+.sub_titles {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.71;
+  color: #000000;
+}
+.sub_titles-link {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.sub_titles link {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.dates {
+  font-size: 14px;
+  line-height: 24px;
+  color: #9b9b9b;
+}
+.link {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+}
+.slika {
+  max-width: 100%;
+  padding-top: 25px;
+}
+.akcije {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 285px);
+  padding: 60px 90px;
+}
+.akcije--left {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+}
+.akcije--left--suzi {
+  width: 80%;
+  padding: 25px 0;
+  border-bottom: 1px solid #000000;
+}
+.akcije--left--naslov {
+  width: 90%;
+  padding: 30px 0;
+  border-bottom: 2px solid #d0d0d0;
+}
+.akcije--left--naslov:last-child {
+  border-bottom: none;
+}
+.akcije--right {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #979797;
+}
+.clicked {
+  color: #f92525;
+}
