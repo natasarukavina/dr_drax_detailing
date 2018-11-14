@@ -26,7 +26,8 @@ function getBaseUrl()
 // todo: 404 if req name not in templates_assoc
 //$loader = new Twig_Loader_Array( $templates_assoc);
 
-$loader = new Twig_Loader_Filesystem('../twigtemplates');
+//$loader = new Twig_Loader_Filesystem('../twigtemplates');
+$loader = new Twig_Loader_Filesystem(dirname( dirname(__FILE__) ).'/twigtemplates');
 $twig = new Twig_Environment($loader, array(
     'cache' => 'twigcache',
     'auto_reload' => true
