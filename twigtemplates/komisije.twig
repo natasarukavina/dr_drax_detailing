@@ -15,7 +15,7 @@
             <h3>Oblast rada</h3>
             <p>{{Komisija.Opis}}</p>
             <h3>Clanovi</h3>
-            <table border=1 style="width:100%">
+            <table style="width:100%">
             {% for item in fetch("Clanovi_komisije") %}
                 {% if (item.TipKomisije == tip) %}
                     <tr>

@@ -15,7 +15,11 @@ function getBaseUrl()
     // output: http://
     $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
     // return: http://localhost/myproject/
-    return $protocol.$hostName. ( empty(dirname($pathInfo['dirname']))?'/':dirname($pathInfo['dirname']) );
+    //echo $protocol.$hostName;
+    //echo dirname($pathInfo['dirname']);
+    $dir = '/';
+    if ( dirname($pathInfo['dirname']) !='/') $dir = dirname($pathInfo['dirname']).'/';
+    return $protocol.$hostName.$dir;
 }
 //$templates_assoc = fetch_twig_templates();
 //print_r($templates_assoc);
