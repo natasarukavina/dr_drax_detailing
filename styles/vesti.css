@@ -21,7 +21,7 @@
   line-height: 1.71;
   color: #000000;
 }
-.sub_titles a {
+.sub_titles-lite {
   font-size: 14px;
   font-weight: normal;
   line-height: 1.71;
@@ -53,8 +53,14 @@
   padding-top: 25px;
 }
 .vesti {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
   flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
   padding: 4% 90px;
 }
@@ -121,6 +127,8 @@
   padding: 6px 0px;
 }
 .vest {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
   flex: 1;
   padding: 4% 90px;
 }
@@ -130,8 +138,15 @@
 }
 .vest--container {
   width: 65%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   padding-top: 2%;
 }
@@ -139,9 +154,15 @@
   width: 100%;
 }
 .vest--container-imgs {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   height: 350px;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 .vest--container-imgs img {
@@ -155,4 +176,20 @@
 }
 .vest--container-text p {
   margin-top: 22px;
+}
+@media only screen and (max-width: 1024px) {
+  .vesti {
+    padding: 4% 60px;
+  }
+  .vest {
+    padding: 4% 60px;
+  }
+}
+@media only screen and (max-width: 960px) {
+  .vesti {
+    padding: 4% 50px;
+  }
+  .vest {
+    padding: 4% 50px;
+  }
 }

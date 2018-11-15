@@ -2,9 +2,15 @@
 
 .vesti {
   // min-height: calc(~"100vh - 100px - 65px");
-  flex: 1;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   padding: 4% 90px;
   &--suzi {
     width: 30%;
@@ -72,7 +78,9 @@
 }
 .vest{
   // min-height: calc(~"100vh - 100px - 65px");
-  flex: 1;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   padding: 4% 90px;
   &--title {
     width: 65%;
@@ -81,18 +89,31 @@
   }
   &--container {
     width: 65%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
     padding-top: 2%;
     &-title {
       width: 100%;
     }
     &-imgs {
+      display: -webkit-box;
+      display: -ms-flexbox;
       display: flex;
       height: 350px;
-      justify-content: space-between;
-      align-items: center;
+      -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
       img {
         height: 300px;
         width: 400px;
@@ -106,5 +127,22 @@
         margin-top: 22px;
       }
     }
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .vesti {
+    padding: 4% 60px;
+  }
+  .vest {
+    padding: 4% 60px;
+  }
+}
+@media only screen and (max-width: 960px) {
+  .vesti {
+    padding: 4% 50px;
+  }
+  .vest {
+    padding: 4% 50px;
   }
 }
