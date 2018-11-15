@@ -21,7 +21,7 @@
   line-height: 1.71;
   color: #000000;
 }
-.sub_titles a {
+.sub_titles-lite {
   font-size: 14px;
   font-weight: normal;
   line-height: 1.71;
@@ -53,8 +53,15 @@
   padding-top: 25px;
 }
 .oNama {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
   flex: 1;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
   padding: 4% 90px;
 }
@@ -70,15 +77,26 @@
   padding-bottom: 90px;
 }
 .oNama--2 {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
   padding: 90px 0;
 }
 .oNama--2--blok {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   padding: 20px 0;
   width: 25%;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 .oNama--2--blok-naslov {
@@ -87,9 +105,26 @@
   font-weight: normal;
 }
 .oNama--2--blok-pdf {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   font-size: 9px;
   font-weight: bold;
   color: #000000;
+}
+@media only screen and (max-width: 1024px) {
+  .oNama {
+    padding: 4% 60px;
+  }
+  .oNama--2--blok {
+    width: 45%;
+  }
+}
+@media only screen and (max-width: 960px) {
+  .oNama {
+    padding: 4% 50px;
+  }
 }
