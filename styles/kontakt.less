@@ -1,23 +1,46 @@
 @import 'variables';
 
 .kontakt{
-    flex: 1;
-    padding: 4% 90px;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  padding: 4% 90px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  &--left{
+    width: 25%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    &--left{
-        width: 25%;
-        display: flex;
-        flex-direction: column;
-        margin-left: 5%;
-        &--info{
-          font-size: 11px;
-          font-weight: 500;
-          line-height: 2;
-          color: @black;  
-          padding: 20px 0;
-        }
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    margin-left: 5%;
+    &--info{
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 2;
+      color: @black;
+      padding: 20px 0;
     }
-    &--right{
-        width: 70%;
+  }
+  &--right{
+    width: 70%;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .kontakt {
+    padding: 4% 60px;
+  }
+}
+@media only screen and (max-width: 960px) {
+  .kontakt {
+    padding: 4% 50px;
+    &--left {
+      width: 28%;
+      margin-left: 2%;
     }
+  }
 }
