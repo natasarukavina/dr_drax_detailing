@@ -25,7 +25,8 @@
             4) Članovi studenti.
         </p>
     </div>
-    <div class="clanovi--pridruzi"><a href="mailto: #"><div class="clanovi--pridruzi-button">Postanite član</div></a></div>
+    
+    <div class="clanovi--pridruzi"><a href="mailto:{{fetch('Home').email}}"><div class="clanovi--pridruzi-button">Postanite član</div></a></div>
     {% set tip = _GET['tip']?_GET['tip']:'Redovni'%}
     <div class="clanovi--spisak" id="spisak">
         <div class="clanovi--spisak-tip">

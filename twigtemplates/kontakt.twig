@@ -1,13 +1,14 @@
 {% extends "base.twig" %}
 
 {% block content %}
+{% set Home = fetch("Home") %}
   <div class="kontakt" >
     <div class="kontakt--left">
         <div class="titles">Kontaktirajte nas</div>
         <div class="kontakt--left--info">Srpsko udruženje za zemljotresno inženjerstvo – SUZI</div>
         <div class="kontakt--left--info">Bulevar Kralja Aleksandra 73, Beograd<br>
             c/o Gradjevinski fakultet</div>
-        <div class="kontakt--left--info">eMail: hello@suzi-saee.rs <br>
+        <div class="kontakt--left--info">eMail: {{Home.email}} <br>
             www.suzi-saee.rs</div>
     </div>
     <div class="kontakt--right" id="mapid"></div>
@@ -23,7 +24,6 @@ integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9
 crossorigin=""></script>
 
 <script>
-    {% set Home = fetch("Home") %};
     var MapStr = '{{Home.Mapa}}';
     var lat  = Number( MapStr.split(',')[0] );
     var lng  = Number( MapStr.split(',')[1] );
