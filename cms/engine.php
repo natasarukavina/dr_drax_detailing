@@ -1,6 +1,7 @@
 <?php
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
+    include(dirname(__FILE__).'/slug.php'); 
 
     try{
         $db = new PDO('sqlite:'.dirname(__FILE__).'/db/baza2.sqlite');
@@ -14,6 +15,8 @@
     // helper functions for splitting comma separated string for old sqlite (without with statement)
     $db->sqliteCreateFunction('substr_count', 'substr_count', 2); // or createFunction if type is Sqlite3 or SQLiteDatabase
     $db->sqliteCreateFunction('explode_by_index', 'explode_by_index', 2);
+    $db->sqliteCreateFunction('makeSlugs', 'makeSlugs', 1);
+    
     $db->sqliteCreateCollation('NATURAL_CMP', 'strnatcmp');  // !!! UNDOCUMENTED PDO FUNCTION
     $db->sqliteCreateCollation('SR_LATIN_CMP', 'SR_LATIN_CMP');  // !!! UNDOCUMENTED PDO FUNCTION
 
@@ -163,7 +166,8 @@
 
         // else get image from DB 
         global $db;
-        $stmt = $db->prepare("SELECT image_blob, mime_type from _files where id = :id union all SELECT image_blob, mime_type from _files where nice_url = :id limit 1");
+        $stmt = $db->prepare("SELECT image_blob, mime_type from _files where id = :id 
+        union all SELECT image_blob, mime_type from _files where (nice_url ||  case when ver=0 then '' else '_'||ver end  || '.' ||  extension) = :id limit 1");
         $stmt->execute(array('id' => $id));
         $file = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (count($file)<1) { 
@@ -234,14 +238,29 @@
     function upload2sqlite($uploaded_file){
         // [uploaded_file] => Array ( [name] => bzvz (1).jpg [type] => image/jpeg [tmp_name] => /tmp/phpvZ85y1 [error] => 0 [size] => 23814
         global $db;
-        $query = $db->prepare("INSERT INTO _files (image_blob, mime_type, name, nice_url, size) VALUES (:image_blob, :mime_type, :name, :nice_url, :size)");
+
+        // TODO: check if upload error
+
+        $path_parts = pathinfo($uploaded_file['name']);
+        $extension = isset( $path_parts['extension'] ) ? $path_parts['extension']  : '';
+        $filename = isset( $path_parts['filename'] ) ? $path_parts['filename'] : ''; // Without extension // Since PHP 5.2.0
+        $slug = makeSlugs($filename);// Without extension 
+
+        $stmt = $db->prepare("select ifnull( max(ver),0) + 1 as ver from _files ff where ff.nice_url = :slug and ff.extension = :extension");
+        $stmt->execute( array( 'extension' => $extension, 'slug' => $slug ) );
+        $ver = $stmt->fetchColumn();
+        
+        $query = $db->prepare("INSERT INTO _files (image_blob, mime_type, name, nice_url, size, extension, ver) VALUES (:image_blob, :mime_type, :name, :slug, :size, :extension, :ver)");
         $query->bindValue(':image_blob', fopen($uploaded_file['tmp_name'], "rb"), PDO::PARAM_LOB);
         $query->bindParam(':mime_type',  $uploaded_file['type'], PDO::PARAM_STR);
-        $query->bindParam(':name',       $uploaded_file['name'], PDO::PARAM_STR);
-        $query->bindParam(':nice_url',   $uploaded_file['name'], PDO::PARAM_STR);
+        $query->bindParam(':name',       $filename, PDO::PARAM_STR);
+        $query->bindParam(':slug',       $slug, PDO::PARAM_STR);
         $query->bindParam(':size',       $uploaded_file['size'], PDO::PARAM_INT);
+        $query->bindValue(':extension',  $extension, PDO::PARAM_STR);
+        $query->bindValue(':ver',        $ver, PDO::PARAM_INT);
         $query->execute();
-        echo $db->lastInsertId(); 
+        //echo $db->lastInsertId(); 
+        echo $slug.(($ver==0)?'':'_'.$ver).'.'.$extension; 
     }
     /*
     function fetch($objName){
