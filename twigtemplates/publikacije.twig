@@ -1,7 +1,7 @@
 {% extends "base.twig" %}
 
 {% block content %}
-  {% set Publikacije_Suzi = fetch("Publikacije_Suzi") %}
+  {# {% set Publikacije_Suzi = fetch("Publikacije_Suzi") %}
   {% set Publikacije_Ostale = fetch("Publikacije_Ostale") %}
   {% set eGlasnik = fetch("eGlasnik") %}
 
@@ -10,8 +10,8 @@
       <div class="vesti--suzi-naslov titles">SUZI Publikacije</div>
       {% for suzi in Publikacije_Suzi %}
       <div class="vesti--suzi-vest">
-        <div class="vesti--suzi-vest--link sub_titles">{{suzi.Autor}}: {{ suzi.Naziv }} , {{suzi.Izdavac}}</div>
-        <div class=""><a href='img/{{suzi.Link}}' download="{{suzi.Naziv}}" >Preuzmi publikaciju</a></div>
+        <div style="margin-bottom: 20px;" class="vesti--suzi-vest--link sub_titles">{{suzi.Autor}}: {{ suzi.Naziv }} , {{suzi.Izdavac}}</div>
+        <div style="margin-bottom: 10px;"><a class="preuzmi-publikaciju" href='img/{{suzi.Link}}' download="{{suzi.Naziv}}" >Preuzmi publikaciju</a></div>
       </div>
       {% endfor %}
     </div>
@@ -19,20 +19,71 @@
       <div class="vesti--svet-naslov titles">Ostale Publikacije</div>
       {% for svet in Publikacije_Ostale %}
       <div class="vesti--svet-vest">
-        <div class="vesti--suzi-vest--link sub_titles">{{svet.Autor}}: {{ svet.Naziv }} , {{svet.Izdavac}}</div>
-        <div class=""><a href='img/{{svet.Link}}' download="{{svet.Naziv}}">Preuzmi publikaciju</a></div>
+        <div style="margin-bottom: 20px;" class="vesti--suzi-vest--link sub_titles">{{svet.Autor}}: {{ svet.Naziv }} , {{svet.Izdavac}}</div>
+        <div style="margin-bottom: 10px;"><a class="preuzmi-publikaciju" href='img/{{svet.Link}}' download="{{svet.Naziv}}">Preuzmi publikaciju</a></div>
       </div>
       {% endfor %}
     </div>
     <div class="vesti--prikazi">
-      <div class="vesti--prikazi-naslov titles">SUZI prikazi</div>
+      <div class="vesti--prikazi-naslov titles">SUZI Elektronski glasnik</div>
       {% for prikaz in eGlasnik %}
       <div class="vesti--prikazi-vest">
         <div class="vesti--prikazi-vest--naslov sub_titles"><a href="suzi-prikaz/?vest={{prikaz.id}}">{{ prikaz.Naslov }}</a></div>
-        <img class="vesti--prikazi-vest--image slika" src="img/{{ prikaz.Slika1 }}"></img>
-        <div class="vesti--prikazi-vest--datum dates">{{ prikaz.Datum }}</div>
-      </div>
+        {# <img class="vesti--prikazi-vest--image slika" src="img/{{ prikaz.Slika1 }}"></img> #}
+        {# <div class="vesti--prikazi-vest--datum dates">{{ prikaz.Datum }}</div> #}
+      {# </div>
       {% endfor %}
     </div>
+  </div> #} 
+  <div class="publikacije">
+    {% set tip= (_GET['tip'])?_GET['tip']:'Suzi-Publikacije' %}
+      <div class="publikacije--top"> 
+          <div class="publikacije--top-title {{('Suzi-Publikacije'==tip)?'active':''}}"><a  href="publikacije/?tip=Suzi-Publikacije" class="{{('Suzi-Publikacije'==tip)?'red':''}}">SUZI Publikacije</a></div>
+          <div class="publikacije--top-title {{('Ostale-Publikacije'==tip)?'active':''}}"><a  href="publikacije/?tip=Ostale-Publikacije" class="{{('Ostale-Publikacije'==tip)?'red':''}}">Ostale Publikacije</a></div>
+          <div class="publikacije--top-title {{('Suzi-Elektronski-glasnik'==tip)?'active':''}}"><a  href="publikacije/?tip=Suzi-Elektronski-glasnik" class="{{('Suzi-Elektronski-glasnik'==tip)?'red':''}}">SUZI Elektronski glasnik</a></div> 
+
+      </div>
+      <div class="publikacije--bottom"> 
+      {% if 'Suzi-Publikacije'==tip %}
+        {% set Publikacije_Suzi = fetch("Publikacije_Suzi") %}
+        <div class="{%if ('Suzi-Publikacije'==tip) %} suzi-publikacije {% endif %}">
+          {% for suzi in Publikacije_Suzi %}
+          <div class="suzi-publikacije--clanak">
+            <div style="margin-bottom: 20px;" class="suzi-publikacije--clanak-link">{{suzi.Autor}}: {{ suzi.Naziv }} , {{suzi.Izdavac}}</div>
+            <div style="margin-bottom: 10px;"><a class="preuzmi-publikaciju" href='img/{{suzi.Link}}' download="{{suzi.Naziv}}" >Preuzmi publikaciju</a></div>
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if 'Ostale-Publikacije'==tip %}
+        {% set Publikacije_Ostale = fetch("Publikacije_Ostale") %}
+        <div class="{%if ('Ostale-Publikacije'==tip) %} suzi-publikacije {% endif %}">
+          {% for svet in Publikacije_Ostale %}
+          <div class="suzi-publikacije--clanak">
+            <div style="margin-bottom: 20px;" class="suzi-publikacije--clanak-link">{{svet.Autor}}: {{ svet.Naziv }} , {{svet.Izdavac}}</div>
+            <div style="margin-bottom: 10px;"><a class="preuzmi-publikaciju" href='img/{{svet.Link}}' download="{{svet.Naziv}}">Preuzmi publikaciju</a></div>
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if 'Suzi-Elektronski-glasnik'==tip %}
+        {% set eGlasnik = fetch("eGlasnik") %}
+        <div class="{%if ('Suzi-Elektronski-glasnik'==tip) %} suzi-publikacije {% endif %}">
+          {% for glasnik in eGlasnik %}
+          <div class="suzi-publikacije--clanak--glasnik">
+            <div class="suzi-publikacije--clanak--glasnik-deo broj-glasnika">{{glasnik.Broj}} <a class="broj-glasnika--pdf" href="img/{{glasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a></div>
+            <div class="suzi-publikacije--clanak--glasnik-deo"><img src="img/{{glasnik.Slika1}}"></div>
+            <div class="suzi-publikacije--clanak--glasnik-deo2">
+              <div class="suzi-publikacije--clanak--glasnik-deo2--naslov">{{glasnik.Naslov}}</div>
+              <div class="suzi-publikacije--clanak--glasnik-deo2--text">{{glasnik.Text | raw}}</div>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+
+      </div>
   </div>
 {% endblock %}
