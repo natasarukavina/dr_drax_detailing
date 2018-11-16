@@ -35,9 +35,6 @@
       {% endfor %}
     </div>
   </div> #} 
-  {% set Publikacije_Suzi = fetch("Publikacije_Suzi") %}
-  {% set Publikacije_Ostale = fetch("Publikacije_Ostale") %}
-  {% set eGlasnik = fetch("eGlasnik") %}
   <div class="publikacije">
     {% set tip= (_GET['tip'])?_GET['tip']:'Suzi-Publikacije' %}
       <div class="publikacije--top"> 
@@ -47,6 +44,8 @@
 
       </div>
       <div class="publikacije--bottom"> 
+      {% if 'Suzi-Publikacije'==tip %}
+        {% set Publikacije_Suzi = fetch("Publikacije_Suzi") %}
         <div class="{%if ('Suzi-Publikacije'==tip) %} suzi-publikacije {% endif %}">
           {% for suzi in Publikacije_Suzi %}
           <div class="suzi-publikacije--clanak">
@@ -55,6 +54,36 @@
           </div>
         {% endfor %}
         </div>
+      {% endif %}
+
+      {% if 'Ostale-Publikacije'==tip %}
+        {% set Publikacije_Ostale = fetch("Publikacije_Ostale") %}
+        <div class="{%if ('Ostale-Publikacije'==tip) %} suzi-publikacije {% endif %}">
+          {% for svet in Publikacije_Ostale %}
+          <div class="suzi-publikacije--clanak">
+            <div style="margin-bottom: 20px;" class="suzi-publikacije--clanak-link">{{svet.Autor}}: {{ svet.Naziv }} , {{svet.Izdavac}}</div>
+            <div style="margin-bottom: 10px;"><a class="preuzmi-publikaciju" href='img/{{svet.Link}}' download="{{svet.Naziv}}">Preuzmi publikaciju</a></div>
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if 'Suzi-Elektronski-glasnik'==tip %}
+        {% set eGlasnik = fetch("eGlasnik") %}
+        <div class="{%if ('Suzi-Elektronski-glasnik'==tip) %} suzi-publikacije {% endif %}">
+          {% for glasnik in eGlasnik %}
+          <div class="suzi-publikacije--clanak--glasnik">
+            <div class="suzi-publikacije--clanak--glasnik-deo broj-glasnika">{{glasnik.Broj}} <a class="broj-glasnika--pdf" href="img/{{glasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a></div>
+            <div class="suzi-publikacije--clanak--glasnik-deo"><img src="img/{{glasnik.Slika1}}"></div>
+            <div class="suzi-publikacije--clanak--glasnik-deo2">
+              <div class="suzi-publikacije--clanak--glasnik-deo2--naslov">{{glasnik.Naslov}}</div>
+              <div class="suzi-publikacije--clanak--glasnik-deo2--text">{{glasnik.Text | raw}}</div>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+
       </div>
   </div>
 {% endblock %}
