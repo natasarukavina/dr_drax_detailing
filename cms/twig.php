@@ -68,7 +68,7 @@ foreach($pathArr as $key) {
 }
 
 $_GET = array_merge($_GET, $queryArr);
-$_GET['twig_file_name'] = $_GET[0];
+$_GET['twig_file_name'] = isset($_GET[0])?$_GET[0]:'index';
 //print_r( $_GET );
 
 $twig->addGlobal('_GET', $_GET);

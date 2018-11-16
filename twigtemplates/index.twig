@@ -5,8 +5,8 @@
     <div class="home--part">
         <div class="home--part-istaknuta-akcija">
                 {% set IstaknutaAkcija =  fetch('IstaknutaAkcija') %}
-                {# <img style="height:335px; width: 100%;" src="image.php/?id={{ IstaknutaAkcija.Slika1 }}"> #}
-                <div style="background-image: url('image.php/?id={{IstaknutaAkcija.Slika1}}'); background-size: cover;
+                {# <img style="height:335px; width: 100%;" src="img/{{ IstaknutaAkcija.Slika1 }}"> #}
+                <div style="background-image: url('img/{{IstaknutaAkcija.Slika1}}'); background-size: cover;
                 background-repeat: no-repeat;     background-position: center; height: 335px;"></div>
                 <div class="title">{{ IstaknutaAkcija.Naslov }}</div>
                 <div class="text">{{IstaknutaAkcija.Text | raw}}  </div>
@@ -30,7 +30,7 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="naslov sub_titles"><a href="vest-suzi/?vest={{vesti_suzi.id}}">{{ vesti_suzi.Naslov }}</a></div>
                         {% if vesti_suzi.Slika %}
-                        <img class="slika" src="image.php/?id={{ vesti_suzi.Slika }}">
+                        <img class="slika" src="img/{{ vesti_suzi.Slika }}">
                         {% endif %}
                     </div>
                     {% endfor %}
@@ -44,7 +44,7 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="sub_titles"><a href="vest-svet/?vest={{vesti_svet.id}}">{{ vesti_svet.Naslov }}</a></div>
                         {% if vesti_svet.Slika1 %}
-                        <img class="slika" src="image.php/?id={{ vesti_svet.Slika1 }}">
+                        <img class="slika" src="img/{{ vesti_svet.Slika1 }}">
                         {% endif %}
                     </div>
                     {% endfor %}
@@ -58,7 +58,7 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="sub_titles"><a href="suzi-prikaz/?vest={{vesti_prikazi.id}}">{{ vesti_prikazi.Naslov }}</a></div>
                         {% if vesti_prikazi.Slika1 %}
-                        <img class="slika" src="image.php/?id={{ vesti_prikazi.Slika1 }}">
+                        <img class="slika" src="img/{{ vesti_prikazi.Slika1 }}">
                         {% endif %}
                     </div>
                     {% endfor %}
@@ -85,7 +85,7 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="sub_titles">{{ suzi_eGlasnik.Naslov }}</div>
                         {% if suzi_eGlasnik.Slika1 %}
-                        <img class="slika" src="image.php/?id={{ suzi_eGlasnik.Slika1 }}">
+                        <img class="slika" src="img/{{ suzi_eGlasnik.Slika1 }}">
                         {% endif %}
                     </div>
                     {% endfor %}
