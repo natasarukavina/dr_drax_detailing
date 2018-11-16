@@ -181,7 +181,7 @@ img {
   color: #000000;
 }
 .plain-text-red {
-  font-size: 13px;
+  font-size: 18px;
   line-height: 22px;
   color: #ff0000;
 }
@@ -291,9 +291,6 @@ img {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
   margin: 60px 0 30px;
 }
 .home--part2--vesti--title {
@@ -304,9 +301,6 @@ img {
 .home--part2--vesti--naslovi {
   width: 80%;
   overflow: auto;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
 }
 .home--part2--vesti--naslovi-1 {
   border-bottom: 1px solid #d0d0d0;
@@ -365,7 +359,7 @@ img {
   font-weight: normal;
   color: #000000;
   line-height: 1.85;
-  padding-bottom: 90px;
+  padding-bottom: 4%;
 }
 .oNama--2 {
   display: -webkit-box;
@@ -375,14 +369,14 @@ img {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  padding: 90px 0;
+  padding: 4% 0 0;
 }
 .oNama--2--blok {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   padding: 20px 0;
-  width: 25%;
+  width: 35%;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
@@ -735,8 +729,8 @@ img {
   border-bottom: 1px solid #000000;
 }
 .clanovi--pridruzi-button {
-  height: 26px;
-  width: 90px;
+  height: 40px;
+  width: 140px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -748,7 +742,7 @@ img {
   align-items: center;
   background-color: #f92525;
   border-radius: 3px;
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 14px;
   color: #ffffff;
@@ -890,8 +884,8 @@ img {
   flex-direction: column;
 }
 .suzi-publikacije--clanak--glasnik-deo1 {
-  width: 26%;
-  margin: 0 1%;
+  width: 22%;
+  margin: 0 2%;
   text-align: center;
   max-width: 100%;
 }
@@ -944,7 +938,7 @@ img {
   display: flex;
 }
 .kontakt--left {
-  width: 25%;
+  width: 30%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -952,7 +946,6 @@ img {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  margin-left: 5%;
 }
 .kontakt--left--info {
   font-size: 11px;

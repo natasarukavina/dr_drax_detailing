@@ -1,40 +1,7 @@
 {% extends "base.twig" %}
 
 {% block content %}
-  {# {% set Publikacije_Suzi = fetch("Publikacije_Suzi") %}
-  {% set Publikacije_Ostale = fetch("Publikacije_Ostale") %}
-  {% set eGlasnik = fetch("eGlasnik") %}
-
-  <div class="vesti">
-    <div class="vesti--suzi">
-      <div class="vesti--suzi-naslov titles">SUZI Publikacije</div>
-      {% for suzi in Publikacije_Suzi %}
-      <div class="vesti--suzi-vest">
-        <div style="margin-bottom: 20px;" class="vesti--suzi-vest--link sub_titles">{{suzi.Autor}}: {{ suzi.Naziv }} , {{suzi.Izdavac}}</div>
-        <div style="margin-bottom: 10px;"><a class="preuzmi-publikaciju" href='img/{{suzi.Link}}' download="{{suzi.Naziv}}" >Preuzmi publikaciju</a></div>
-      </div>
-      {% endfor %}
-    </div>
-    <div class="vesti--svet">
-      <div class="vesti--svet-naslov titles">Ostale Publikacije</div>
-      {% for svet in Publikacije_Ostale %}
-      <div class="vesti--svet-vest">
-        <div style="margin-bottom: 20px;" class="vesti--suzi-vest--link sub_titles">{{svet.Autor}}: {{ svet.Naziv }} , {{svet.Izdavac}}</div>
-        <div style="margin-bottom: 10px;"><a class="preuzmi-publikaciju" href='img/{{svet.Link}}' download="{{svet.Naziv}}">Preuzmi publikaciju</a></div>
-      </div>
-      {% endfor %}
-    </div>
-    <div class="vesti--prikazi">
-      <div class="vesti--prikazi-naslov titles">SUZI Elektronski glasnik</div>
-      {% for prikaz in eGlasnik %}
-      <div class="vesti--prikazi-vest">
-        <div class="vesti--prikazi-vest--naslov sub_titles"><a href="suzi-prikaz/?vest={{prikaz.id}}">{{ prikaz.Naslov }}</a></div>
-        {# <img class="vesti--prikazi-vest--image slika" src="img/{{ prikaz.Slika1 }}"></img> #}
-        {# <div class="vesti--prikazi-vest--datum dates">{{ prikaz.Datum }}</div> #}
-      {# </div>
-      {% endfor %}
-    </div>
-  </div> #} 
+  
   <div class="publikacije">
     {% set tip= (_GET['1'])?_GET['1']:'Suzi-Publikacije' %}
       <div class="publikacije--top"> 
@@ -85,7 +52,11 @@
             
           {% endfor %}
           </div>
-            <div class="suzi-publikacije--clanak--glasnik-deo1"><img src="img/{{SelektovaniGlasnik.Slika1}}"></div>
+            <div class="suzi-publikacije--clanak--glasnik-deo1">
+              {% if SelektovaniGlasnik.Slika1 %}
+                <img src="img/{{SelektovaniGlasnik.Slika1}}">
+              {% endif %}
+            </div>
             <div class="suzi-publikacije--clanak--glasnik-deo2">
               <div class="suzi-publikacije--clanak--glasnik-deo2--naslov">{{SelektovaniGlasnik.Naslov}}</div>
               <div class="suzi-publikacije--clanak--glasnik-deo2--text">{{SelektovaniGlasnik.Text | raw}}</div>

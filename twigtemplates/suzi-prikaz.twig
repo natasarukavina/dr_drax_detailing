@@ -9,7 +9,12 @@
   <div class="vest--container">
     <div class="vest--container-title titles-2">{{suzi_prikazi.Naslov}}</div>
     <div class="vest--container-imgs">
-      <img class="" src="img/{{ suzi_prikazi.Slika1 }}" alt="SUZI Vest" />{% if suzi_prikazi.Slika2 %}<img class="" src="img/{{ suzi_prikazi.Slika2 }}" />{% endif %}
+      {% if suzi_prikazi.Slika1 %}
+        <img class="" src="img/{{ suzi_prikazi.Slika1 }}" alt="SUZI Vest" />
+      {% endif %}
+      {% if suzi_prikazi.Slika2 %}
+        <img class="" src="img/{{ suzi_prikazi.Slika2 }}" />
+      {% endif %}
     </div>
     <div class="vest--container-text plain-text">
       {{suzi_prikazi.Text | raw}}
