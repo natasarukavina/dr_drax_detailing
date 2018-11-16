@@ -21,7 +21,9 @@
             </div>
         </div>
         <div class="akcije--right">
-            <img class="akcije--right--slika" src="img/{{SelektovanaAkcija.Slika1}}">
+            {% if SelektovanaAkcija.Slika1 %}
+                <img class="akcije--right--slika" src="img/{{SelektovanaAkcija.Slika1}}">
+            {% endif %}
             <div class="akcije--right--text">{{SelektovanaAkcija.Text | raw }}</div>
 
         </div>

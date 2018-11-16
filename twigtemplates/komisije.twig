@@ -1,41 +1,6 @@
 {% extends "base.twig" %}
 {% block content %}
 
-    {# {% set tip = _GET['tip']?_GET['tip']:'3' %}
-    <div style="display:flex ">
-        <ul style="flex:1">
-            {% for item in fetch("Komisija") %}
-            <li class="{{(item.id==tip)?'active':''}}"><a href="komisije?tip={{item.id}}"> {{item.Naziv}}</a></li>
-            {% endfor %}
-        </ul>
-
-        {% set Komisija = fetch("Komisija", { 'id':tip } )[0] %}
-        <div style="flex:2">
-            <h2>{{Komisija.Naziv}}</h2>
-            <h3>Oblast rada</h3>
-            <p>{{Komisija.Opis}}</p>
-            <h3>Clanovi</h3>
-            <table style="width:100%">
-            {% for item in fetch("Clanovi_komisije") %}
-                {% if (item.TipKomisije == tip) %}
-                    <tr>
-{#
-                    <td> {{item.id}} </td>
-                    <td> {{item.TipKomisije}} </td>
-                    <td> {{item.TipKomisije_label}} </td>
-#}
-                    {# <td> {{item.Ime}} </td>
-                    <td> {{item.Period}} </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-            </table>
-            <h3>Aktivnosti</h3>
-            <p>{{Komisija.Aktivnosti}}</p>
-
-        </div>
-    </div> #}
-
     <div class="komisije">
         {% set slug = _GET['1']?_GET['1']:'komisija-za-zastitu-stanovnistva' %}
             <div class="komisije--left">
