@@ -1,0 +1,125 @@
+.titles {
+  font-size: 24px;
+  font-weight: 300;
+  color: #f92525;
+  line-height: 28px;
+}
+.titles-2 {
+  font-size: 24px;
+  line-height: 28px;
+  color: #202124;
+}
+.sub_titles {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.71;
+  color: #000000;
+}
+.sub_titles-link {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.sub_titles-lite {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.plain-text {
+  font-size: 13px;
+  line-height: 22px;
+  color: #000000;
+}
+.plain-text-red {
+  font-size: 13px;
+  line-height: 22px;
+  color: #ff0000;
+}
+.dates {
+  font-size: 14px;
+  line-height: 24px;
+  color: #9b9b9b;
+}
+.link {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+}
+.slika {
+  max-width: 100%;
+  padding-top: 25px;
+}
+.preuzmi-publikaciju {
+  font-size: 11px;
+  font-weight: bold;
+  color: #f92525;
+}
+.publikacije {
+  display: flex;
+  flex-direction: column;
+  padding: 4% 90px;
+  flex: 1;
+}
+.publikacije--top {
+  display: flex;
+  border-bottom: 1px solid #d0d0d0;
+}
+.publikacije--top-title {
+  display: flex;
+  justify-content: center;
+  width: 33.33%;
+  font-size: 24px;
+  font-weight: 300;
+  color: #000000;
+  padding-bottom: 2%;
+}
+.red {
+  color: #f92525;
+}
+.suzi-publikacije--clanak {
+  display: flex;
+  flex-direction: column;
+}
+.suzi-publikacije--clanak-link {
+  font-size: 18px;
+  font-weight: bold;
+  color: #202124;
+}
+.suzi-publikacije--clanak--glasnik {
+  display: flex;
+  padding-top: 2%;
+}
+.suzi-publikacije--clanak--glasnik-deo {
+  width: 30%;
+}
+.suzi-publikacije--clanak--glasnik-deo .broj-glasnika {
+  font-size: 16px;
+  font-weight: bold;
+  color: #202124;
+  padding: 2% 0;
+  border-bottom: 1px solid #d0d0d0;
+}
+.suzi-publikacije--clanak--glasnik-deo .broj-glasnika--pdf {
+  font-size: 9px;
+  font-weight: bold;
+  color: #000000;
+}
+.suzi-publikacije--clanak--glasnik-deo2 {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+}
+.suzi-publikacije--clanak--glasnik-deo2--naslov {
+  font-size: 13px;
+  color: #f92525;
+  font-weight: normal;
+}
+.suzi-publikacije--clanak--glasnik-deo2--text {
+  font-size: 12px;
+  color: #000000;
+  line-height: 1.83;
+  font-weight: 300;
+}
