@@ -10,7 +10,7 @@
       <div class="vesti--suzi-naslov titles">SUZI Vesti</div>
       {% for suzi in vesti_suzi %}
       <div class="vesti--suzi-vest">
-        <div class="vesti--suzi-vest--link sub_titles"><a href="vest-suzi/?vest={{suzi.id}}">{{ suzi.Naslov }}</a></div>
+        <div class="vesti--suzi-vest--link sub_titles"><a href="vest-suzi/{{suzi.Slug}}">{{ suzi.Naslov }}</a></div>
         <div class="vesti--suzi-vest--datum dates">{{ suzi.Datum }}</div>
       </div>
       {% endfor %}
@@ -19,7 +19,7 @@
       <div class="vesti--svet-naslov titles">Vesti iz sveta</div>
       {% for svet in vesti_svet %}
       <div class="vesti--svet-vest">
-        <div class="vesti--svet-vest--naslov sub_titles-lite"><a href="vest-svet/?vest={{svet.id}}">{{ svet.Naslov }}</a></div>
+        <div class="vesti--svet-vest--naslov sub_titles-lite"><a href="vest-svet/{{svet.Slug}}">{{ svet.Naslov }}</a></div>
         <img class="vesti--svet-vest--image slika" src="img/{{ svet.Slika1 }}"></img>
         <div class="vesti--svet-vest--datum dates">{{ svet.Datum }}</div>
       </div>
@@ -29,7 +29,7 @@
       <div class="vesti--prikazi-naslov titles">SUZI prikazi</div>
       {% for prikaz in suzi_prikazi %}
       <div class="vesti--prikazi-vest">
-        <div class="vesti--prikazi-vest--naslov sub_titles-lite"><a href="suzi-prikaz/?vest={{prikaz.id}}">{{ prikaz.Naslov }}</a></div>
+        <div class="vesti--prikazi-vest--naslov sub_titles-lite"><a href="suzi-prikaz/{{prikaz.Slug}}">{{ prikaz.Naslov }}</a></div>
         <img class="vesti--prikazi-vest--image slika" src="img/{{ prikaz.Slika1 }}"></img>
         <div class="vesti--prikazi-vest--datum dates">{{ prikaz.Datum }}</div>
       </div>
