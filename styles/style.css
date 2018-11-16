@@ -865,9 +865,15 @@ img {
 .red {
   color: #f92525;
 }
+.suzi-publikacije {
+  padding: 2% 0;
+}
 .suzi-publikacije--clanak {
+  width: 60%;
   display: flex;
   flex-direction: column;
+  padding: 2% 0 1%;
+  border-bottom: 1px solid #d0d0d0;
 }
 .suzi-publikacije--clanak-link {
   font-size: 18px;
@@ -876,22 +882,16 @@ img {
 }
 .suzi-publikacije--clanak--glasnik {
   display: flex;
-  padding-top: 2%;
+  padding-top: 3%;
 }
 .suzi-publikacije--clanak--glasnik-deo {
   width: 30%;
 }
-.suzi-publikacije--clanak--glasnik-deo .broj-glasnika {
-  font-size: 16px;
-  font-weight: bold;
-  color: #202124;
-  padding: 2% 0;
-  border-bottom: 1px solid #d0d0d0;
-}
-.suzi-publikacije--clanak--glasnik-deo .broj-glasnika--pdf {
-  font-size: 9px;
-  font-weight: bold;
-  color: #000000;
+.suzi-publikacije--clanak--glasnik-deo1 {
+  width: 26%;
+  margin: 0 1%;
+  text-align: center;
+  max-width: 100%;
 }
 .suzi-publikacije--clanak--glasnik-deo2 {
   width: 40%;
@@ -902,12 +902,35 @@ img {
   font-size: 13px;
   color: #f92525;
   font-weight: normal;
+  margin-bottom: 4%;
 }
 .suzi-publikacije--clanak--glasnik-deo2--text {
   font-size: 12px;
   color: #000000;
   line-height: 1.83;
   font-weight: 300;
+}
+.broj-glasnika {
+  height: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #202124;
+  padding: 1% 0;
+  margin-right: 2%;
+  border-bottom: 1px solid #d0d0d0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.broj-glasnika--pdf {
+  font-size: 9px;
+  font-weight: bold;
+  color: #000000;
+  display: flex;
+  align-items: center;
+}
+.broj-glasnika--pdf img {
+  margin-left: 20px;
 }
 .kontakt {
   -webkit-box-flex: 1;
