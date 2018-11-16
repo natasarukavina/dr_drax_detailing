@@ -10,14 +10,14 @@
                 background-repeat: no-repeat;     background-position: center; height: 335px;"></div>
                 <div class="title">{{ IstaknutaAkcija.Naslov }}</div>
                 <div class="text">{{IstaknutaAkcija.Text | raw}}  </div>
-                <div class="more"><a href="akcije?tip={{IstaknutaAkcija.id}}">Vidi ceo tekst...</a></div>
+                <div class="more"><a href="akcije/{{IstaknutaAkcija.Slug}}">Vidi ceo tekst...</a></div>
 
         </div>
         <div class="home--part-2">
                 <div class="suzi-akcije"> SUZI Akcije</div>
                 <div class="overflow">
                         {% for item in fetch('Akcije') %}
-                        <div class="naslov"><a href="akcije?tip={{item.id}}">{{ item.Naslov }}</a></div>
+                        <div class="naslov"><a href="akcije/{{item.Slug}}">{{ item.Naslov }}</a></div>
                         {% endfor %}
                 </div>
         </div>

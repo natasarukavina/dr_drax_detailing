@@ -7,15 +7,15 @@
             <div class="titles akcije--left--suzi">SUZI Akcije</div>
             <div>
                 {% set Akcije = fetch('Akcije') %}
-                {% set tip = _GET['tip'] ? _GET['tip'] : Akcije[0]['Slug'] %}
+                {% set tip = _GET['1'] ? _GET['1'] : Akcije[0]['Slug'] %}
                 {% set SelektovanaAkcija = {} %}
                 {% for item in Akcije %}
-                    {% if item.Slug == tip %}    
+                    {% if (item.Slug == tip) or ( item.id == tip) %}    
                         {% set SelektovanaAkcija = item %}
                     {% endif %}
 
                     <div class="sub_titles akcije--left--naslov">
-                        <a style="font-weight: bold;" class="{{(item.Slug==tip)?'clicked':''}}" href="akcije?tip={{item.Slug}}">{{ item.Naslov }}</a>
+                        <a style="font-weight: bold;" class="{{(item.Slug==tip or item.id==tip)?'clicked':''}}" href="akcije/{{item.Slug}}">{{ item.Naslov }}</a>
                     </div>
                 {% endfor %}
             </div>
