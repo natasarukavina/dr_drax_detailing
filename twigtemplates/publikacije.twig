@@ -70,11 +70,13 @@
 
       {% if 'Suzi-Elektronski-glasnik'==tip %}
         {% set eGlasnik = fetch("eGlasnik") %}
+        {% set tip = _GET['1'] ? _GET['1'] : Akcije[0]['Slug'] %}
+        {% set SelektovanaAkcija = {} %}
         <div class="{%if ('Suzi-Elektronski-glasnik'==tip) %} suzi-publikacije {% endif %}">
           {% for glasnik in eGlasnik %}
           <div class="suzi-publikacije--clanak--glasnik">
             <div class="suzi-publikacije--clanak--glasnik-deo broj-glasnika">{{glasnik.Broj}} <a class="broj-glasnika--pdf" href="img/{{glasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a></div>
-            <div class="suzi-publikacije--clanak--glasnik-deo"><img src="img/{{glasnik.Slika1}}"></div>
+            <div class="suzi-publikacije--clanak--glasnik-deo1"><img src="img/{{glasnik.Slika1}}"></div>
             <div class="suzi-publikacije--clanak--glasnik-deo2">
               <div class="suzi-publikacije--clanak--glasnik-deo2--naslov">{{glasnik.Naslov}}</div>
               <div class="suzi-publikacije--clanak--glasnik-deo2--text">{{glasnik.Text | raw}}</div>
