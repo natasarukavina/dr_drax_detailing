@@ -78,7 +78,7 @@
               {% set SelektovaniGlasnik = glasnik %}
           {% endif %}
           <div class="suzi-publikacije--clanak--glasnik">
-            <div class="suzi-publikacije--clanak--glasnik-deo broj-glasnika">{{SelektovaniGlasnik.Broj}} <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a></div>
+            <div class="suzi-publikacije--clanak--glasnik-deo broj-glasnika"><a class="{{(SelektovaniGlasnik.Slug==tip or SelektovaniGlasnik.id==tip)?'red':''}}">{{SelektovaniGlasnik.Broj}}</a> <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a></div>
             <div class="suzi-publikacije--clanak--glasnik-deo1"><img src="img/{{SelektovaniGlasnik.Slika1}}"></div>
             <div class="suzi-publikacije--clanak--glasnik-deo2">
               <div class="suzi-publikacije--clanak--glasnik-deo2--naslov">{{SelektovaniGlasnik.Naslov}}</div>
