@@ -5,6 +5,14 @@
         {{#if .compType=='TEXT' && .visible_details=='true'}}
         <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
+            <input {{#if slug_src==.compId}} on-blur="@this.fire('blur',row[.compId])" {{/if}}
+            style="width: calc(100% - 15rem)" type="text" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}  >
+        </div>
+        {{/if}}
+
+        {{#if .compType=='SLUG' && .visible_details=='true'}}
+        <div col='1/1' class="f" xx>
+            <label class="l" xx>{{.nice_name}}</label>
             <input style="width: calc(100% - 15rem)" type="text" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}  >
         </div>
         {{/if}}
@@ -216,6 +224,17 @@ bottom: inherit;" >
             self.set('row', row);
         } 
         self.focusFirstElement();
+
+        this.on('blur', async function(val){
+            console.log('BLUR', val);
+            var slug_dest = self.get('slug_dest');
+            if (slug_dest){
+                if (!self.get('row.'+slug_dest)){
+                    var [resp, err] = await self.fetch2('?query=_slug' , {text:val})
+                    self.set('row.'+slug_dest, resp.slug)
+                }
+            }
+        })
 /*
         this.on('refresh', async function(){
             var [resp, err] = await fetch2("?query=PRAGMA table_info('"+self.get('tablename')+"')")
@@ -288,6 +307,22 @@ bottom: inherit;" >
                 , loading:false
             }
         }
+    ,computed:{
+        slug_src:function(){
+            var cols = this.get('cols')
+            var l = cols.length;
+            var s=null;
+            for (var i=0;i<l;i++) if (cols[i].compType == 'SLUG') s = cols[i].lookup_field;
+            return s
+        },
+        slug_dest:function(){
+            var cols = this.get('cols')
+            var l = cols.length;
+            var s=null;
+            for (var i=0;i<l;i++) if (cols[i].compType == 'SLUG') s = cols[i].field_name;
+            return s
+        },
+    }
     };
     </script>
 

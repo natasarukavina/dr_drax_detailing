@@ -21,7 +21,7 @@
   line-height: 1.71;
   color: #000000;
 }
-.sub_titles a {
+.sub_titles-lite {
   font-size: 14px;
   font-weight: normal;
   line-height: 1.71;
@@ -53,13 +53,22 @@
   padding-top: 25px;
 }
 .home {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
   padding: 4% 90px 0;
 }
 .home--part {
   height: 600px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
 }
 .home--part-istaknuta-akcija {
@@ -82,7 +91,12 @@
 .home--part-2 {
   width: 30%;
   border-bottom: 1px solid #d0d0d0;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
 }
 .home--part-2 .suzi-akcije {
@@ -91,6 +105,8 @@
 }
 .home--part-2 .overflow {
   overflow: auto;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
   flex: 1;
 }
 .home--part-2 .naslov {
@@ -107,7 +123,11 @@
 }
 .home--part2 {
   height: 700px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
   border-bottom: 1px solid #000000;
 }
@@ -116,8 +136,15 @@
 }
 .home--part2--vesti {
   width: 33%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
   margin: 60px 0 30px;
 }
@@ -129,6 +156,8 @@
 .home--part2--vesti--naslovi {
   width: 80%;
   overflow: auto;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
   flex: 1;
 }
 .home--part2--vesti--naslovi-1 {
@@ -143,4 +172,26 @@
   padding: 20px 0;
   text-decoration: none;
   cursor: pointer;
+}
+@media only screen and (max-width: 1024px) {
+  .home {
+    padding: 4% 60px 0;
+  }
+  .home--part2--vesti--title {
+    width: 85%;
+  }
+  .home--part2--vesti--naslovi {
+    width: 85%;
+  }
+}
+@media only screen and (max-width: 960px) {
+  .home {
+    padding: 4% 50px 0;
+  }
+  .home--part2--vesti--title {
+    width: 85%;
+  }
+  .home--part2--vesti--naslovi {
+    width: 85%;
+  }
 }

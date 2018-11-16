@@ -4,6 +4,10 @@ ini_set('display_errors', 1);
 include("engine.php");
 require_once 'vendor/autoload.php';
 
+$currentPath = $_SERVER['PHP_SELF']; 
+$pathInfo = pathinfo($currentPath);     
+$BASE = dirname($pathInfo['dirname']);
+
 function getBaseUrl() 
 {
     // output: /myproject/index.php
@@ -45,6 +49,12 @@ $p = parse_url($_SERVER['REQUEST_URI']);
 if (!isset($p['query'])) $p['query']='';
 if (!isset($p['path']))  $p['path']='';
 //list($path, $query) =
+//echo $p['path'];
+
+if (substr($p['path'], 0, strlen($BASE)) == $BASE) {
+    $p['path'] = substr($p['path'], strlen($BASE));
+} 
+
 $pathArr = array_filter(explode('/', $p['path']));
 //print_r( $pathArr );
 //$queryArr = array_filter(explode('&', $p['query']));
@@ -53,12 +63,13 @@ parse_str($p['query'], $queryArr);
 
 $index = 0;
 foreach($pathArr as $key) {
-    $queryArr[$index] = $key;
+    $queryArr[$index] = urldecode($key);
     $index++;
 }
 
 $_GET = array_merge($_GET, $queryArr);
-//$_GET['twig_file_name'] = $_GET[0];
+$_GET['twig_file_name'] = $_GET[0];
+//print_r( $_GET );
 
 $twig->addGlobal('_GET', $_GET);
 $twig->addGlobal('_POST', $_POST);// todo add SESSION var

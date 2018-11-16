@@ -46,6 +46,16 @@
                 {{/each}}
             </select>                
         </div>
+                
+        {{#if row.field_type=='SLUG' }}
+        <div col='1/1'>
+            <label style="width:14em">Slug from</label>
+            <Select style="display: inline-block; width:calc(99% - 14em);" url="?query=_engine_schema_column&table_name={{table_name}}" value={{row.lookup_field}} labelf="label" valuef="compId" >
+                <option disabled selected value="" >Pick</option>
+            </Select>
+        </div>
+        {{/if}}
+
         {{#if row.field_type=='DROPDOWN' || row.field_type=='MULTISELECT' }}
         <div col='1/1'>
             <label style="width:14em">Lookup table</label>
@@ -168,6 +178,7 @@
             , update:false
             , types:{
                 'TEXT': {sqlitename:'TEXT', myname:'TEXT'} ,
+                'SLUG': {sqlitename:'TEXT', myname:'SLUG'} ,
                 'LONGTEXT': {sqlitename:'TEXT', myname:'LONGTEXT'} ,
                 'IMAGE': {sqlitename:'TEXT', myname:'IMAGE'} ,
                 'DATE': {sqlitename:'TEXT', myname:'DATE'} ,

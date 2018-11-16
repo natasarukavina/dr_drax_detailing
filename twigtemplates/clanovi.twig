@@ -27,12 +27,14 @@
     </div>
     
     <div class="clanovi--pridruzi"><a href="mailto:{{fetch('Home').email}}"><div class="clanovi--pridruzi-button">Postanite član</div></a></div>
-    {% set tip = _GET['tip']?_GET['tip']:'Redovni'%}
+    {% set tip = _GET['1'] ? _GET['1'] : 'Redovni' %}
     <div class="clanovi--spisak" id="spisak">
         <div class="clanovi--spisak-tip">
           <div class="clanovi--spisak-tip--naslov titles">Članovi</div>
           {% for item in fetch("TipClana") %}
-          <div class="clanovi--spisak-tip--red plain-text {{(item.Naziv == tip) ? 'active-list' : ''}}"><a href="clanovi?tip={{item.Naziv}}#spisak"> {{item.Naziv}}</a></div>
+            <div class="clanovi--spisak-tip--red plain-text {{(item.Naziv == tip) ? 'active-list' : ''}}">
+                <a href="clanovi/{{item.Naziv}}#spisak"> {{item.Naziv}}</a>
+            </div>
           {% endfor %}
         </div>
 
