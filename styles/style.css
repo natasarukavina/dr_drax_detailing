@@ -83,7 +83,7 @@ img {
   -webkit-box-pack: space-evenly;
   -ms-flex-pack: space-evenly;
   justify-content: space-evenly;
-  padding-left: 10%;
+  padding-left: 5%;
 }
 .head--meni-title {
   height: 100%;
@@ -1041,9 +1041,6 @@ img {
 @media only screen and (max-width: 1024px) {
   .head {
     padding: 0 60px;
-  }
-  .head--meni {
-    padding-left: 20px;
   }
   .head--meni-title {
     width: 80px;
