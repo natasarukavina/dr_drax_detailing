@@ -8,14 +8,16 @@
   <div class="vest--title titles">Vesti iz sveta</div>
   <div class="vest--container">
     <div class="vest--container-title titles-2">{{vesti_svet.Naslov}}</div>
-    <div class="vest--container-imgs">
-      {% if vesti_svet.Slika1  %}
-        <img class="" src="img/{{ vesti_svet.Slika1 }}" alt="SUZI Vest" />
-      {% endif %}
-      {% if vesti_svet.Slika2 %}
-        <img class="" src="img/{{ vesti_svet.Slika2 }}" />
-      {% endif %}
-    </div>
+    {% if vesti_svet.Slika1 or vesti_svet.Slika2  %}
+      <div class="vest--container-imgs">
+        {% if vesti_svet.Slika1  %}
+          <img class="" src="img/{{ vesti_svet.Slika1 }}" alt="SUZI Vest" />
+        {% endif %}
+        {% if vesti_svet.Slika2 %}
+          <img class="" src="img/{{ vesti_svet.Slika2 }}" />
+        {% endif %}
+      </div>
+    {% endif %}
     <div class="vest--container-text plain-text">
       {{vesti_svet.Text | raw}}
     </div>
