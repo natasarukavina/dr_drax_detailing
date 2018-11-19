@@ -8,14 +8,16 @@
   <div class="vest--title titles">SUZI Vesti</div>
   <div class="vest--container">
     <div class="vest--container-title titles-2">{{suzi_vesti.Naslov}}</div>
-    <div class="vest--container-imgs">
-      {% if suzi_vesti.Slika1 %}
-        <img class="" src="img/{{ suzi_vesti.Slika1 }}" alt="SUZI Vest" />
-      {% endif %}
-      {% if suzi_vesti.Slika2 %}
-        <img class="" src="img/{{ suzi_vesti.Slika2 }}" />
-      {% endif %}
-    </div>
+    {% if suzi_vesti.Slika1 or suzi_vesti.Slika2 %}
+      <div class="vest--container-imgs">
+        {% if suzi_vesti.Slika1 %}
+          <img class="" src="img/{{ suzi_vesti.Slika1 }}" alt="SUZI Vest" />
+        {% endif %}
+        {% if suzi_vesti.Slika2 %}
+          <img class="" src="img/{{ suzi_vesti.Slika2 }}" />
+        {% endif %}
+      </div>
+    {% endif %}
     <div class="vest--container-text plain-text">
       {{suzi_vesti.Text | raw}}
     </div>
