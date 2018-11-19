@@ -8,13 +8,13 @@
   <link rel="icon" href="images/suzi.png">
   {# <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> #}
   <link rel="stylesheet" type="text/css" href="styles/style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  {# <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> #}
   {# <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> #}
 </head>
 <body>
-<div style="max-width: 1600px;">
+{# <div style="max-width: 1600px;"> #}
     <div class="head">
-        <a style="margin-top: 10px;" class="head--logo" href="index"><img src="images/suzi logo-2.svg" alt="logo"></a>
+        <a style="margin-top: 10px;" class="head--logo" href="index"><img style="margin-left: -2%;" src="images/suzi logo-2.svg" alt="logo"></a>
         <div class="head--meni">
 
             <a href="index"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">Početna</a>
@@ -34,8 +34,8 @@
     <div class="footer">
         <div class="footer--1">
             <div class="footer--1--suzi">2018 SUZI</div>
-            <div class="footer--1--suzi">Sponzori SUZI</div>
-            <div class="footer--1--suzi" style="border-right: none;">Prijatelji SUZI</div>
+            <div class="footer--1--suzi"><a href="sponzori">Sponzori SUZI</a></div>
+            <div class="footer--1--suzi" style="border-right: none;"><a href="prijatelji">Prijatelji SUZI</a></div>
         </div>
         <div class="footer--icons">
             <a href="#"><img src="images/Facebook.svg"></a>
@@ -43,6 +43,6 @@
             <a href="#"><img src="images/Twitter.svg"></a>
         </div>
     </div>
-</div>
+{# </div> #}
 </body>
 </html>
