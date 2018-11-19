@@ -273,15 +273,20 @@ bottom: inherit;" >
                 self.set('show', false)
             }
         })
-        this.on('delete', async function(){
+        this.on('delete', function(){
             var id  = self.get('row.id');
             if (!id) return;
-            var [resp, err] = await fetch2('?query='+self.get('tablename')+'&_action=delete', {id:id})
-            if (resp) {
-                izitoast.success({ message: 'Record deleted.'});
-                if (self.parent) self.parent.fire('refresh');
-                self.set('show', false)
-            }
+
+            ractive.fire('showYesNoDialog', 'Delete this item ?', async function(answer){
+                var id  = self.get('row.id');
+                var [resp, err] = await fetch2('?query='+self.get('tablename')+'&_action=delete', {id:id})
+                if (resp) {
+                    izitoast.success({ message: 'Record deleted.'});
+                    if (self.parent) self.parent.fire('refresh');
+                    self.set('show', false)
+                }
+            });
+            
         })        
 
         this.on('showMap', function(id){
