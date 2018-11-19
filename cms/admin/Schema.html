@@ -116,7 +116,7 @@
             </thead>
             <tbody>
                 {{#each row.field}}
-                <tr on-click="@this.fire('selectRow', .)">
+                <tr style="cursor: pointer" on-click="@this.fire('selectRow', .)">
                     <td>{{.field_name}}</td>
                     <td>{{.nice_name}}</td>
                     <td>{{.field_type}}</td>

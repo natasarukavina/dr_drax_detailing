@@ -157,6 +157,34 @@ bottom: inherit;
 </modal>
 {{/if}}
 
+
+{{#if showYesNoDialog }}
+<modal show="{{showYesNoDialog}}" title="Confirmation" 
+class="animated fadeInRight" showOverlay="{{true}}" showHeader="{{true}}" style="
+height: 16em;
+width: 30em;
+left: calc(50% - 15em);
+right: inherit;
+top: calc(50% - 8em);
+bottom: inherit;
+" >
+    <section style="padding: 2rem; overflow: auto; text-align: center;height: 100%; display: flex; flex-flow: column;">
+        <h3 style="flex:1">{{YesNoDialogText}}</h3>
+        <div xx style="display:flex; justify-content: space-between; margin-top: 2rem;">
+            <button  style="margin: 0;" on-click="@this.fire('YesNoDialogAnswer', false)">
+                <span class="glyphicon glyphicon-remove"></span> Cancel
+            </button>    
+            <button primary style="width: 14rem; margin: 0;" on-click="@this.fire('YesNoDialogAnswer', true)">
+                <span class="glyphicon glyphicon-ok"></span>
+                Yes
+            </button>    
+        </div>
+    </section>
+</modal>
+{{/if}}
+
+
+
 <script>
   component.exports = {
     onrender: function () {
@@ -212,6 +240,18 @@ bottom: inherit;
             if (selected_tablename && self.get('schemas.'+selected_tablename))
                 self.set('selected_tablename_obj', self.get('schemas.'+selected_tablename) )
         }, {init:false, defer:true})        
+
+        this.answer_cb = null;
+        this.on('showYesNoDialog', function(text, answer_cb){
+            self.set('YesNoDialogText', text || 'Are you sure ?');
+            self.set('showYesNoDialog',true);
+            self.answer_cb = answer_cb
+        })        
+        this.on('YesNoDialogAnswer', function(answer){
+            if (answer===true && self.answer_cb) self.answer_cb(answer);
+            self.set('showYesNoDialog',false)
+        })
+
     },        
     data:function() {
             return {    
@@ -226,7 +266,9 @@ bottom: inherit;
                 selected_tablename_obj:{},
                 showSchemaNew:false,
                 menuOpen:false,
-                showAbout:false
+                showAbout:false,
+                showYesNoDialog:false,
+                YesNoDialogText:''
 
             }
         }
