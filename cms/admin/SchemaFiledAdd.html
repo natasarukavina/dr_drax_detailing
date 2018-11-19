@@ -72,6 +72,11 @@
         {{/if}}
 
         <div col='1/1' style="display:flex">
+            <label style="width:14em">Grid width</label>
+            <input style="width:calc(99% - 14em)" type="text" placeholder="20%, 13rem,..." value={{row.w}}>
+        </div>        
+
+        <div col='1/1' style="display:flex">
             <label style="width:14em">Grid template</label>
             <textarea style="width:calc(99% - 14em)" type="text" placeholder="formatNumber(viewport[i][.compId])..." value={{row.template}}></textarea>
         </div>        
