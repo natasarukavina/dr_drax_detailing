@@ -250,16 +250,18 @@ bottom: inherit;
             })
 
             this.on('droptable', async function(){
-                var tablename = self.get('schema_name');
-//                var [resp, err] = await fetch2('?query=engine_drop_table&tablename=' + tablename)
-                var [resp, err] = await fetch2('?query=_engine_schema&_action=delete&tablename=' + tablename)
-                if (resp) {
-                    if (self.parent) self.parent.fire('refresh');
-                    self.set('G.selected_tablename', null);
-                    self.set('G.selectedModule', 'Schema')
-                    izitoast.info({ message: 'Table '+tablename+' deleted.'});
-                    self.set('show', false);
-                }
+                ractive.fire('showYesNoDialog', 'Delete schema '+self.get('schema_name')+' ?', async function(answer){
+
+                    var tablename = self.get('schema_name');
+                    var [resp, err] = await fetch2('?query=_engine_schema&_action=delete&tablename=' + tablename)
+                    if (resp) {
+                        if (self.parent) self.parent.fire('refresh');
+                        self.set('G.selected_tablename', null);
+                        self.set('G.selectedModule', 'Schema')
+                        izitoast.info({ message: 'Table '+tablename+' deleted.'});
+                        self.set('show', false);
+                    }
+                })
             })
             
         },
