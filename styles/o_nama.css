@@ -33,7 +33,7 @@
   color: #000000;
 }
 .plain-text-red {
-  font-size: 13px;
+  font-size: 18px;
   line-height: 22px;
   color: #ff0000;
 }
@@ -126,5 +126,25 @@
 @media only screen and (max-width: 960px) {
   .oNama {
     padding: 4% 50px;
+  }
+  .oNama--1--text {
+    width: 100%;
+  }
+}
+@media only screen and (max-width: 640px) {
+  .oNama--2--blok {
+    width: 100%;
+  }
+}
+@media only screen and (max-width: 360px) {
+  .oNama {
+    padding: 4% 35px;
+  }
+  .oNama--1--text {
+    font-size: 12px;
+  }
+  .oNama--2--blok-naslov {
+    font-size: 13px;
+    width: 55%;
   }
 }
