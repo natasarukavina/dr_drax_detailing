@@ -245,12 +245,14 @@ component.exports = {
         })
         
         this.on('delete', async function(){
-            var [resp, err] = await fetch2('?query=_files&_action=delete&id='+self.get('imgSelect') )
-            if (resp ) {
-                self.set('imgSelect', null);
-                self.fire('refresh');
-                izitoast.success({ message: 'File removed'});
-            }
+            ractive.fire('showYesNoDialog', 'Delete file '+self.get('imgSelect') + ' ?', async function(answer){
+                var [resp, err] = await fetch2('?query=_files&_action=delete&id='+self.get('imgSelect') )
+                if (resp ) {
+                    self.set('imgSelect', null);
+                    self.fire('refresh');
+                    izitoast.success({ message: 'File removed'});
+                }
+            })
         })
 
     },        

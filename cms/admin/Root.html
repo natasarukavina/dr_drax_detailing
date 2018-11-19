@@ -169,8 +169,8 @@ top: calc(50% - 8em);
 bottom: inherit;
 " >
     <section style="padding: 2rem; overflow: auto; text-align: center;height: 100%; display: flex; flex-flow: column;">
-        <h3 style="flex:1">{{YesNoDialogText}}</h3>
-        <div xx style="display:flex; justify-content: space-between; margin-top: 2rem;">
+        <h3 style="flex:1; overflow: auto; overflow-wrap: break-word;">{{YesNoDialogText}}</h3>
+        <div xx style="display:flex; justify-content: space-between; margin-top: 0;">
             <button  style="margin: 0;" on-click="@this.fire('YesNoDialogAnswer', false)">
                 <span class="glyphicon glyphicon-remove"></span> Cancel
             </button>    
