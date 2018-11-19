@@ -12,11 +12,12 @@
   {# <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> #}
 </head>
 <body>
-
+<div style="max-width: 1600px;">
     <div class="head">
         <a style="margin-top: 10px;" class="head--logo" href="index"><img src="images/suzi logo-2.svg" alt="logo"></a>
         <div class="head--meni">
 
+            <a href="index"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">Početna</a>
             <a href="o_nama"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='o_nama' %} active {%endif%}">O nama</a>
             <a href="akcije"        class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
             <a href="vesti"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
@@ -42,5 +43,6 @@
             <a href="#"><img src="images/Twitter.svg"></a>
         </div>
     </div>
+</div>
 </body>
 </html>
