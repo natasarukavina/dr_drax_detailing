@@ -12,9 +12,6 @@ body {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 p {
   -webkit-margin-before: 0px;
@@ -261,9 +258,6 @@ img {
 }
 .home--part-2 .overflow {
   overflow: auto;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
 }
 .home--part-2 .naslov {
   font-size: 14px;
@@ -273,9 +267,6 @@ img {
   padding: 40px 0;
   margin-right: 10px;
   border-bottom: 1px solid #d0d0d0;
-}
-.home--part-2 .naslov:last-child {
-  border-bottom: none;
 }
 .home--part2 {
   height: 700px;
@@ -998,6 +989,44 @@ img {
     width: 28%;
     margin-left: 2%;
   }
+}
+.prijatelji {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  padding: 4% 90px 0;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.prijatelji-boks {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+}
+.prijatelji-boks--1 {
+  height: 150px;
+  width: 50%;
+  margin-bottom: 3%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.prijatelji-boks--1--adresa {
+  font-size: 14px;
+  line-height: 1.71;
+  color: #000000;
+  margin-top: 20px;
+}
+.prijatelji-boks--1--link {
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 2;
+  color: #f92525;
 }
 @media only screen and (max-width: 1024px) {
   .head {

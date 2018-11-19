@@ -6,8 +6,8 @@
         <div class="home--part-istaknuta-akcija">
                 {% set IstaknutaAkcija =  fetch('IstaknutaAkcija') %}
                 {# <img style="height:335px; width: 100%;" src="img/{{ IstaknutaAkcija.Slika1 }}"> #}
-                <div style="background-image: url('img/{{IstaknutaAkcija.Slika1}}'); background-size: cover;
-                background-repeat: no-repeat;     background-position: center; height: 335px;"></div>
+                <a href="akcije/{{IstaknutaAkcija.Slug}}"><div style="background-image: url('img/{{IstaknutaAkcija.Slika1}}'); background-size: cover;
+                background-repeat: no-repeat;     background-position: center; height: 335px;"></div></a>
                 <div class="title">{{ IstaknutaAkcija.Naslov }}</div>
                 <div class="text">{{IstaknutaAkcija.Text | raw}}  </div>
                 <div class="more"><a href="akcije/{{IstaknutaAkcija.Slug}}">Vidi ceo tekst...</a></div>
@@ -20,6 +20,7 @@
                         <div class="naslov"><a href="akcije/{{item.Slug}}">{{ item.Naslov }}</a></div>
                         {% endfor %}
                 </div>
+                <a class="more" href= "akcije">Sve SUZI akcije...</a>
         </div>
     </div>
     <div class="home--part2">
@@ -30,7 +31,7 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="naslov sub_titles"><a href="vest-suzi/{{vesti_suzi.Slug}}">{{ vesti_suzi.Naslov }}</a></div>
                         {% if vesti_suzi.Slika %}
-                        <img class="slika" src="img/{{ vesti_suzi.Slika }}">
+                        <a href="vest-suzi/{{vesti_suzi.Slug}}"><img class="slika" src="img/{{ vesti_suzi.Slika }}"></a>
                         {% endif %}
                     </div>
                     {% endfor %}
@@ -44,7 +45,7 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="sub_titles"><a href="vest-svet/{{vesti_svet.Slug}}">{{ vesti_svet.Naslov }}</a></div>
                         {% if vesti_svet.Slika1 %}
-                        <img class="slika" src="img/{{ vesti_svet.Slika1 }}">
+                        <a href="vest-svet/{{vesti_svet.Slug}}"><img class="slika" src="img/{{ vesti_svet.Slika1 }}"></a>
                         {% endif %}
                     </div>
                     {% endfor %}
@@ -58,7 +59,7 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="sub_titles"><a href="suzi-prikaz/{{vesti_prikazi.Slug}}">{{ vesti_prikazi.Naslov }}</a></div>
                         {% if vesti_prikazi.Slika1 %}
-                        <img class="slika" src="img/{{ vesti_prikazi.Slika1 }}">
+                        <a href="suzi-prikaz/{{vesti_prikazi.Slug}}"><img class="slika" src="img/{{ vesti_prikazi.Slika1 }}"></a>
                         {% endif %}
                     </div>
                     {% endfor %}
@@ -85,12 +86,12 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="sub_titles"><a href="publikacije/Suzi-Elektronski-glasnik/{{suzi_eGlasnik.Slug}}">{{ suzi_eGlasnik.Naslov }}</a></div>
                         {% if suzi_eGlasnik.Slika1 %}
-                        <img class="slika" src="img/{{ suzi_eGlasnik.Slika1 }}">
+                        <a href="publikacije/Suzi-Elektronski-glasnik/{{suzi_eGlasnik.Slug}}"><img class="slika" src="img/{{ suzi_eGlasnik.Slika1 }}"></a>
                         {% endif %}
                     </div>
                     {% endfor %}
                 </div>
-                <a class="more" href= "publikacije/Suzi-Elektronski-glasnik">Prethodni brojevi...</a>
+                <a class="more" href= "publikacije/Suzi-Elektronski-glasnik">Svi brojevi...</a>
         </div>
         <div class="home--part2--vesti">
                 <div class="home--part2--vesti--title titles">Korisni linkovi</div>

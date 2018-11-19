@@ -1,0 +1,92 @@
+.titles {
+  font-size: 24px;
+  font-weight: 300;
+  color: #f92525;
+  line-height: 28px;
+}
+.titles-2 {
+  font-size: 24px;
+  line-height: 28px;
+  color: #202124;
+}
+.sub_titles {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.71;
+  color: #000000;
+}
+.sub_titles-link {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.sub_titles-lite {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.71;
+  color: #000000;
+}
+.plain-text {
+  font-size: 13px;
+  line-height: 22px;
+  color: #000000;
+}
+.plain-text-red {
+  font-size: 18px;
+  line-height: 22px;
+  color: #ff0000;
+}
+.dates {
+  font-size: 14px;
+  line-height: 24px;
+  color: #9b9b9b;
+}
+.link {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000000;
+}
+.slika {
+  max-width: 100%;
+  padding-top: 25px;
+}
+.prijatelji {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  padding: 4% 90px 0;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.prijatelji-boks {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+}
+.prijatelji-boks--1 {
+  height: 150px;
+  width: 50%;
+  margin-bottom: 3%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.prijatelji-boks--1--adresa {
+  font-size: 14px;
+  line-height: 1.71;
+  color: #000000;
+  margin-top: 20px;
+}
+.prijatelji-boks--1--link {
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 2;
+  color: #f92525;
+}

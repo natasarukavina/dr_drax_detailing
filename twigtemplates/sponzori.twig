@@ -1,0 +1,22 @@
+{% extends "base.twig" %}
+
+{% block content %}
+
+    <div class="prijatelji">
+
+        <div class="titles" style="margin-bottom: 3%;">Prijatelji SUZI</div>
+        <div class="prijatelji-boks">
+            {% set Sponzori = fetch("Sponzori") %}
+            {% for item in Sponzori %}
+            <div class="prijatelji-boks--1">
+                <img style="max-width: 200px;" src="img/{{item.Logo}}">
+                <div class="prijatelji-boks--1--adresa">{{item.Adresa}} </div>
+                <div class="prijatelji-boks--1--link"><a href="{{item.Link}}">{{item.Link}}</a></div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+{% endblock %}

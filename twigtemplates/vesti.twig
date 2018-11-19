@@ -21,7 +21,7 @@
       <div class="vesti--svet-vest">
         <div class="vesti--svet-vest--naslov sub_titles-lite"><a href="vest-svet/{{svet.Slug}}">{{ svet.Naslov }}</a></div>
         {% if svet.Slika1 %}
-          <img class="vesti--svet-vest--image slika" src="img/{{ svet.Slika1 }}">
+          <a href="vest-svet/{{svet.Slug}}"><img class="vesti--svet-vest--image slika" src="img/{{ svet.Slika1 }}"></a>
         {% endif %}
         <div class="vesti--svet-vest--datum dates">{{ svet.Datum }}</div>
       </div>
@@ -33,7 +33,7 @@
       <div class="vesti--prikazi-vest">
         <div class="vesti--prikazi-vest--naslov sub_titles-lite"><a href="suzi-prikaz/{{prikaz.Slug}}">{{ prikaz.Naslov }}</a></div>
         {% if prikaz.Slika1 %}
-          <img class="vesti--prikazi-vest--image slika" src="img/{{ prikaz.Slika1 }}">
+          <a href="suzi-prikaz/{{prikaz.Slug}}"><img class="vesti--prikazi-vest--image slika" src="img/{{ prikaz.Slika1 }}"></a>
         {% endif %}
         <div class="vesti--prikazi-vest--datum dates">{{ prikaz.Datum }}</div>
       </div>
