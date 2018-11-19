@@ -64,7 +64,7 @@
 
             <div col='1/1'>    
                 <label style="width: 14rem;">Menu order</label>
-                <input type="number" placeholder="" value={{row.menu_sort}} style="width: calc(100% - 15rem);">
+                <input type="number" placeholder="" value={{row.menu_sort}} style="width: 10rem">
             </div>
             <div col='1/1'>
                 <Checkbox id="checkbox-2" checked={{row.is_multiple}}></Checkbox>
@@ -73,7 +73,7 @@
             {{#if row.is_multiple===true || row.is_multiple=='true' }}
             <div col='1/1'>
                 <label style="width: 14rem;">Group table By  </label>
-                <select style="width:calc(99% - 22em); display: inline;" value='{{row.group_by}}'>
+                <select style="width:calc(99% - 19em); display: inline;" value='{{row.group_by}}'>
                     <option value=''>(don't group)</option>
                     {{#each row.field:key}}
                         <option value='{{.field_name}}'>{{.field_name}} ({{.nice_name}})</option>

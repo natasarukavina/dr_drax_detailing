@@ -27,14 +27,14 @@
         {{#if (.compType=='INTEGER' || .compType=='NUMERIC') && .visible_details=='true' }}
         <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
-            <input style="width: calc(100% - 15rem)" type="number" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}} >
+            <input style="width: 10rem" type="number" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}} >
         </div>
         {{/if}}
 
         {{#if .compType=='DATE' && .visible_details=='true'}}
         <div col='1/1' class="f" xx>
             <label class="l" xx>{{.nice_name}}</label>
-            <input style="width: calc(100% - 15rem)" type="date" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}  >
+            <input style="width: 15rem" type="date" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}  >
         </div>
         {{/if}}
 

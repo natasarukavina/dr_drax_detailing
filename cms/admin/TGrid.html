@@ -3,7 +3,7 @@
         <tag>{{fr.length}} item{{fr.length==1?'':'s'}}</tag>
     </span>      
     <span style="flex: 1; text-align: center; font-weight: bold; text-transform: uppercase;">
-        {{.selected_tablename}}
+        {{G.schemas[~/selected_tablename].nice_name}}
     </span>
     <button style="padding: 9px; margin: 0;" on-click="@this.set('addNew',true)" id="addNew">
         <span class="glyphicon glyphicon-plus"></span>
@@ -25,7 +25,7 @@
 
 
 {{#if showDetails}}
-<modal show="{{showDetails}}" zoomFrom="{{currFilterIndex}}" cw="{{cw}}" title="{{selected_tablename}} details" 
+<modal show="{{showDetails}}" zoomFrom="{{currFilterIndex}}" cw="{{cw}}" title="{{G.schemas[~/selected_tablename].nice_name}} details" 
 class="animated fadeInRight" showOverlay="{{false}}" style="
 height: initial;
 width: auto;
@@ -38,7 +38,7 @@ bottom: 0;" >
 {{/if}}
 
 {{#if addNew}}
-<modal show="{{addNew}}" zoomFrom="addNew" cw="{{cw}}" title="Add new {{selected_tablename}}" showOverlay="{{true}}" style="
+<modal show="{{addNew}}" zoomFrom="addNew" cw="{{cw}}" title="Add new {{G.schemas[~/selected_tablename].nice_name}}" showOverlay="{{true}}" style="
 height: 44em;
 width: 50em;
 left: calc(50% - 25em);

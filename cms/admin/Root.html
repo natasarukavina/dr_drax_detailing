@@ -4,7 +4,7 @@
                 <!-- you can leave this empty if you don't want a title -->
                 <a  style="left: 0; top: 0; bottom: 0; padding: 1rem 2rem;">
                     <img src="favicon.png">
-                    {{selectedModule?selected_tablename:'Admin Panel'}}
+                    {{selectedModule? selectedModule=='ImageBrowser'?'Media':selected_tablename_obj.nice_name:'Admin Panel'}}
                 </a>
                 
             </header>
@@ -208,6 +208,9 @@ bottom: inherit;
 
         this.observe('selectedModule selected_tablename showAbout', function(n,o){
             setTimeout( function(){  self.set('menuOpen', false) },100);
+            var selected_tablename = self.get('selected_tablename');
+            if (selected_tablename && self.get('schemas.'+selected_tablename))
+                self.set('selected_tablename_obj', self.get('schemas.'+selected_tablename) )
         }, {init:false, defer:true})        
     },        
     data:function() {
@@ -220,6 +223,7 @@ bottom: inherit;
                 sqlite_tables:[],
                 sqlite_schema:[],
                 selected_tablename:'',
+                selected_tablename_obj:{},
                 showSchemaNew:false,
                 menuOpen:false,
                 showAbout:false

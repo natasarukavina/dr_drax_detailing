@@ -80,7 +80,7 @@
         </grid>
         <div xx class="buttonBar">
             <button disabled="{{!update}}" on-click="delete">
-                <span class="glyphicon glyphicon-remove"></span> Delete
+                <span class="glyphicon glyphicon-remove"></span> Delete User
             </button>    
             <button primary disabled={{loading}} style="width: 14rem;" on-click="save">
                 <span class="glyphicon {{loading?'glyphicon-refresh glyphicon-refresh-animate':'glyphicon-ok'}}"></span>
@@ -145,11 +145,11 @@
                 }
             })
             this.on('delete', async function(){
-                var id  = self.get('row.id');
-                if (!id) return;
-                var [resp, err] = await fetch2('?query='+self.get('tablename')+'&_action=delete', {id:id})
+                var user_name  = self.get('row.user_name');
+                //if (!id) return;
+                var [resp, err] = await fetch2('?query='+self.get('tablename')+'&_action=delete', {user_name:user_name})
                 if (resp) {
-                    izitoast.success({ message: 'Record deleted.'});
+                    izitoast.success({ message: 'User deleted.'});
                     if (self.parent) self.parent.fire('refresh');
                     self.set('show', false)
                 }
