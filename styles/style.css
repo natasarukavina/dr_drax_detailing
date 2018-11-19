@@ -83,7 +83,7 @@ img {
   -webkit-box-pack: space-evenly;
   -ms-flex-pack: space-evenly;
   justify-content: space-evenly;
-  padding-left: 10%;
+  padding-left: 5%;
 }
 .head--meni-title {
   height: 100%;
@@ -1016,6 +1016,16 @@ img {
   flex-direction: column;
   justify-content: flex-end;
 }
+.prijatelji-boks--1--logo {
+  height: 80px;
+  width: 270px;
+  display: flex;
+  align-items: center;
+}
+.prijatelji-boks--1--logo img {
+  max-width: 100%;
+  max-height: 100%;
+}
 .prijatelji-boks--1--adresa {
   font-size: 14px;
   line-height: 1.71;
@@ -1031,9 +1041,6 @@ img {
 @media only screen and (max-width: 1024px) {
   .head {
     padding: 0 60px;
-  }
-  .head--meni {
-    padding-left: 20px;
   }
   .head--meni-title {
     width: 80px;
