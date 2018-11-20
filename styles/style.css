@@ -12,6 +12,8 @@ body {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
+  max-width: 1600px;
+  margin: auto;
 }
 p {
   -webkit-margin-before: 0px;
@@ -485,7 +487,7 @@ img {
   color: #000000;
 }
 .akcije--right--text * {
-  font-size: initial !important;
+  font-size: inherit !important;
 }
 .clicked {
   color: #f92525 !important;
