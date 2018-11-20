@@ -9,8 +9,8 @@
             flex-direction: column;
     padding: 4% 90px 0;
     &--part{
-        // padding: 60px 0;
-        height: 600px;
+        max-height: 550px;
+        height: auto;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -20,6 +20,7 @@
         &-istaknuta-akcija{
             width: 66%;
             border-bottom: 1px solid @gray-light;
+            padding-bottom: 20px;
             .title{
                 font-size: 18px;
                 font-weight: bold;
@@ -44,9 +45,11 @@
            -webkit-box-direction: normal;
                -ms-flex-direction: column;
                    flex-direction: column;
+            padding-bottom: 20px;
            .suzi-akcije{
             font-size: 24px;
             color: @red;
+            margin-bottom: 10px;
            }
            .overflow{
                overflow: auto;
@@ -59,7 +62,7 @@
             font-weight: bold;
             letter-spacing: 1.71;
             color: @black;
-            padding: 40px 0;
+            padding: 20px 0;
             margin-right: 10px;
             border-bottom: 1px solid @gray-light;
 
@@ -72,7 +75,8 @@
 
     }
     &--part2{
-        height: 700px;
+        max-height: 550px;
+        height: auto;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -95,7 +99,7 @@
             // -webkit-box-pack: justify;
             //     -ms-flex-pack: justify;
             //         justify-content: space-between;
-            margin: 60px 0 30px;
+            margin: 30px 0 30px;
             &--title{
                 width: 80%;
                 padding-bottom: 20px;
@@ -109,7 +113,7 @@
                 //         flex: 1;
                 &-1{
                     border-bottom: 1px solid @gray-light;
-                    padding: 25px 0;
+                    padding: 20px 0;
                 }
             }
         }
