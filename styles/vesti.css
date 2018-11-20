@@ -33,7 +33,7 @@
   color: #000000;
 }
 .plain-text-red {
-  font-size: 13px;
+  font-size: 18px;
   line-height: 22px;
   color: #ff0000;
 }
@@ -74,15 +74,11 @@
 }
 .vesti--suzi-vest {
   width: 100%;
-  padding: 25px 0px 5px 0px;
+  padding: 20px 0px 5px 0px;
   border-bottom: 1px solid #d0d0d0;
 }
 .vesti--suzi-vest--link {
   width: 100%;
-}
-.vesti--suzi-vest--datum {
-  width: 100%;
-  padding: 6px 0px;
 }
 .vesti--svet {
   width: 30%;

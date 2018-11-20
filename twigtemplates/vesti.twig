@@ -11,7 +11,7 @@
       {% for suzi in vesti_suzi %}
       <div class="vesti--suzi-vest">
         <div class="vesti--suzi-vest--link sub_titles"><a href="vest-suzi/{{suzi.Slug}}">{{ suzi.Naslov }}</a></div>
-        <div class="vesti--suzi-vest--datum dates">{{ suzi.Datum }}</div>
+        <div class="dates">{{ suzi.Datum | date("d.m.Y") }}</div>
       </div>
       {% endfor %}
     </div>
@@ -23,7 +23,7 @@
         {% if svet.Slika1 %}
           <a href="vest-svet/{{svet.Slug}}"><img class="vesti--svet-vest--image slika" src="img/{{ svet.Slika1 }}"></a>
         {% endif %}
-        <div class="vesti--svet-vest--datum dates">{{ svet.Datum }}</div>
+        <div class="dates">{{ svet.Datum | date("d.m.Y") }}</div>
       </div>
       {% endfor %}
     </div>
@@ -35,7 +35,7 @@
         {% if prikaz.Slika1 %}
           <a href="suzi-prikaz/{{prikaz.Slug}}"><img class="vesti--prikazi-vest--image slika" src="img/{{ prikaz.Slika1 }}"></a>
         {% endif %}
-        <div class="vesti--prikazi-vest--datum dates">{{ prikaz.Datum }}</div>
+        <div class="dates">{{ prikaz.Datum | date("d.m.Y") }}</div>
       </div>
       {% endfor %}
     </div>
