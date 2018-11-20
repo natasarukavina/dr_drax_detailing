@@ -6,11 +6,13 @@
         <div class="home--part-istaknuta-akcija">
                 {% set IstaknutaAkcija =  fetch('IstaknutaAkcija') %}
                 {# <img style="height:335px; width: 100%;" src="img/{{ IstaknutaAkcija.Slika1 }}"> #}
-                <a href="akcije/{{IstaknutaAkcija.Slug}}"><div style="background-image: url('img/{{IstaknutaAkcija.Slika1}}'); background-size: cover;
-                background-repeat: no-repeat;     background-position: center; height: 335px;"></div></a>
+                {% if IstaknutaAkcija.Slika1 %}
+                    <a href="akcije/{{IstaknutaAkcija.Slug}}"><div style="background-image: url('img/{{IstaknutaAkcija.Slika1}}'); background-size: cover;
+                    background-repeat: no-repeat;     background-position: center; height: 335px;"></div></a>
+                {% endif %}
                 <div class="title">{{ IstaknutaAkcija.Naslov }}</div>
                 <div class="text">{{IstaknutaAkcija.Text | raw}}  </div>
-                <div class="more"><a href="akcije/{{IstaknutaAkcija.Slug}}">Vidi ceo tekst...</a></div>
+                <div class="more"><a href="{{ IstaknutaAkcija.href }}/{{IstaknutaAkcija.Slug}}">Vidi ceo tekst...</a></div>
 
         </div>
         <div class="home--part-2">

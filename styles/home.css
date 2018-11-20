@@ -63,7 +63,8 @@
   padding: 4% 90px 0;
 }
 .home--part {
-  height: 600px;
+  max-height: 550px;
+  height: auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -74,6 +75,7 @@
 .home--part-istaknuta-akcija {
   width: 66%;
   border-bottom: 1px solid #d0d0d0;
+  padding-bottom: 20px;
 }
 .home--part-istaknuta-akcija .title {
   font-size: 18px;
@@ -98,10 +100,12 @@
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
+  padding-bottom: 20px;
 }
 .home--part-2 .suzi-akcije {
   font-size: 24px;
   color: #f92525;
+  margin-bottom: 10px;
 }
 .home--part-2 .overflow {
   overflow: auto;
@@ -111,12 +115,13 @@
   font-weight: bold;
   letter-spacing: 1.71;
   color: #000000;
-  padding: 40px 0;
+  padding: 20px 0;
   margin-right: 10px;
   border-bottom: 1px solid #d0d0d0;
 }
 .home--part2 {
-  height: 700px;
+  max-height: 550px;
+  height: auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -137,7 +142,7 @@
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  margin: 60px 0 30px;
+  margin: 30px 0 30px;
 }
 .home--part2--vesti--title {
   width: 80%;
@@ -150,7 +155,7 @@
 }
 .home--part2--vesti--naslovi-1 {
   border-bottom: 1px solid #d0d0d0;
-  padding: 25px 0;
+  padding: 20px 0;
 }
 .more {
   font-size: 14px;
