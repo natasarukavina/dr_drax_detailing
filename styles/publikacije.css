@@ -33,7 +33,7 @@
   color: #000000;
 }
 .plain-text-red {
-  font-size: 13px;
+  font-size: 18px;
   line-height: 22px;
   color: #ff0000;
 }
@@ -99,7 +99,7 @@
   padding-top: 3%;
 }
 .suzi-publikacije--clanak--glasnik-deo {
-  width: 30%;
+  width: 32%;
   display: flex;
   flex-direction: column;
 }
@@ -110,7 +110,7 @@
   max-width: 100%;
 }
 .suzi-publikacije--clanak--glasnik-deo2 {
-  width: 40%;
+  width: 42%;
   display: flex;
   flex-direction: column;
 }
@@ -146,5 +146,5 @@
   align-items: center;
 }
 .broj-glasnika--pdf img {
-  margin-left: 20px;
+  margin-left: 5px;
 }

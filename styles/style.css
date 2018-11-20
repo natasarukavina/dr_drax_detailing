@@ -87,7 +87,7 @@ img {
   -webkit-box-pack: space-evenly;
   -ms-flex-pack: space-evenly;
   justify-content: space-evenly;
-  padding-left: 5%;
+  padding-left: 1%;
 }
 .head--meni-title {
   height: 100%;
@@ -128,7 +128,7 @@ img {
 .footer--1--suzi {
   width: 30%;
   border-right: 1px solid #ffffff;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: bold;
   line-height: 1.33;
   color: #ffffff;
@@ -228,10 +228,10 @@ img {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
+  border-bottom: 1px solid #000000;
 }
 .home--part-istaknuta-akcija {
   width: 66%;
-  border-bottom: 1px solid #d0d0d0;
   padding-bottom: 20px;
 }
 .home--part-istaknuta-akcija .title {
@@ -249,7 +249,6 @@ img {
 }
 .home--part-2 {
   width: 30%;
-  border-bottom: 1px solid #d0d0d0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -267,14 +266,16 @@ img {
 .home--part-2 .overflow {
   overflow: auto;
 }
+.home--part-2 .overflow-border {
+  border-bottom: 1px solid #d0d0d0;
+  padding: 15px 0;
+}
 .home--part-2 .naslov {
   font-size: 14px;
   font-weight: bold;
-  letter-spacing: 1.71;
+  line-height: 1.71;
   color: #000000;
-  padding: 20px 0;
   margin-right: 10px;
-  border-bottom: 1px solid #d0d0d0;
 }
 .home--part2 {
   max-height: 550px;
@@ -312,7 +313,7 @@ img {
 }
 .home--part2--vesti--naslovi-1 {
   border-bottom: 1px solid #d0d0d0;
-  padding: 20px 0;
+  padding: 15px 0;
 }
 .more {
   font-size: 14px;
@@ -384,7 +385,7 @@ img {
   display: -ms-flexbox;
   display: flex;
   padding: 20px 0;
-  width: 35%;
+  width: 55%;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
@@ -396,6 +397,7 @@ img {
   color: #000000;
   font-size: 14px;
   font-weight: normal;
+  width: 50%;
 }
 .oNama--2--blok-pdf {
   display: -webkit-box;
@@ -407,6 +409,7 @@ img {
   font-size: 9px;
   font-weight: bold;
   color: #000000;
+  width: 20%;
 }
 @media only screen and (max-width: 1024px) {
   .oNama {
@@ -907,7 +910,7 @@ img {
   padding-top: 3%;
 }
 .suzi-publikacije--clanak--glasnik-deo {
-  width: 30%;
+  width: 32%;
   display: flex;
   flex-direction: column;
 }
@@ -918,7 +921,7 @@ img {
   max-width: 100%;
 }
 .suzi-publikacije--clanak--glasnik-deo2 {
-  width: 40%;
+  width: 42%;
   display: flex;
   flex-direction: column;
 }
@@ -954,7 +957,7 @@ img {
   align-items: center;
 }
 .broj-glasnika--pdf img {
-  margin-left: 20px;
+  margin-left: 5px;
 }
 .kontakt {
   -webkit-box-flex: 1;
