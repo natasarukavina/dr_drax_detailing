@@ -16,6 +16,7 @@
 
                     <div class="sub_titles akcije--left--naslov">
                         <a style="font-weight: bold;" class="{{(item.Slug==tip or item.id==tip)?'clicked':''}}" href="akcije/{{item.Slug}}">{{ item.Naslov }}</a>
+                        <div class="dates">{{ item.Datum | date("d.m.Y") }}</div>
                     </div>
                 {% endfor %}
             </div>
