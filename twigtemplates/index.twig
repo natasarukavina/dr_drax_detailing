@@ -7,7 +7,7 @@
                 {% set IstaknutaAkcija =  fetch('IstaknutaAkcija') %}
                 {# <img style="height:335px; width: 100%;" src="img/{{ IstaknutaAkcija.Slika1 }}"> #}
                 {% if IstaknutaAkcija.Slika1 %}
-                    <a href="akcije/{{IstaknutaAkcija.Slug}}"><div style="background-image: url('img/{{IstaknutaAkcija.Slika1}}'); background-size: cover;
+                    <a href="akcije/{{IstaknutaAkcija.Slug}}"><div style="background-image: url('img/{{IstaknutaAkcija.Slika1}}'); background-size: contain;
                     background-repeat: no-repeat;     background-position: center; height: 335px;"></div></a>
                 {% endif %}
                 <div class="title">{{ IstaknutaAkcija.Naslov }}</div>

@@ -91,7 +91,7 @@ img {
 }
 .head--meni-title {
   height: 100%;
-  width: 100px;
+  width: 80px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -471,7 +471,7 @@ img {
 }
 .akcije--left--naslov {
   width: 90%;
-  padding: 30px 0;
+  padding: 20px 0 5px;
   font-weight: bold;
   border-bottom: 1px solid #d0d0d0;
 }
@@ -534,15 +534,11 @@ img {
 }
 .vesti--suzi-vest {
   width: 100%;
-  padding: 25px 0px 5px 0px;
+  padding: 20px 0px 5px 0px;
   border-bottom: 1px solid #d0d0d0;
 }
 .vesti--suzi-vest--link {
   width: 100%;
-}
-.vesti--suzi-vest--datum {
-  width: 100%;
-  padding: 6px 0px;
 }
 .vesti--svet {
   width: 30%;
@@ -910,18 +906,18 @@ img {
   padding-top: 3%;
 }
 .suzi-publikacije--clanak--glasnik-deo {
-  width: 32%;
+  width: 40%;
   display: flex;
   flex-direction: column;
 }
 .suzi-publikacije--clanak--glasnik-deo1 {
-  width: 22%;
+  width: 20%;
   margin: 0 2%;
   text-align: center;
   max-width: 100%;
 }
 .suzi-publikacije--clanak--glasnik-deo2 {
-  width: 42%;
+  width: 40%;
   display: flex;
   flex-direction: column;
 }
