@@ -91,7 +91,7 @@
   display: -ms-flexbox;
   display: flex;
   padding: 20px 0;
-  width: 35%;
+  width: 55%;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
@@ -103,6 +103,7 @@
   color: #000000;
   font-size: 14px;
   font-weight: normal;
+  width: 50%;
 }
 .oNama--2--blok-pdf {
   display: -webkit-box;
@@ -114,6 +115,7 @@
   font-size: 9px;
   font-weight: bold;
   color: #000000;
+  width: 20%;
 }
 @media only screen and (max-width: 1024px) {
   .oNama {
