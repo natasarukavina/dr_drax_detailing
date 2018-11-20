@@ -17,7 +17,10 @@
           {% for suzi in Publikacije_Suzi %}
           <div class="suzi-publikacije--clanak">
             <div style="margin-bottom: 20px;" class="suzi-publikacije--clanak-link">{{suzi.Autor}}: {{ suzi.Naziv }} , {{suzi.Izdavac}}</div>
-            <div style="margin-bottom: 10px;"><a class="preuzmi-publikaciju" href='img/{{suzi.Link}}' download="{{suzi.Naziv}}" >Preuzmi publikaciju</a></div>
+            <div style="margin-bottom: 10px;">
+              <a class="preuzmi-publikaciju" href='img/{{suzi.Link}}' download="{{suzi.Naziv}}" >Preuzmi publikaciju</a>
+              <a style="margin-left: 20px;" class="preuzmi-publikaciju" href='img/{{suzi.Link}}' target="_blank" >Otvori u novoj stranici publikaciju</a>
+            </div>
           </div>
         {% endfor %}
         </div>
@@ -29,7 +32,10 @@
           {% for svet in Publikacije_Ostale %}
           <div class="suzi-publikacije--clanak">
             <div style="margin-bottom: 20px;" class="suzi-publikacije--clanak-link">{{svet.Autor}}: {{ svet.Naziv }} , {{svet.Izdavac}}</div>
-            <div style="margin-bottom: 10px;"><a class="preuzmi-publikaciju" href='img/{{svet.Link}}' download="{{svet.Naziv}}">Preuzmi publikaciju</a></div>
+            <div style="margin-bottom: 10px;">
+              <a class="preuzmi-publikaciju" href='img/{{svet.Link}}' download="{{svet.Naziv}}">Preuzmi publikaciju</a>
+              <a style="margin-left: 20px;" class="preuzmi-publikaciju" href='img/{{svet.Link}}' target="_blank">Otvori u novoj stranici publikaciju</a>
+            </div>
           </div>
         {% endfor %}
         </div>
@@ -48,7 +54,7 @@
             {% endif %}
             
               <div class="broj-glasnika">
-                <a class="{{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}">{{glasnik.Broj}}</a> <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a></div>
+                <a class="{{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}">{{glasnik.Broj}}</a><a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}">Pogledaj PDF <img src="images/pdf.svg"></a> <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a></div>
             
           {% endfor %}
           </div>
