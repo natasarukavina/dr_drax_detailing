@@ -8,6 +8,8 @@ $currentPath = $_SERVER['PHP_SELF'];
 $pathInfo = pathinfo($currentPath);     
 $BASE = dirname($pathInfo['dirname']);
 
+//setlocale(LC_TIME, 'sr_CS');
+
 function getBaseUrl() 
 {
     // output: /myproject/index.php
