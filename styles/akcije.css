@@ -33,7 +33,7 @@
   color: #000000;
 }
 .plain-text-red {
-  font-size: 13px;
+  font-size: 18px;
   line-height: 22px;
   color: #ff0000;
 }
@@ -105,7 +105,7 @@
   color: #000000;
 }
 .akcije--right--text * {
-  font-size: initial !important;
+  font-size: inherit !important;
 }
 .clicked {
   color: #f92525 !important;
