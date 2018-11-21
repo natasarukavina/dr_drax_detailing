@@ -11,30 +11,38 @@
 <body>
 {# <div style="max-width: 1600px;"> #}
     <div class="head">
-        <a style="margin-top: 10px;" class="head--logo" href="index"><img style="margin-left: -2%;" src="images/suzi logo-2.svg" alt="logo"></a>
-        <div class="head--meni">
+            <a style="margin-top: 10px;" class="head--logo" href="index"><img style="margin-left: -2%;" src="images/suzi logo-2.svg" alt="logo"></a>
+            <div class="head--meni">
 
-            <a href="index"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">Početna</a>
-            <a href="o_nama"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='o_nama' %} active {%endif%}">O nama</a>
-            <a href="akcije"        class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
-            <a href="vesti"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
-            <a href="komisije"      class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='komisije' %} active {%endif%}">Komisije</a>
-            <a href="publikacije"   class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active {%endif%}">Publikacije</a>
-            <a href="clanovi"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active {%endif%}">Članovi</a>
-            <a href="kontakt"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active {%endif%}">Kontakt</a>
-            <input id="typeahead" type="text" placeholder="Pretraga" class="tt-input">
-            <!-- <img src="images/pretraga.svg"/> -->
+                <a href="index"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">Početna</a>
+                <a href="o_nama"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='o_nama' %} active {%endif%}">O nama</a>
+                <a href="akcije"        class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
+                <a href="vesti"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
+                <a href="komisije"      class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='komisije' %} active {%endif%}">Komisije</a>
+                <a href="publikacije"   class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active {%endif%}">Publikacije</a>
+                <a href="clanovi"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active {%endif%}">Članovi</a>
+                <a href="kontakt"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active {%endif%}">Kontakt</a>
+                <input id="typeahead" type="text" placeholder="Pretraga" class="tt-input">
+                <!-- <img src="images/pretraga.svg"/> -->
 
-        </div>
+            </div>
     </div>
     <div class="head-responsive">
         <div class="head-responsive-bar">
             <a style="margin-top: 10px;" class="head--logo" href="index"><img style="margin-left: -2%;" src="images/suzi logo-2.svg" alt="logo"></a>
-            <div id="navbar">
-                <img class="head-responsive-bar-hamb" src="images/menu-icon.svg"/>
+            <div style="display: flex;">
+                <div id="js-search" style="margin-top: 5px;" >
+                    <img class="head-responsive-bar-hamb" src="images/pretraga.svg"/>
+                </div>
+                <div id="navbar" style="margin-left: 50px;">
+                    <img class="head-responsive-bar-hamb" src="images/menu-icon.svg"/>
+                </div>
             </div>
         </div>
-        <div class="head-responsive--icon">
+        <div id="js-pretraga" class="head-responsive--pretraga">
+            <input id="typeahead" type="text" placeholder="Pretraga" class="tt-input">
+        </div>
+        <div id="head" class="head-responsive--icon">
             
             <div class="head-responsive--meni" id="js-meni">
                 <a href="index"         class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">Početna</a>
@@ -68,10 +76,18 @@
 {# </div> #}
 <script>
     let meni = document.getElementById('js-meni');
+    let pretraga = document.getElementById('js-pretraga');
     let navBar = document.getElementById('navbar');
+    let search = document.getElementById('js-search');
+    let head = document.getElementById('head');
 
     navBar.addEventListener('click', function(){
         meni.classList.toggle('active-meni');
+        head.classList.toggle('head-transition');
+    });
+    search.addEventListener('click', function(){
+        pretraga.classList.toggle('active-pretraga');
+        
     });
 
 </script>
@@ -83,11 +99,11 @@
 .tt-suggestion { color:red }
 .tt-selectable { color:red }
 .tt-cursor { background-color: gray }
-.tt-input { 
+{# .tt-input { 
     position: relative;
     vertical-align: top;
     background-color: transparent;
-}
+} #}
 </style>
 {#  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
 #}
