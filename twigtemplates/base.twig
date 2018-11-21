@@ -27,6 +27,28 @@
 
         </div>
     </div>
+    <div class="head-responsive">
+        <div class="head-responsive-bar">
+            <a style="margin-top: 10px;" class="head--logo" href="index"><img style="margin-left: -2%;" src="images/suzi logo-2.svg" alt="logo"></a>
+            <div id="navbar">
+                <img class="head-responsive-bar-hamb" src="images/menu-icon.svg"/>
+            </div>
+        </div>
+        <div class="head-responsive--icon">
+            
+            <div class="head-responsive--meni" id="js-meni">
+                <a href="index"         class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">Početna</a>
+                <a href="o_nama"         class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='o_nama' %} active {%endif%}">O nama</a>
+                <a href="akcije"        class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
+                <a href="vesti"         class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
+                <a href="komisije"      class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='komisije' %} active {%endif%}">Komisije</a>
+                <a href="publikacije"   class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active {%endif%}">Publikacije</a>
+                <a href="clanovi"       class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active {%endif%}">Članovi</a>
+                <a href="kontakt"       class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active {%endif%}">Kontakt</a>
+                
+            </div>
+        </div>
+    </div>
 
 {% block content %}{% endblock %}
 
@@ -42,6 +64,18 @@
             <a href="#"><img src="images/Twitter.svg"></a>
         </div>
     </div>
+
+{# </div> #}
+<script>
+    let meni = document.getElementById('js-meni');
+    let navBar = document.getElementById('navbar');
+
+    navBar.addEventListener('click', function(){
+        meni.classList.toggle('active-meni');
+    });
+
+</script>
+
 
 <style>
 .tt-suggestion { color:red }
@@ -79,6 +113,7 @@
             });            
         });
    </script>
+
 
 </body>
 </html>
