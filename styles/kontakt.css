@@ -33,7 +33,7 @@
   color: #000000;
 }
 .plain-text-red {
-  font-size: 13px;
+  font-size: 18px;
   line-height: 22px;
   color: #ff0000;
 }
@@ -62,7 +62,7 @@
   display: flex;
 }
 .kontakt--left {
-  width: 30%;
+  width: 35%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -72,14 +72,14 @@
   flex-direction: column;
 }
 .kontakt--left--info {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 2;
   color: #000000;
   padding: 20px 0;
 }
 .kontakt--right {
-  width: 70%;
+  width: 65%;
 }
 @media only screen and (max-width: 1024px) {
   .kontakt {
