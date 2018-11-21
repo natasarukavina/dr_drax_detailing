@@ -22,7 +22,7 @@
             <a href="publikacije"   class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active {%endif%}">Publikacije</a>
             <a href="clanovi"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active {%endif%}">Članovi</a>
             <a href="kontakt"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active {%endif%}">Kontakt</a>
-            <input id="typeahead" type="text" placeholder="Countries">
+            <input id="typeahead" type="text" placeholder="Pretraga" class="tt-input">
             <!-- <img src="images/pretraga.svg"/> -->
 
         </div>
@@ -78,17 +78,26 @@
 
 
 <style>
+.twitter-typeahead { z-index:9999 }
+.tt-open { background-color: white }
 .tt-suggestion { color:red }
 .tt-selectable { color:red }
 .tt-cursor { background-color: gray }
+.tt-input { 
+    position: relative;
+    vertical-align: top;
+    background-color: transparent;
+}
 </style>
 {#  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
 #}
    <script src="js/jquery-3.3.1.min.js"></script> 
    <script src="js/typeahead.bundle.min.js"></script> 
    <script>
+
         var substringMatcher = function(strs) {
             return function findMatches(q, cb) {
+                console.log(q);
                 var matches, substringRegex;
                 matches = [];
                 substrRegex = new RegExp(q, 'i');
@@ -101,17 +110,23 @@
             };
         };
 
-        $.getJSON("cms/api.php/?query=_search", function(result){
-            $('#typeahead').typeahead(null, {
-                name: 'countries',
-                display: 'Naslov',
-                source: substringMatcher(result)
-            });   
+        function prefetchSearch(){
+            $.getJSON("cms/api.php/?query=_search", function(result){
+                $('#typeahead').typeahead(null, {
+                    name: 'countries',
+                    display: 'Naslov',
+                    source: substringMatcher(result)
+                }); 
 
-            $('#typeahead').bind('typeahead:select', function(ev, suggestion) {
-                document.location = suggestion.href+'/'+suggestion.Slug
-            });            
-        });
+                $('#typeahead')[0].focus();
+                $('#typeahead').bind('typeahead:select', function(ev, suggestion) {
+                    document.location = suggestion.href+'/'+suggestion.Slug
+                });            
+            });
+        }
+
+        $('#typeahead').one('click', prefetchSearch);
+
    </script>
 
 
