@@ -42,7 +42,7 @@ function makeSlugs($string, $maxlen=0)
         $stringTab=my_str_split($string);
     }
 
-    $numbers=array("0","1","2","3","4","5","6","7","8","9","-");
+    $numbers=array("0","1","2","3","4","5","6","7","8","9","-","_");
     //$numbers=array("0","1","2","3","4","5","6","7","8","9");
 
     foreach($stringTab as $letter)
