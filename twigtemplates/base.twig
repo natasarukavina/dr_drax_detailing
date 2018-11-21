@@ -28,6 +28,19 @@
             <img src="images/pretraga.svg"/>
 
         </div>
+        <div class="head--responsive">
+            <button id="meni">Meni</button>
+            <div id="nav-bar" class="head--responsive-menu">
+                <a href="index"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">Početna</a>
+                <a href="o_nama"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='o_nama' %} active {%endif%}">O nama</a>
+                <a href="akcije"        class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
+                <a href="vesti"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
+                <a href="komisije"      class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='komisije' %} active {%endif%}">Komisije</a>
+                <a href="publikacije"   class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active {%endif%}">Publikacije</a>
+                <a href="clanovi"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active {%endif%}">Članovi</a>
+                <a href="kontakt"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active {%endif%}">Kontakt</a>
+            </div>
+        </div>
     </div>
 
 {% block content %}{% endblock %}
@@ -45,5 +58,14 @@
         </div>
     </div>
 {# </div> #}
+{# <script>
+    let meni = document.getElementById("meni");
+    let nav_bar = document.getElementById("nav-bar");
+
+    nav_bar.addEventListener("click", function(){
+        meni.classList.toggle("active-meni");
+    });
+
+</script> #}
 </body>
 </html>
