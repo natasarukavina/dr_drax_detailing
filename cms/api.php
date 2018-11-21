@@ -52,7 +52,7 @@ if ($req['query'] == '_authSA'){
     return ;
 }
 
-if ( isset($_SESSION['_session_user_role']) ) //&& ($_SESSION['_session_user_role']==2 || $_SESSION['_session_user_role']==4))
+//if ( isset($_SESSION['_session_user_role']) ) //&& ($_SESSION['_session_user_role']==2 || $_SESSION['_session_user_role']==4))
     apiJson( $req['query'], $req );
-else echo json_encode(array('_message'=>'No privilegies', '_message_type'=>'error', '_message_action'=>'reload'));
+//else echo json_encode(array('_message'=>'No privilegies', '_message_type'=>'error', '_message_action'=>'reload'));
 ?>

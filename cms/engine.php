@@ -124,6 +124,7 @@
             //echo json_encode(array('s'=>$sqlstring)); // todo
             //return;            
         }
+        
         if (empty($sqlstring)) return array('error'=>"Query missing");
         $sqls = explode(';', $sqlstring);
         

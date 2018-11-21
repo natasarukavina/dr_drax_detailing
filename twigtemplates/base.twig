@@ -22,7 +22,7 @@
                 <a href="publikacije"   class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active {%endif%}">Publikacije</a>
                 <a href="clanovi"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active {%endif%}">Članovi</a>
                 <a href="kontakt"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active {%endif%}">Kontakt</a>
-                <input id="typeahead" type="text" placeholder="Pretraga" class="tt-input">
+                <input id="typeahead_d" type="text" placeholder="Pretraga" class="tt-input">
                 <!-- <img src="images/pretraga.svg"/> -->
 
             </div>
@@ -40,7 +40,7 @@
             </div>
         </div>
         <div id="js-pretraga" class="head-responsive--pretraga">
-            <input id="typeahead" type="text" placeholder="Pretraga" class="tt-input">
+            <input id="typeahead_m" type="text" placeholder="Pretraga" class="tt-input">
         </div>
         <div id="head" class="head-responsive--icon">
             
@@ -87,17 +87,23 @@
     });
     search.addEventListener('click', function(){
         pretraga.classList.toggle('active-pretraga');
-        
+        setTimeout(prefetchSearch, 300)
     });
 
 </script>
 
 
 <style>
-.twitter-typeahead { z-index:9999 }
+.twitter-typeahead { z-index:9999; width:100% }
 .tt-open { background-color: white }
-.tt-suggestion { color:red }
-.tt-selectable { color:red }
+.tt-suggestion { color:black }
+.tt-selectable { 
+    color:black;
+    width:50%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .tt-cursor { background-color: gray }
 {# .tt-input { 
     position: relative;
@@ -127,21 +133,22 @@
         };
 
         function prefetchSearch(){
+            console.log($('#typeahead_m'))
             $.getJSON("cms/api.php/?query=_search", function(result){
-                $('#typeahead').typeahead(null, {
+                $('#typeahead_m').typeahead(null, {
                     name: 'countries',
                     display: 'Naslov',
                     source: substringMatcher(result)
                 }); 
 
-                $('#typeahead')[0].focus();
-                $('#typeahead').bind('typeahead:select', function(ev, suggestion) {
+                $('#typeahead_m')[0].focus();
+                $('#typeahead_m').bind('typeahead:select', function(ev, suggestion) {
                     document.location = suggestion.href+'/'+suggestion.Slug
                 });            
             });
         }
 
-        $('#typeahead').one('click', prefetchSearch);
+        //$('#typeahead').one('click', prefetchSearch);
 
    </script>
 
