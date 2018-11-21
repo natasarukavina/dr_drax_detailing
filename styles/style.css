@@ -1062,17 +1062,6 @@ img {
   .head {
     display: none;
   }
-  .head--logo {
-    width: 170px;
-  }
-  .head--logo img {
-    width: 100%;
-    height: 100%;
-  }
-  .head--meni-title {
-    width: auto;
-    margin: 0px 10px;
-  }
   .head-responsive {
     min-height: 45px;
     height: auto;

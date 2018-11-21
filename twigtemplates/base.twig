@@ -6,10 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="images/suzi.png">
-  {# <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> #}
   <link rel="stylesheet" type="text/css" href="styles/style.css">
-  {# <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> #}
-  {# <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> #}
 </head>
 <body>
 {# <div style="max-width: 1600px;"> #}
@@ -25,7 +22,8 @@
             <a href="publikacije"   class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active {%endif%}">Publikacije</a>
             <a href="clanovi"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active {%endif%}">Članovi</a>
             <a href="kontakt"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active {%endif%}">Kontakt</a>
-            <img src="images/pretraga.svg"/>
+            <input id="typeahead" type="text" placeholder="Countries">
+            <!-- <img src="images/pretraga.svg"/> -->
 
         </div>
     </div>
@@ -66,6 +64,7 @@
             <a href="#"><img src="images/Twitter.svg"></a>
         </div>
     </div>
+
 {# </div> #}
 <script>
     let meni = document.getElementById('js-meni');
@@ -76,5 +75,45 @@
     });
 
 </script>
+
+
+<style>
+.tt-suggestion { color:red }
+.tt-selectable { color:red }
+.tt-cursor { background-color: gray }
+</style>
+{#  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
+#}
+   <script src="js/jquery-3.3.1.min.js"></script> 
+   <script src="js/typeahead.bundle.min.js"></script> 
+   <script>
+        var substringMatcher = function(strs) {
+            return function findMatches(q, cb) {
+                var matches, substringRegex;
+                matches = [];
+                substrRegex = new RegExp(q, 'i');
+                $.each(strs, function(i, item) {
+                    if (substrRegex.test(item.Naslov)) {
+                        matches.push(item);
+                    }
+                });
+                cb(matches);
+            };
+        };
+
+        $.getJSON("cms/api.php/?query=_search", function(result){
+            $('#typeahead').typeahead(null, {
+                name: 'countries',
+                display: 'Naslov',
+                source: substringMatcher(result)
+            });   
+
+            $('#typeahead').bind('typeahead:select', function(ev, suggestion) {
+                document.location = suggestion.href+'/'+suggestion.Slug
+            });            
+        });
+   </script>
+
+
 </body>
 </html>
