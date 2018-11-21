@@ -37,6 +37,7 @@ a {
 }
 a:hover {
   text-decoration: none;
+  opacity: 0.5;
 }
 img {
   border-style: none;
@@ -112,6 +113,9 @@ img {
           text-decoration: none;
         }
     }
+}
+.head-responsive{
+  display: none;
 }
 
 .active{
@@ -189,26 +193,89 @@ img {
 }
 @media only screen and (max-width: 960px) {
   .head {
-    &--logo {
-      width: 170px;
-      img {
-        width: 100%;
-        height: 100%;
+    display: none;
+    // &--logo {
+    //   width: 170px;
+    //   img {
+    //     width: 100%;
+    //     height: 100%;
+    //   }
+    // }
+    // &--meni {
+    //   &-title {
+    //     width: auto;
+    //     margin: 0px 10px;
+    //   }
+    // }
+  }
+  .head-responsive{
+    min-height: 45px;
+    height: auto;
+    border-bottom: 1px solid @gray-light;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    &-bar{
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+      -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
+      &-hamb{
+        &:hover{
+          cursor: pointer;
+        }
       }
     }
-    &--meni {
-      &-title {
-        width: auto;
-        margin: 0px 10px;
+      &--icon{
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        flex-direction: column;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+        margin-top: 10px;
       }
-    }
+      &--meni{
+        display: none;
+        &-title{
+          height: 100%;
+          width: auto;
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-box-align: center;
+          -ms-flex-align: center;
+          align-items: center;
+          -webkit-box-pack: center;
+          -ms-flex-pack: center;
+          justify-content: center;
+          font-size: 13px;
+          font-weight: bold;
+          color: @black;
+          text-decoration: none;
+          margin: 10px;
+        }
+      }
+
+  }
+  .active-meni{
+    display: flex!important;
+    flex-direction: column;
   }
 }
 @media only screen and (max-width: 960px) {
   .head {
     padding: 0 50px;
     &--logo {
-      width: 170px;
+      width: 210px;
       img {
         width: 100%;
         height: 100%;
