@@ -105,14 +105,13 @@
    <script src="js/jquery-3.3.1.min.js"></script> 
    <script src="js/typeahead.bundle.min.js"></script> 
    <script>
-
-        var substringMatcher = function(strs) {
+        var serachArray = [];
+        var substringMatcher = function() {
             return function findMatches(q, cb) {
-                console.log(q);
                 var matches, substringRegex;
                 matches = [];
                 substrRegex = new RegExp(q, 'i');
-                $.each(strs, function(i, item) {
+                $.each(serachArray, function(i, item) {
                     if (substrRegex.test(item.Naslov)) {
                         matches.push(item);
                     }
@@ -125,20 +124,25 @@
             $('#typeahead_m')[0].focus();
             if (searchInit) return;
             searchInit=true;
-            console.log($('#typeahead_m'))
+            //console.log($('#typeahead_m'))
             $.getJSON("cms/api.php/?query=_search", function(result){
-                $('#typeahead_m').typeahead(null, {
-                    name: 'countries',
-                    display: 'Naslov',
-                    source: substringMatcher(result)
-                }); 
-
-                $('#typeahead_m')[0].focus();
-                $('#typeahead_m').bind('typeahead:select', function(ev, suggestion) {
-                    document.location = suggestion.href+'/'+suggestion.Slug
-                });            
+                serachArray = result        
             });
         }
+
+        $('#typeahead_m').typeahead({highlight:true}, {
+            name: 'countries',
+            display: 'Naslov',
+            source: substringMatcher(),
+            limit: 10
+        }); 
+
+        $('#typeahead_m')[0].focus();
+        $('#typeahead_m').bind('typeahead:select', function(ev, suggestion) {
+            document.location = suggestion.href+'/'+suggestion.Slug
+        });   
+
+        
 
         //$('#typeahead').one('click', prefetchSearch);
 
