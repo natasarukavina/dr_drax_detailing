@@ -557,6 +557,9 @@ img {
   }
 }
 @media only screen and (max-width: 600px) {
+  .oNama--1--text {
+    font-size: 12px;
+  }
   .oNama--2--blok {
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -567,6 +570,7 @@ img {
   }
   .oNama--2--blok-pdf {
     padding-right: 10px;
+    width: 100px;
   }
 }
 .akcije {
