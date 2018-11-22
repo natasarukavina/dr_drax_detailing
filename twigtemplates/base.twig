@@ -112,7 +112,7 @@
                 matches = [];
                 substrRegex = new RegExp(q, 'i');
                 $.each(serachArray, function(i, item) {
-                    if (substrRegex.test(item.Naslov)) {
+                    if (substrRegex.test(item.Naslov) || substrRegex.test(item.Text)) {
                         matches.push(item);
                     }
                 });
