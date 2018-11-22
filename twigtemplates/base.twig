@@ -95,24 +95,7 @@
 </script>
 
 
-<style>
-.twitter-typeahead { z-index:9999; width:80%; margin: auto; }
-.tt-open { background-color: white }
-.tt-suggestion { color:black }
-.tt-selectable { 
-    color:black;
-    width:50%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.tt-cursor { background-color: gray }
-{# .tt-input { 
-    position: relative;
-    vertical-align: top;
-    background-color: transparent;
-} #}
-</style>
+
 {#  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
 #}
    <script src="js/jquery-3.3.1.min.js"></script> 
@@ -133,8 +116,11 @@
                 cb(matches);
             };
         };
-
+        var searchInit=false;
         function prefetchSearch(){
+            $('#typeahead_m')[0].focus();
+            if (searchInit) return;
+            searchInit=true;
             console.log($('#typeahead_m'))
             $.getJSON("cms/api.php/?query=_search", function(result){
                 $('#typeahead_m').typeahead(null, {
