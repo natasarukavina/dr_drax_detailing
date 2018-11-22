@@ -167,3 +167,60 @@
   text-decoration: none;
   cursor: pointer;
 }
+@media only screen and (max-width: 1150px) {
+  .home--part {
+    max-height: 580px;
+  }
+}
+@media only screen and (max-width: 960px) {
+  .home {
+    padding: 4% 40px 4%;
+  }
+  .home--part {
+    max-height: 5000px;
+    flex-direction: column;
+  }
+  .home--part-istaknuta-akcija {
+    width: 100%;
+    border-bottom: 1px solid #202124;
+    padding-bottom: 0;
+  }
+  .home--part-istaknuta-akcija .title {
+    font-size: 14px;
+  }
+  .home--part-istaknuta-akcija .text {
+    height: 115px;
+    font-size: 11px;
+  }
+  .home--part-istaknuta-akcija .more {
+    font-size: 12px;
+  }
+  .home--part-2 {
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 0;
+  }
+  .home--part-2 .more {
+    font-size: 12px;
+  }
+  .home--part2 {
+    max-height: 10000px;
+    flex-direction: column;
+    border-bottom: none;
+  }
+  .home--part2--vesti {
+    width: 100%;
+    margin: 0;
+    padding-top: 20px;
+    border-bottom: 1px solid #202124;
+  }
+  .home--part2--vesti--naslovi {
+    width: 100%;
+  }
+  .home--part2--vesti--title {
+    border-bottom: none;
+  }
+  .home--part2--vesti .more {
+    font-size: 12px;
+  }
+}
