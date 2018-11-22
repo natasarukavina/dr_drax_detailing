@@ -163,13 +163,45 @@ img {
   align-items: center;
 }
 .tt-input {
-  width: 10%;
   height: 20px;
   margin: auto;
-  border-radius: 10px;
   position: relative;
   vertical-align: top;
   background-color: transparent;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #202124 !important;
+}
+.tt-input:focus {
+  outline: none;
+}
+.twitter-typeahead {
+  z-index: 9999;
+  width: 80%;
+  margin: auto;
+}
+.tt-open {
+  background-color: white;
+  -webkit-box-shadow: 2px 3px 5px 3px #d0d0d0;
+  -moz-box-shadow: 2px 3px 5px 3px #d0d0d0;
+  box-shadow: 2px 3px 5px 3px #d0d0d0;
+  width: 100%;
+}
+.tt-suggestion {
+  color: black;
+}
+.tt-selectable {
+  color: black;
+  width: 90%;
+  font-size: 13px;
+  margin: auto;
+  margin-top: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tt-cursor {
+  background-color: #d0d0d0;
 }
 .titles {
   font-size: 24px;
@@ -1065,7 +1097,16 @@ img {
 @media only screen and (max-width: 1024px) {
   .tt-input {
     height: 40px;
-    width: 80%;
+    width: 100%;
+    animation: line-animation 0.3s ease-in-out;
+  }
+  @keyframes line-animation {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: 100%;
+    }
   }
   .head {
     display: none;
@@ -1078,7 +1119,7 @@ img {
     display: -ms-flexbox;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 20px 20px 10px;
   }
   .head-responsive-bar {
     display: -webkit-box;
@@ -1137,7 +1178,7 @@ img {
   }
   .active-pretraga {
     display: flex!important;
-    padding-top: 30px;
+    padding-top: 10px;
     margin-top: 20px;
     border-top: 1px solid #d0d0d0;
   }

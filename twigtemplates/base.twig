@@ -40,7 +40,7 @@
             </div>
         </div>
         <div id="js-pretraga" class="head-responsive--pretraga">
-            <input id="typeahead_m" type="text" placeholder="Pretraga" class="tt-input">
+            <input style="border: 0px solid;" id="typeahead_m" type="text" placeholder="Pretraga" class="tt-input">
         </div>
         <div id="head" class="head-responsive--icon">
             
@@ -84,33 +84,18 @@
     navBar.addEventListener('click', function(){
         meni.classList.toggle('active-meni');
         head.classList.toggle('head-transition');
+        pretraga.classList.remove('active-pretraga');
     });
     search.addEventListener('click', function(){
         pretraga.classList.toggle('active-pretraga');
-        setTimeout(prefetchSearch, 300)
+        meni.classList.remove('active-meni');
+        prefetchSearch()
     });
 
 </script>
 
 
-<style>
-.twitter-typeahead { z-index:9999; width:100% }
-.tt-open { background-color: white }
-.tt-suggestion { color:black }
-.tt-selectable { 
-    color:black;
-    width:50%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.tt-cursor { background-color: gray }
-{# .tt-input { 
-    position: relative;
-    vertical-align: top;
-    background-color: transparent;
-} #}
-</style>
+
 {#  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
 #}
    <script src="js/jquery-3.3.1.min.js"></script> 
@@ -131,8 +116,11 @@
                 cb(matches);
             };
         };
-
+        var searchInit=false;
         function prefetchSearch(){
+            $('#typeahead_m')[0].focus();
+            if (searchInit) return;
+            searchInit=true;
             console.log($('#typeahead_m'))
             $.getJSON("cms/api.php/?query=_search", function(result){
                 $('#typeahead_m').typeahead(null, {
