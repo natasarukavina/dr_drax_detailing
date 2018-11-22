@@ -174,13 +174,17 @@ img {
 }
 
 .tt-input{
-  width: 10%;
+  // width: 10%;
   height: 20px;
   margin: auto;
-  border-radius: 10px;
   position: relative;
   vertical-align: top;
   background-color: transparent;
+  cursor: pointer;
+  border-bottom: 1px solid @gray-dark!important;
+  &:focus{
+    outline: none;
+  }
 }
 
 @import 'home';
@@ -207,8 +211,18 @@ img {
 @media only screen and (max-width: 1024px) {
   .tt-input{
     height: 40px;
-    width: 80%;
+    width: 100%;
+    animation: line-animation 0.3s ease-in-out;
   }
+  @keyframes line-animation {
+    0%{
+      width: 0;
+    }
+    100%{
+      width: 100%;
+    }
+  }
+  
   .head {
     display: none;
     // &--logo {

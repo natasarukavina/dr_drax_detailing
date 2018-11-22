@@ -40,7 +40,7 @@
             </div>
         </div>
         <div id="js-pretraga" class="head-responsive--pretraga">
-            <input id="typeahead_m" type="text" placeholder="Pretraga" class="tt-input">
+            <input style="border: 0px solid;" id="typeahead_m" type="text" placeholder="Pretraga" class="tt-input">
         </div>
         <div id="head" class="head-responsive--icon">
             
@@ -84,17 +84,19 @@
     navBar.addEventListener('click', function(){
         meni.classList.toggle('active-meni');
         head.classList.toggle('head-transition');
+        pretraga.classList.remove('active-pretraga');
     });
     search.addEventListener('click', function(){
         pretraga.classList.toggle('active-pretraga');
-        setTimeout(prefetchSearch, 300)
+        meni.classList.remove('active-meni');
+        prefetchSearch()
     });
 
 </script>
 
 
 <style>
-.twitter-typeahead { z-index:9999; width:100% }
+.twitter-typeahead { z-index:9999; width:80%; margin: auto; }
 .tt-open { background-color: white }
 .tt-suggestion { color:black }
 .tt-selectable { 
