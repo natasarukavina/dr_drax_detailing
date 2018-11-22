@@ -15,8 +15,6 @@ body{
             flex-direction: column;
     max-width: 1600px;
     margin: auto;
-    border-left: 1px solid @gray-light;
-    border-right: 1px solid @gray-light;
 }
 
 p {
@@ -62,68 +60,84 @@ img {
     font-weight: normal;
     src: url('../fonts/Raleway/Raleway-Regular.ttf');
 }
-
-.head{
-    height: 100px;
-    // width: 100%;
-    border-bottom: 1px solid @gray-light;
+.head-responsive{
+  min-height: 45px;
+  height: auto;
+  border-bottom: 1px solid @gray-light;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-direction: column;
+  padding: 0 90px 0;
+  &-bar{
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    padding: 0 90px;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
             justify-content: space-between;
-    // &--logo {
-
-    // }
-    &--meni{
+    &-pre{
+      &:hover{
+        cursor: pointer;
+      }
+    }
+    &-nav{
+      display: none;
+      &:hover{
+        cursor: pointer;
+      }
+    }
+    &--meni-d{
+      height: 100%;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+      justify-content: space-evenly;
+      padding-left: 1%;
+      &-title{
         height: 100%;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
+        width: 68px;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
-        -webkit-box-flex: 1;
-        -ms-flex: 1;
-        flex: 1;
-        -webkit-box-pack: space-evenly;
-        -ms-flex-pack: space-evenly;
-        justify-content: space-evenly;
-        padding-left: 1%;
-        &-title{
-          height: 100%;
-          width: 80px;
-          display: -webkit-box;
-          display: -ms-flexbox;
-          display: flex;
-          -webkit-box-align: center;
-          -ms-flex-align: center;
-          align-items: center;
-          -webkit-box-pack: center;
-          -ms-flex-pack: center;
-          justify-content: center;
-          font-size: 13px;
-          font-weight: bold;
-          color: @black;
-          text-decoration: none;
-        }
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: bold;
+        color: @black;
+        text-decoration: none;
+      }
     }
-    &--pretraga{
-      display: none;
-    }
-}
-.head-responsive{
-  display: none;
+  }
+  &--pretraga{
+    display: none;
+  }
+  &--icon{
+    display: none;
+  } 
 }
 
 .active{
   color: @red;
   border-bottom: 3px solid @red;
+  &-m{
+    color: @red!important;
+  }
 }
 .active-list{
   a {
@@ -172,9 +186,22 @@ img {
       align-items: center;
     }
 }
+.active-meni{
+  display: flex!important;
+  flex-direction: column;
+}
+.active-pretraga{
+  display: flex!important;
+  padding: 15px 0;
+  margin-top: 2px;
+  border-top: 1px solid @gray-light;
+}
+.head-transition{
+  max-height: 300px;
+}
 
 .tt-input{
-  // width: 10%;
+  width: 100%;
   height: 20px;
   margin: auto;
   position: relative;
@@ -183,8 +210,17 @@ img {
   font-size: 14px;
   cursor: pointer;
   border-bottom: 1px solid @gray-dark!important;
+  animation: line-animation 0.3s ease-in-out;
   &:focus{
     outline: none;
+  }
+}
+@keyframes line-animation {
+  0%{
+    width: 0;
+  }
+  100%{
+    width: 100%;
   }
 }
 .twitter-typeahead { 
@@ -227,55 +263,23 @@ img {
 @import 'kontakt';
 @import 'prijatelji';
 
-// @media only screen and (max-width: 1024px) {
-//   .head {
-//     padding: 0 60px;
-//     &--meni {
-//       // padding-left: 20px;
-//       &-title {
-//         width: 80px;
-//       }
-//     }
-//   }
-// }
+
 @media only screen and (max-width: 1024px) {
   .tt-input{
     height: 40px;
     width: 100%;
-    animation: line-animation 0.3s ease-in-out;
   }
-  @keyframes line-animation {
-    0%{
-      width: 0;
-    }
-    100%{
-      width: 100%;
-    }
+  .responsive-m{
+    justify-content: flex-end;
   }
   
-  .head {
-    display: none;
-  }
   .head-responsive{
-    min-height: 45px;
-    height: auto;
-    border-bottom: 1px solid @gray-light;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 20px 10px;
     &-bar{
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-      -webkit-box-pack: justify;
-          -ms-flex-pack: justify;
-              justify-content: space-between;
-      &-hamb{
+      &--meni-d{
+        display: none;
+      }
+      &-nav{
+        display: block;
         &:hover{
           cursor: pointer;
         }
@@ -283,16 +287,15 @@ img {
     }
     &--pretraga{
       display: none;
-      // max-height: 0px;
     }
     &--icon{
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
       flex-direction: column;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+      -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
       margin-top: 10px;
       max-height: 0px;
       overflow-y: hidden;
@@ -302,7 +305,7 @@ img {
       display: none;
       &-title{
         height: 100%;
-        width: auto;
+        width: 30%;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -311,19 +314,22 @@ img {
         align-items: center;
         -webkit-box-pack: center;
         -ms-flex-pack: center;
-        justify-content: center;
+        justify-content: flex-start;
         font-size: 13px;
         font-weight: bold;
         color: @black;
         text-decoration: none;
         margin: 10px;
+        padding-bottom: 5px;
       }
     }
 
   }
   .active-meni{
     display: flex!important;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
   }
   .active-pretraga{
     display: flex!important;
@@ -332,19 +338,20 @@ img {
     border-top: 1px solid @gray-light;
   }
   .head-transition{
-    max-height: 300px;
+    max-height: 180px;
+    margin-bottom: 10px;
   }
 }
 @media only screen and (max-width: 960px) {
-  .head {
+  .head-responsive {
     padding: 0 50px;
-    &--logo {
-      width: 210px;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
+    // &--logo {
+    //   // width: 210px;
+    //   img {
+    //     width: 100%;
+    //     height: 100%;
+    //   }
+    // }
   }
   .footer{
     &--icons {
