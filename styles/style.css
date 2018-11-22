@@ -14,8 +14,6 @@ body {
   flex-direction: column;
   max-width: 1600px;
   margin: auto;
-  border-left: 1px solid #d0d0d0;
-  border-right: 1px solid #d0d0d0;
 }
 p {
   -webkit-margin-before: 0px;
@@ -60,21 +58,37 @@ img {
   font-weight: normal;
   src: url('../fonts/Raleway/Raleway-Regular.ttf');
 }
-.head {
-  height: 100px;
+.head-responsive {
+  min-height: 45px;
+  height: auto;
   border-bottom: 1px solid #d0d0d0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding: 0 90px;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+  flex-direction: column;
+  padding: 0 90px 0;
+}
+.head-responsive-bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
-.head--meni {
+.head-responsive-bar-pre:hover {
+  cursor: pointer;
+}
+.head-responsive-bar-nav {
+  display: none;
+}
+.head-responsive-bar-nav:hover {
+  cursor: pointer;
+}
+.head-responsive-bar--meni-d {
   height: 100%;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -90,9 +104,9 @@ img {
   justify-content: space-evenly;
   padding-left: 1%;
 }
-.head--meni-title {
+.head-responsive-bar--meni-d-title {
   height: 100%;
-  width: 80px;
+  width: 68px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -107,10 +121,10 @@ img {
   color: #000000;
   text-decoration: none;
 }
-.head--pretraga {
+.head-responsive--pretraga {
   display: none;
 }
-.head-responsive {
+.head-responsive--icon {
   display: none;
 }
 .active {
@@ -162,7 +176,21 @@ img {
   -ms-flex-align: center;
   align-items: center;
 }
+.active-meni {
+  display: flex!important;
+  flex-direction: column;
+}
+.active-pretraga {
+  display: flex!important;
+  padding: 15px 0;
+  margin-top: 2px;
+  border-top: 1px solid #d0d0d0;
+}
+.head-transition {
+  max-height: 300px;
+}
 .tt-input {
+  width: 100%;
   height: 20px;
   margin: auto;
   position: relative;
@@ -171,9 +199,18 @@ img {
   font-size: 14px;
   cursor: pointer;
   border-bottom: 1px solid #202124 !important;
+  animation: line-animation 0.3s ease-in-out;
 }
 .tt-input:focus {
   outline: none;
+}
+@keyframes line-animation {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
 }
 .twitter-typeahead {
   z-index: 9999;
@@ -1108,31 +1145,16 @@ img {
       width: 100%;
     }
   }
-  .head {
+  .responsive-m {
+    justify-content: flex-end;
+  }
+  .head-responsive-bar--meni-d {
     display: none;
   }
-  .head-responsive {
-    min-height: 45px;
-    height: auto;
-    border-bottom: 1px solid #d0d0d0;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 20px 10px;
+  .head-responsive-bar-nav {
+    display: block;
   }
-  .head-responsive-bar {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-  }
-  .head-responsive-bar-hamb:hover {
+  .head-responsive-bar-nav:hover {
     cursor: pointer;
   }
   .head-responsive--pretraga {

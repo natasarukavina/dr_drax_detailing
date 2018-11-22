@@ -9,33 +9,27 @@
   <link rel="stylesheet" type="text/css" href="styles/style.css">
 </head>
 <body>
-{# <div style="max-width: 1600px;"> #}
-    <div class="head">
-            <a style="margin-top: 10px;" class="head--logo" href="index"><img style="margin-left: -2%;" src="images/suzi logo-2.svg" alt="logo"></a>
-            <div class="head--meni">
-
-                <a href="index"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">Početna</a>
-                <a href="o_nama"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='o_nama' %} active {%endif%}">O nama</a>
-                <a href="akcije"        class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
-                <a href="vesti"         class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
-                <a href="komisije"      class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='komisije' %} active {%endif%}">Komisije</a>
-                <a href="publikacije"   class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active {%endif%}">Publikacije</a>
-                <a href="clanovi"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active {%endif%}">Članovi</a>
-                <a href="kontakt"       class="head--meni-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active {%endif%}">Kontakt</a>
-                <input id="typeahead_d" type="text" placeholder="Pretraga" class="tt-input">
-                <!-- <img src="images/pretraga.svg"/> -->
-
-            </div>
-    </div>
     <div class="head-responsive">
         <div class="head-responsive-bar">
-            <a style="margin-top: 10px;" class="head--logo" href="index"><img style="margin-left: -2%;" src="images/suzi logo-2.svg" alt="logo"></a>
-            <div style="display: flex;">
-                <div id="js-search" style="margin-top: 5px;" >
-                    <img class="head-responsive-bar-hamb" src="images/pretraga.svg"/>
+            <a style="margin-top: 25px; margin-bottom: 15px;" class="head--logo" href="index"><img style="margin-left: -2%; height: 70px;" src="images/suzi logo-2.svg" alt="logo"></a>
+            <div style="display: flex; flex: 1;" class="responsive-m">
+                <div class="head-responsive-bar--meni-d">
+
+                    <a href="index"         class="head-responsive-bar--meni-d-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">Početna</a>
+                    <a href="o_nama"         class="head-responsive-bar--meni-d-title {%if (_GET['twig_file_name'] | lower)=='o_nama' %} active {%endif%}">O nama</a>
+                    <a href="akcije"        class="head-responsive-bar--meni-d-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
+                    <a href="vesti"         class="head-responsive-bar--meni-d-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
+                    <a href="komisije"      class="head-responsive-bar--meni-d-title {%if (_GET['twig_file_name'] | lower)=='komisije' %} active {%endif%}">Komisije</a>
+                    <a href="publikacije"   class="head-responsive-bar--meni-d-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active {%endif%}">Publikacije</a>
+                    <a href="clanovi"       class="head-responsive-bar--meni-d-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active {%endif%}">Članovi</a>
+                    <a href="kontakt"       class="head-responsive-bar--meni-d-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active {%endif%}">Kontakt</a>
+
                 </div>
-                <div id="navbar" style="margin-left: 50px;">
-                    <img class="head-responsive-bar-hamb" src="images/menu-icon.svg"/>
+                <div id="js-search" style="margin-top: 5px; display: flex; align-items: center;" >
+                    <img class="head-responsive-bar-pre" src="images/pretraga.svg"/>
+                </div>
+                <div id="navbar" style="margin-left: 50px; display: flex; align-items: center;">
+                    <img class="head-responsive-bar-nav" src="images/menu-icon.svg"/>
                 </div>
             </div>
         </div>
