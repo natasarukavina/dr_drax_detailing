@@ -11,7 +11,7 @@
 <body>
     <div class="head-responsive">
         <div class="head-responsive-bar">
-            <a style="margin-top: 25px; margin-bottom: 15px;" class="head--logo" href="index"><img style="margin-left: -2%; height: 70px;" src="images/suzi logo-2.svg" alt="logo"></a>
+            <a style="margin-top: 25px; margin-bottom: 15px;" class="head--logo" href="index"><img style="height: 70px;" src="images/suzi logo-2.svg" alt="logo"></a>
             <div style="display: flex; flex: 1;" class="responsive-m">
                 <div class="head-responsive-bar--meni-d">
 
@@ -39,14 +39,14 @@
         <div id="head" class="head-responsive--icon">
             
             <div class="head-responsive--meni" id="js-meni">
-                <a href="index"         class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active {%endif%}">Početna</a>
-                <a href="o_nama"         class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='o_nama' %} active {%endif%}">O nama</a>
-                <a href="akcije"        class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active {%endif%}">Akcije</a>
-                <a href="vesti"         class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active {%endif%}">Vesti</a>
-                <a href="komisije"      class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='komisije' %} active {%endif%}">Komisije</a>
-                <a href="publikacije"   class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active {%endif%}">Publikacije</a>
-                <a href="clanovi"       class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active {%endif%}">Članovi</a>
-                <a href="kontakt"       class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active {%endif%}">Kontakt</a>
+                <a href="index"         class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='index' %} active-m {%endif%}">Početna</a>
+                <a href="o_nama"         class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='o_nama' %} active-m {%endif%}">O nama</a>
+                <a href="akcije"        class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='akcije' %} active-m {%endif%}">Akcije</a>
+                <a href="vesti"         class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='vesti' %} active-m {%endif%}">Vesti</a>
+                <a href="komisije"      class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='komisije' %} active-m {%endif%}">Komisije</a>
+                <a href="publikacije"   class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='publikacije' %} active-m {%endif%}">Publikacije</a>
+                <a href="clanovi"       class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='clanovi' %} active-m {%endif%}">Članovi</a>
+                <a href="kontakt"       class="head-responsive--meni-title {%if (_GET['twig_file_name'] | lower)=='kontakt' %} active-m {%endif%}">Kontakt</a>
                 
             </div>
         </div>
@@ -76,13 +76,23 @@
     let head = document.getElementById('head');
 
     navBar.addEventListener('click', function(){
-        meni.classList.toggle('active-meni');
-        head.classList.toggle('head-transition');
-        pretraga.classList.remove('active-pretraga');
+        if (meni.classList.contains('active-meni')) {
+            meni.classList.remove('active-meni');
+        }
+        else {
+            meni.classList.add('active-meni');
+            pretraga.classList.remove('active-pretraga');
+            head.classList.add('head-transition');
+        }   
     });
     search.addEventListener('click', function(){
-        pretraga.classList.toggle('active-pretraga');
-        meni.classList.remove('active-meni');
+        if (pretraga.classList.contains('active-pretraga')) {
+            pretraga.classList.remove('active-pretraga');
+        }
+        else {
+            pretraga.classList.add('active-pretraga');
+            meni.classList.remove('active-meni');
+        }
         prefetchSearch()
     });
 
