@@ -300,8 +300,20 @@ img {
   color: #000000;
 }
 .slika {
+  max-height: 100%;
   max-width: 100%;
+}
+.slika-small {
+  max-height: 330px;
+  height: auto;
   padding-top: 25px;
+  padding-bottom: 5px;
+  text-align: center;
+}
+@media screen and (max-width: 960px) {
+  .slika-small {
+    height: 300px;
+  }
 }
 .home {
   display: -webkit-box;
@@ -733,9 +745,6 @@ img {
 .vesti--svet-vest--naslov {
   width: 100%;
 }
-.vesti--svet-vest--image {
-  padding-top: 25px;
-}
 .vesti--svet-vest--datum {
   padding: 6px 0px;
 }
@@ -753,9 +762,6 @@ img {
 }
 .vesti--prikazi-vest--naslov {
   width: 100%;
-}
-.vesti--prikazi-vest--image {
-  padding-top: 25px;
 }
 .vesti--prikazi-vest--datum {
   padding: 6px 0px;
@@ -791,7 +797,8 @@ img {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  height: 350px;
+  height: 400px;
+  padding-top: 2%;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
@@ -800,9 +807,8 @@ img {
   align-items: center;
 }
 .vest--container-imgs img {
-  height: 300px;
-  width: 400px;
-  padding-top: 2%;
+  max-height: 400px;
+  max-width: 100%;
 }
 .vest--container-text {
   width: 100%;
@@ -822,9 +828,55 @@ img {
 @media only screen and (max-width: 960px) {
   .vesti {
     padding: 4% 50px;
+    flex-direction: column;
+  }
+  .vesti--suzi {
+    width: 100%;
+  }
+  .vesti--suzi-naslov {
+    border-bottom: none;
+    padding-top: 20px;
+  }
+  .vesti--suzi-vest {
+    padding: 20px 0 20px 0;
+  }
+  .vesti--suzi-vest:last-child {
+    border-bottom: none;
+  }
+  .vesti--svet,
+  .vesti--prikazi {
+    width: 100%;
+  }
+  .vesti--svet-naslov,
+  .vesti--prikazi-naslov {
+    border-bottom: none;
+    padding-top: 20px;
+    border-top: 1px solid #202124;
+  }
+  .vesti--svet-vest,
+  .vesti--prikazi-vest {
+    padding: 20px 0 20px 0;
+  }
+  .vesti--svet-vest:last-child,
+  .vesti--prikazi-vest:last-child {
+    border-bottom: none;
   }
   .vest {
     padding: 4% 50px;
+  }
+  .vest--title {
+    width: 100%;
+  }
+  .vest--container {
+    width: 100%;
+  }
+  .vest--container-imgs {
+    margin: auto;
+  }
+}
+@media only screen and (max-width: 360px) {
+  .vesti {
+    padding: 4% 20px;
   }
 }
 .komisije {
