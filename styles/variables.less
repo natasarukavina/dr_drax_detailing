@@ -61,6 +61,21 @@
     color: @black;
 }
 .slika{
+    max-height: 100%;
     max-width: 100%;
-    padding-top: 25px;
+    &-small{
+      max-height: 330px;
+      height: auto;
+      padding-top: 25px;
+      padding-bottom: 5px;
+      text-align: center;
+    }
 }
+@media screen and (max-width: 960px){
+  .slika{
+    &-small{
+      height: 300px;
+    }
+  }
+}
+
