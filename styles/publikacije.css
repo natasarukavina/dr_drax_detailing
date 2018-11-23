@@ -81,16 +81,24 @@
   color: #f92525;
 }
 .publikacije {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   flex-direction: column;
   padding: 4% 90px;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
   flex: 1;
 }
 .publikacije--top {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   border-bottom: 1px solid #d0d0d0;
 }
 .publikacije--top-title {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   justify-content: center;
   width: 33.33%;
@@ -107,6 +115,8 @@
 }
 .suzi-publikacije--clanak {
   width: 60%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   flex-direction: column;
   padding: 2% 0 1%;
@@ -118,11 +128,15 @@
   color: #202124;
 }
 .suzi-publikacije--clanak--glasnik {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   padding-top: 3%;
 }
 .suzi-publikacije--clanak--glasnik-deo {
   width: 40%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   flex-direction: column;
 }
@@ -134,6 +148,8 @@
 }
 .suzi-publikacije--clanak--glasnik-deo2 {
   width: 40%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   flex-direction: column;
 }
@@ -157,15 +173,23 @@
   padding: 20px 0;
   margin-right: 2%;
   border-bottom: 1px solid #d0d0d0;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 .broj-glasnika--pdf {
   font-size: 9px;
   font-weight: bold;
   color: #000000;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 .broj-glasnika--pdf img {
@@ -185,7 +209,11 @@
   }
   .publikacije--mobile {
     padding: 4% 50px;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
     flex: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     flex-direction: column;
   }
@@ -221,6 +249,8 @@
     width: 100%;
   }
   .broj-glasnika--broj {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
     flex: 1;
   }
   .broj-glasnika--pdf {

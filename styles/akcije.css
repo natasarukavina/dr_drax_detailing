@@ -49,8 +49,31 @@
   color: #000000;
 }
 .slika {
+  max-height: 100%;
   max-width: 100%;
+}
+.slika-small {
+  max-height: 330px;
+  height: auto;
   padding-top: 25px;
+  padding-bottom: 5px;
+  text-align: center;
+}
+@media screen and (max-width: 960px) {
+  .slika-small {
+    height: 300px;
+  }
+  .plain-text {
+    font-size: 11px;
+  }
+  .plain-text-red {
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 360px) {
+  .slika-small {
+    height: 200px;
+  }
 }
 .akcije {
   display: -webkit-box;
@@ -132,6 +155,8 @@
     display: none;
   }
   .akcije--mobile {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     flex-direction: column;
     height: auto;

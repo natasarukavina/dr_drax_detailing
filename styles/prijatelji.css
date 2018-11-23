@@ -63,12 +63,6 @@
   .slika-small {
     height: 300px;
   }
-  .titles {
-    font-size: 18px;
-  }
-  .titles--2 {
-    font-size: 18px;
-  }
   .plain-text {
     font-size: 11px;
   }
@@ -95,6 +89,8 @@
   flex: 1;
 }
 .prijatelji-boks {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   flex-wrap: wrap;
   width: 80%;
@@ -103,6 +99,8 @@
   height: 150px;
   width: 50%;
   margin-bottom: 3%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -110,7 +108,11 @@
 .prijatelji-boks--1--logo {
   height: 80px;
   width: 270px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 .prijatelji-boks--1--logo img {
