@@ -41,22 +41,22 @@ img {
 @font-face {
   font-family: Raleway;
   font-weight: bold;
-  src: url('../fonts/Raleway/Raleway-Bold.ttf');
+  src: url('fonts/Raleway/Raleway-Bold.ttf');
 }
 @font-face {
   font-family: Raleway;
   font-weight: 500;
-  src: url('../fonts/Raleway/Raleway-Medium.ttf');
+  src: url('fonts/Raleway/Raleway-Medium.ttf');
 }
 @font-face {
   font-family: Raleway;
   font-weight: 300;
-  src: url('../fonts/Raleway/Raleway-Light.ttf');
+  src: url('fonts/Raleway/Raleway-Light.ttf');
 }
 @font-face {
   font-family: Raleway;
   font-weight: normal;
-  src: url('../fonts/Raleway/Raleway-Regular.ttf');
+  src: url('fonts/Raleway/Raleway-Regular.ttf');
 }
 .head-responsive {
   min-height: 45px;
@@ -313,6 +313,11 @@ img {
 @media screen and (max-width: 960px) {
   .slika-small {
     height: 300px;
+  }
+}
+@media screen and (max-width: 360px) {
+  .slika-small {
+    height: 200px;
   }
 }
 .home {
@@ -878,6 +883,12 @@ img {
   .vesti {
     padding: 4% 20px;
   }
+  .vest {
+    padding: 4% 20px;
+  }
+  .vest--container-imgs {
+    height: 250px;
+  }
 }
 .komisije {
   display: -webkit-box;
@@ -950,6 +961,9 @@ img {
   display: -ms-flexbox;
   display: flex;
 }
+.komisije--mobile {
+  display: none;
+}
 .clicked {
   color: #f92525 !important;
   font-weight: bold;
@@ -963,13 +977,20 @@ img {
   .komisije {
     padding: 4% 50px;
   }
+  .komisije--left {
+    width: 100%;
+  }
+  .komisije--right {
+    display: none;
+  }
+  .komisije--mobile {
+    display: flex;
+    flex-direction: column;
+  }
 }
 .clanovi {
-  min-height: calc(100vh - 100px - 65px);
+  flex: 1;
   padding: 4% 90px;
-}
-.clanovi--opis {
-  min-height: 50%;
 }
 .clanovi--opis-paragraf {
   margin-bottom: 20px;
