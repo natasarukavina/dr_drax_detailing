@@ -56,6 +56,7 @@
     function api($sqlstring, $params=array()){
         global $db;
         $is_multiple = true; // $is_multiple results, not queries
+        $is_eval = false;
         $wc = str_word_count($sqlstring,0, '1234567890:@&_');
         if ($wc==0) {
             return array();
@@ -82,6 +83,7 @@
             end as can_exec
             , :_session_user_role as _session_user_role
             , :_action as _action
+            , eval
             from _sql 
             where sql_name = :sql_name");
 
@@ -123,8 +125,19 @@
             $sqlstring = preg_replace($patterns,$replacements,$sqlstring);            
             //echo json_encode(array('s'=>$sqlstring)); // todo
             //return;            
+
+            $is_eval = $respp[0]['eval']==='true'?true:false;
+
+            if ($is_eval){
+                $resp = eval($sqlstring);
+                if ($is_multiple) 
+                    return ($resp);
+                else 
+                    return count($resp)>0 ? $resp[0] : new stdClass() ;      
+            }
+
         }
-        
+
         if (empty($sqlstring)) return array('error'=>"Query missing");
         $sqls = explode(';', $sqlstring);
         
@@ -141,7 +154,7 @@
         } else {
 //            echo json_encode( count($resp)>0 ? $resp[0] : array() , JSON_FORCE_OBJECT ); // response only from last query if multiple
             return count($resp)>0 ? $resp[0] : new stdClass() ; // response only from last query if multiple
-}
+        }
     }
 
     function fetch_twig_templates(){
