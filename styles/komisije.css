@@ -140,9 +140,6 @@
   display: -ms-flexbox;
   display: flex;
 }
-.komisije--mobile {
-  display: none;
-}
 .clicked {
   color: #f92525 !important;
   font-weight: bold;
@@ -155,15 +152,31 @@
 @media only screen and (max-width: 960px) {
   .komisije {
     padding: 4% 50px;
+    flex-direction: column;
   }
   .komisije--left {
     width: 100%;
+    padding-bottom: 5px;
+  }
+  .komisije--left--naslov {
+    padding: 15px 0;
   }
   .komisije--right {
-    display: none;
+    width: 100%;
+    padding-left: 0;
+    padding-top: 20px;
+    border-left: none;
+    border-top: 1px solid #202124;
   }
-  .komisije--mobile {
-    display: flex;
-    flex-direction: column;
+  .komisije--right--deo-title {
+    font-size: 14px;
+  }
+  .komisije--right--deo-text {
+    font-size: 11px;
+  }
+}
+@media only screen and (max-width: 360px) {
+  .komisije {
+    padding: 4% 20px;
   }
 }

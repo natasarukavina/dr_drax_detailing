@@ -49,8 +49,37 @@
   color: #000000;
 }
 .slika {
+  max-height: 100%;
   max-width: 100%;
+}
+.slika-small {
+  max-height: 330px;
+  height: auto;
   padding-top: 25px;
+  padding-bottom: 5px;
+  text-align: center;
+}
+@media screen and (max-width: 960px) {
+  .slika-small {
+    height: 300px;
+  }
+  .titles {
+    font-size: 18px;
+  }
+  .titles--2 {
+    font-size: 18px;
+  }
+  .plain-text {
+    font-size: 11px;
+  }
+  .plain-text-red {
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 360px) {
+  .slika-small {
+    height: 200px;
+  }
 }
 .prijatelji {
   display: -webkit-box;
@@ -99,4 +128,32 @@
   font-weight: bold;
   line-height: 2;
   color: #f92525;
+}
+@media screen and (max-width: 1024px) {
+  .prijatelji {
+    padding: 4% 60px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .prijatelji {
+    padding: 4% 50px;
+  }
+  .prijatelji-boks {
+    width: 100%;
+  }
+  .prijatelji-boks--1 {
+    width: 50%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+@media screen and (max-width: 800px) {
+  .prijatelji-boks--1 {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 360px) {
+  .prijatelji {
+    padding: 4% 20px;
+  }
 }

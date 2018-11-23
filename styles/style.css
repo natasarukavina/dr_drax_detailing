@@ -314,6 +314,18 @@ img {
   .slika-small {
     height: 300px;
   }
+  .titles {
+    font-size: 18px;
+  }
+  .titles--2 {
+    font-size: 18px;
+  }
+  .plain-text {
+    font-size: 11px;
+  }
+  .plain-text-red {
+    font-size: 14px;
+  }
 }
 @media screen and (max-width: 360px) {
   .slika-small {
@@ -875,8 +887,14 @@ img {
   .vest--container {
     width: 100%;
   }
+  .vest--container-title {
+    font-size: 14px;
+  }
   .vest--container-imgs {
     margin: auto;
+  }
+  .vest--container-text {
+    font-size: 11px;
   }
 }
 @media only screen and (max-width: 360px) {
@@ -961,9 +979,6 @@ img {
   display: -ms-flexbox;
   display: flex;
 }
-.komisije--mobile {
-  display: none;
-}
 .clicked {
   color: #f92525 !important;
   font-weight: bold;
@@ -976,16 +991,32 @@ img {
 @media only screen and (max-width: 960px) {
   .komisije {
     padding: 4% 50px;
+    flex-direction: column;
   }
   .komisije--left {
     width: 100%;
+    padding-bottom: 5px;
+  }
+  .komisije--left--naslov {
+    padding: 15px 0;
   }
   .komisije--right {
-    display: none;
+    width: 100%;
+    padding-left: 0;
+    padding-top: 20px;
+    border-left: none;
+    border-top: 1px solid #202124;
   }
-  .komisije--mobile {
-    display: flex;
-    flex-direction: column;
+  .komisije--right--deo-title {
+    font-size: 14px;
+  }
+  .komisije--right--deo-text {
+    font-size: 11px;
+  }
+}
+@media only screen and (max-width: 360px) {
+  .komisije {
+    padding: 4% 20px;
   }
 }
 .clanovi {
@@ -1026,7 +1057,6 @@ img {
   color: #ffffff;
 }
 .clanovi--spisak {
-  min-height: 50%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1072,7 +1102,7 @@ img {
   display: flex;
   padding: 1px 0px;
   margin-bottom: 30px;
-  border-bottom: 1px solid #a8a8a8;
+  border-bottom: 1px solid #d0d0d0;
 }
 .clanovi--spisak-telo--header-naslov {
   width: 50%;
@@ -1108,6 +1138,58 @@ img {
 @media only screen and (max-width: 960px) {
   .clanovi {
     padding: 4% 50px;
+  }
+  .clanovi--spisak {
+    flex-direction: column;
+  }
+  .clanovi--spisak-tip {
+    width: 100%;
+  }
+  .clanovi--spisak-tip--red {
+    font-size: 14px;
+  }
+  .clanovi--spisak-tip--naslov {
+    margin-bottom: 20px;
+  }
+  .clanovi--spisak-tip .mobile {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .clanovi--spisak-telo {
+    width: 100%;
+  }
+  .clanovi--spisak-telo--header {
+    border-top: 1px solid #d0d0d0;
+    margin-top: 20px;
+  }
+  .clanovi--spisak-telo--red-osoba {
+    font-size: 14px;
+  }
+}
+@media only screen and (max-width: 360px) {
+  .clanovi {
+    padding: 4% 20px;
+  }
+  .clanovi--spisak-telo--red {
+    flex-direction: column;
+  }
+  .clanovi--spisak-telo--red-osoba {
+    width: 100%;
+    font-size: 13px;
+  }
+  .clanovi--spisak-telo--header {
+    flex-direction: column;
+    min-height: 60px;
+  }
+  .clanovi--spisak-telo--header-naslov {
+    height: 30px;
+  }
+  .clanovi--spisak-tip .mobile {
+    justify-content: flex-start;
+  }
+  .clanovi--spisak-tip--red {
+    width: 90px;
   }
 }
 .preuzmi-publikaciju {
@@ -1206,6 +1288,61 @@ img {
 .broj-glasnika--pdf img {
   margin-left: 5px;
 }
+.publikacije--mobile {
+  display: none;
+}
+@media screen and (max-width: 1024px) {
+  .publikacije {
+    padding: 4% 60px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .publikacije {
+    display: none;
+  }
+  .publikacije--mobile {
+    padding: 4% 50px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .publikacije--top-title {
+    margin-top: 50px;
+    padding-bottom: 20px;
+    width: 100%;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    border-bottom: 1px solid #202124;
+  }
+  .publikacije--top-title:first-child {
+    margin-top: 20px;
+  }
+  .suzi-publikacije--clanak {
+    width: 100%;
+    padding: 20px 0 10px;
+  }
+  .suzi-publikacije--clanak-link {
+    font-size: 14px;
+  }
+  .suzi-publikacije--clanak--glasnik {
+    flex-direction: column;
+  }
+  .suzi-publikacije--clanak--glasnik-deo {
+    width: 100%;
+  }
+  .suzi-publikacije--clanak--glasnik-deo1 {
+    width: 100%;
+  }
+  .suzi-publikacije--clanak--glasnik-deo2 {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 360px) {
+  .publikacije--mobile {
+    padding: 4% 20px;
+  }
+}
 .kontakt {
   -webkit-box-flex: 1;
   -ms-flex: 1;
@@ -1243,10 +1380,25 @@ img {
 @media only screen and (max-width: 960px) {
   .kontakt {
     padding: 4% 50px;
+    flex-direction: column;
   }
   .kontakt--left {
-    width: 28%;
-    margin-left: 2%;
+    width: 100%;
+  }
+  .kontakt--left--info {
+    font-size: 11px;
+  }
+  .kontakt--right {
+    width: 100%;
+    height: 400px;
+  }
+}
+@media only screen and (max-width: 360px) {
+  .kontakt {
+    padding: 4% 20px;
+  }
+  .kontakt--right {
+    height: 300px;
   }
 }
 .prijatelji {
@@ -1296,6 +1448,34 @@ img {
   font-weight: bold;
   line-height: 2;
   color: #f92525;
+}
+@media screen and (max-width: 1024px) {
+  .prijatelji {
+    padding: 4% 60px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .prijatelji {
+    padding: 4% 50px;
+  }
+  .prijatelji-boks {
+    width: 100%;
+  }
+  .prijatelji-boks--1 {
+    width: 50%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+@media screen and (max-width: 800px) {
+  .prijatelji-boks--1 {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 360px) {
+  .prijatelji {
+    padding: 4% 20px;
+  }
 }
 @media only screen and (max-width: 1120px) {
   .head-responsive {

@@ -6,38 +6,18 @@
             <div class="komisije--left">
             {% set Selektovana_komisija = {} %}
                 {% for item in fetch("Komisija") %}
-                    {% if item.Slug == slug %} {% set Selektovana_komisija = item %} {% endif %}
+                    {% if item.Slug == slug %} 
+                        {% set Selektovana_komisija = item %} 
+                    {% endif %}
                     <div class="komisije--left--naslov">
-                        <a class="{{(item.Slug == slug)?'clicked':''}}" href="komisije/{{item.Slug}}"> {{item.Naziv}}</a>
+                        <a class="{{(item.Slug == slug)?'clicked':''}}" href="komisije/{{item.Slug}}#{{item.id}}"> {{item.Naziv}}</a>
                     </div>
+                    
                 {% endfor %}
-                <div class="komisije--mobile">
-                    <div class="komisije--right--naziv">{{Selektovana_komisija.Naziv}}</div>
-                    <div class="komisije--right--deo">
-                        <div class="komisije--right--deo-title">Oblast rada</div>
-                        <div class="komisije--right--deo-text">{{Selektovana_komisija.Opis}}</div>
-                    </div>
-                    <div class="komisije--right--deo"> 
-                        <div class="komisije--right--deo-title">Članovi</div>
-                        <div class="komisije--right--text"> 
-                            {% for item in fetch("Clanovi_komisije") %}
-                                {% if (item.TipKomisije == Selektovana_komisija.id) %}
-                                <div class="komisije--right--deo-table">
-                                    <div class="komisije--right--deo-text">{{item.Ime}}</div>
-                                    <div style="margin-left: 10px;" class="komisije--right--deo-text">{{item.Period}}</div>
-                                </div>
-                                {% endif %}
-                            {% endfor %} 
-                        </div>
-                    </div>
-                    <div class="komisije--right--deo"> 
-                        <div class="komisije--right--deo-title">Aktivnosti</div>
-                        <div class="komisije--right--deo-text">{{Selektovana_komisija.Aktivnosti}}</div>
-                    </div>
-                </div>
+                
             </div>
             <div class="komisije--right">
-                <div class="komisije--right--naziv">{{Selektovana_komisija.Naziv}}</div>
+                <div class="komisije--right--naziv" id="{{Selektovana_komisija.id}}">{{Selektovana_komisija.Naziv}}</div>
                 <div class="komisije--right--deo">
                     <div class="komisije--right--deo-title">Oblast rada</div>
                     <div class="komisije--right--deo-text">{{Selektovana_komisija.Opis}}</div>
