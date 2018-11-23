@@ -63,6 +63,18 @@
   .slika-small {
     height: 300px;
   }
+  .titles {
+    font-size: 18px;
+  }
+  .titles--2 {
+    font-size: 18px;
+  }
+  .plain-text {
+    font-size: 11px;
+  }
+  .plain-text-red {
+    font-size: 14px;
+  }
 }
 @media screen and (max-width: 360px) {
   .slika-small {
@@ -107,7 +119,6 @@
   color: #ffffff;
 }
 .clanovi--spisak {
-  min-height: 50%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -153,7 +164,7 @@
   display: flex;
   padding: 1px 0px;
   margin-bottom: 30px;
-  border-bottom: 1px solid #a8a8a8;
+  border-bottom: 1px solid #d0d0d0;
 }
 .clanovi--spisak-telo--header-naslov {
   width: 50%;
@@ -189,5 +200,57 @@
 @media only screen and (max-width: 960px) {
   .clanovi {
     padding: 4% 50px;
+  }
+  .clanovi--spisak {
+    flex-direction: column;
+  }
+  .clanovi--spisak-tip {
+    width: 100%;
+  }
+  .clanovi--spisak-tip--red {
+    font-size: 14px;
+  }
+  .clanovi--spisak-tip--naslov {
+    margin-bottom: 20px;
+  }
+  .clanovi--spisak-tip .mobile {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .clanovi--spisak-telo {
+    width: 100%;
+  }
+  .clanovi--spisak-telo--header {
+    border-top: 1px solid #d0d0d0;
+    margin-top: 20px;
+  }
+  .clanovi--spisak-telo--red-osoba {
+    font-size: 14px;
+  }
+}
+@media only screen and (max-width: 360px) {
+  .clanovi {
+    padding: 4% 20px;
+  }
+  .clanovi--spisak-telo--red {
+    flex-direction: column;
+  }
+  .clanovi--spisak-telo--red-osoba {
+    width: 100%;
+    font-size: 13px;
+  }
+  .clanovi--spisak-telo--header {
+    flex-direction: column;
+    min-height: 60px;
+  }
+  .clanovi--spisak-telo--header-naslov {
+    height: 30px;
+  }
+  .clanovi--spisak-tip .mobile {
+    justify-content: flex-start;
+  }
+  .clanovi--spisak-tip--red {
+    width: 90px;
   }
 }

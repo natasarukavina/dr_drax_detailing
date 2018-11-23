@@ -97,3 +97,65 @@
             }
     }
 }
+.publikacije--mobile{
+    display: none;
+}
+@media screen and (max-width: 1024px){
+   .publikacije{
+       padding: 4% 60px;
+   } 
+}
+@media screen and (max-width: 960px){
+    .publikacije{
+        display: none;
+    } 
+    .publikacije--mobile{
+        padding: 4% 50px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .publikacije{
+        &--top{
+            &-title{
+                margin-top: 50px;
+                padding-bottom: 20px;
+                width: 100%;
+                -webkit-box-pack: start;
+                -ms-flex-pack: start;
+                    justify-content: flex-start;
+                border-bottom: 1px solid @gray-dark;
+                &:first-child{
+                    margin-top: 20px;
+                }
+            }
+        }
+    }
+    .suzi-publikacije{
+        &--clanak{
+            width: 100%;
+            padding: 20px 0 10px;
+            &-link{
+                font-size: 14px;
+            }
+            &--glasnik{
+                flex-direction: column;
+                &-deo{
+                    width: 100%;
+                }
+                &-deo1{
+                    width: 100%;
+                }
+                &-deo2{
+                    width: 100%;
+                }
+            }
+        }
+    }
+ }
+@media screen and (max-width: 360px){
+    .publikacije--mobile{
+        padding: 4% 20px;
+    } 
+}
+ 
