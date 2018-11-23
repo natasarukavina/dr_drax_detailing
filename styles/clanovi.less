@@ -41,7 +41,7 @@
     }
   }
   &--spisak {
-    min-height: 50%;
+    // min-height: 50%;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -86,7 +86,7 @@
         display: flex;
         padding: 1px 0px;
         margin-bottom: 30px;
-        border-bottom: 1px solid #a8a8a8;
+        border-bottom: 1px solid @gray-light;
         &-naslov {
           width: 50%;
           height: 80px;
@@ -125,5 +125,65 @@
 @media only screen and (max-width: 960px) {
   .clanovi {
     padding: 4% 50px;
+    &--spisak{
+      flex-direction: column;
+      &-tip{
+        width: 100%;
+        &--red{
+          font-size: 14px;
+        }
+        &--naslov{
+          margin-bottom: 20px;
+        }
+        .mobile{
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+        }
+      }
+      &-telo{
+        width: 100%;
+        &--header{
+          border-top: 1px solid @gray-light;
+          margin-top: 20px;
+        }
+        &--red{
+          &-osoba{
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 360px) {
+  .clanovi{
+    padding: 4% 20px;
+    &--spisak{
+      &-telo{
+        &--red{
+          flex-direction: column;
+          &-osoba{
+            width: 100%;
+            font-size: 13px;
+          }
+        }
+        &--header{
+          flex-direction: column;
+          min-height: 60px;
+          &-naslov{
+            height: 30px;
+          }
+        }
+      }
+      &-tip{
+        .mobile{
+          justify-content: flex-start;
+        }
+        &--red{
+          width: 90px;
+        }
+      }
+    }
   }
 }

@@ -63,6 +63,18 @@
   .slika-small {
     height: 300px;
   }
+  .titles {
+    font-size: 18px;
+  }
+  .titles--2 {
+    font-size: 18px;
+  }
+  .plain-text {
+    font-size: 11px;
+  }
+  .plain-text-red {
+    font-size: 14px;
+  }
 }
 @media screen and (max-width: 360px) {
   .slika-small {

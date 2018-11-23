@@ -8,6 +8,7 @@
   <div class="vest--title titles">Vesti iz sveta</div>
   <div class="vest--container">
     <div class="vest--container-title titles-2">{{vesti_svet.Naslov}}</div>
+    <div class="dates">{{ vesti_svet.Datum | date("d.m.Y") }}</div>
     {% if vesti_svet.Slika1 or vesti_svet.Slika2  %}
       <div class="vest--container-imgs">
         {% if vesti_svet.Slika1  %}

@@ -8,6 +8,7 @@
   <div class="vest--title titles">SUZI Prikazi</div>
   <div class="vest--container">
     <div class="vest--container-title titles-2">{{suzi_prikazi.Naslov}}</div>
+    <div class="dates">{{ suzi_prikazi.Datum | date("d.m.Y") }}</div>
     {% if suzi_prikazi.Slika1 or suzi_prikazi.Slika2 %}
       <div class="vest--container-imgs">
         {% if suzi_prikazi.Slika1 %}

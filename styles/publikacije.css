@@ -49,8 +49,37 @@
   color: #000000;
 }
 .slika {
+  max-height: 100%;
   max-width: 100%;
+}
+.slika-small {
+  max-height: 330px;
+  height: auto;
   padding-top: 25px;
+  padding-bottom: 5px;
+  text-align: center;
+}
+@media screen and (max-width: 960px) {
+  .slika-small {
+    height: 300px;
+  }
+  .titles {
+    font-size: 18px;
+  }
+  .titles--2 {
+    font-size: 18px;
+  }
+  .plain-text {
+    font-size: 11px;
+  }
+  .plain-text-red {
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 360px) {
+  .slika-small {
+    height: 200px;
+  }
 }
 .preuzmi-publikaciju {
   font-size: 11px;
@@ -147,4 +176,59 @@
 }
 .broj-glasnika--pdf img {
   margin-left: 5px;
+}
+.publikacije--mobile {
+  display: none;
+}
+@media screen and (max-width: 1024px) {
+  .publikacije {
+    padding: 4% 60px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .publikacije {
+    display: none;
+  }
+  .publikacije--mobile {
+    padding: 4% 50px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .publikacije--top-title {
+    margin-top: 50px;
+    padding-bottom: 20px;
+    width: 100%;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    border-bottom: 1px solid #202124;
+  }
+  .publikacije--top-title:first-child {
+    margin-top: 20px;
+  }
+  .suzi-publikacije--clanak {
+    width: 100%;
+    padding: 20px 0 10px;
+  }
+  .suzi-publikacije--clanak-link {
+    font-size: 14px;
+  }
+  .suzi-publikacije--clanak--glasnik {
+    flex-direction: column;
+  }
+  .suzi-publikacije--clanak--glasnik-deo {
+    width: 100%;
+  }
+  .suzi-publikacije--clanak--glasnik-deo1 {
+    width: 100%;
+  }
+  .suzi-publikacije--clanak--glasnik-deo2 {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 360px) {
+  .publikacije--mobile {
+    padding: 4% 20px;
+  }
 }

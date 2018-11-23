@@ -31,11 +31,13 @@
     <div class="clanovi--spisak" id="spisak">
         <div class="clanovi--spisak-tip">
           <div class="clanovi--spisak-tip--naslov titles">Članovi</div>
+          <div class="mobile">
           {% for item in fetch("TipClana") %}
             <div class="clanovi--spisak-tip--red plain-text {{(item.Naziv == tip) ? 'active-list' : ''}}">
                 <a href="clanovi/{{item.Naziv}}#spisak"> {{item.Naziv}}</a>
             </div>
           {% endfor %}
+          </div>
         </div>
 
         <div class="clanovi--spisak-telo">
