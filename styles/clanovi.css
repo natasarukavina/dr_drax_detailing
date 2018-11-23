@@ -63,12 +63,6 @@
   .slika-small {
     height: 300px;
   }
-  .titles {
-    font-size: 18px;
-  }
-  .titles--2 {
-    font-size: 18px;
-  }
   .plain-text {
     font-size: 11px;
   }
@@ -82,6 +76,8 @@
   }
 }
 .clanovi {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
   flex: 1;
   padding: 4% 90px;
 }
@@ -214,6 +210,8 @@
     margin-bottom: 20px;
   }
   .clanovi--spisak-tip .mobile {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;

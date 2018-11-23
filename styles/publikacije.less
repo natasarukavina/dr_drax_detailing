@@ -7,14 +7,22 @@
 }
 
 .publikacije{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     flex-direction: column;
     padding: 4% 90px;
-    flex: 1;
+    -webkit-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
     &--top{
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
         border-bottom: 1px solid @gray-light;
         &-title{
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
             justify-content: center;
             width: 33.33%;
@@ -32,6 +40,8 @@
     padding: 2% 0;
     &--clanak{
         width: 60%;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
         flex-direction: column;
         padding: 2% 0 1%;
@@ -42,10 +52,14 @@
             color: @gray-dark;
         }
         &--glasnik{
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
             padding-top: 3%;
             &-deo{
                 width: 40%;
+                display: -webkit-box;
+                display: -ms-flexbox;
                 display: flex;
                 flex-direction: column;
             }
@@ -57,6 +71,8 @@
             }
             &-deo2{
                 width: 40%;
+                display: -webkit-box;
+                display: -ms-flexbox;
                 display: flex;
                 flex-direction: column;
                 &--naslov{
@@ -83,15 +99,23 @@
     padding: 20px 0;
     margin-right: 2%;
     border-bottom: 1px solid @gray-light;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
     &--pdf{
         font-size: 9px;
         font-weight: bold;
         color: @black;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
-        align-items: center;
+        -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
             img{
                 margin-left: 5px;
             }
@@ -111,7 +135,11 @@
     } 
     .publikacije--mobile{
         padding: 4% 50px;
-        flex: 1;
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
         flex-direction: column;
     }
@@ -152,10 +180,30 @@
             }
         }
     }
+    .broj-glasnika{
+        &--broj{
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+        }
+        &--pdf{
+            width: 90px;
+            margin-left: 10px;
+        }
+    }
  }
 @media screen and (max-width: 360px){
     .publikacije--mobile{
         padding: 4% 20px;
     } 
+    .broj-glasnika{
+        flex-wrap: wrap;
+        height: 90px;
+        justify-content: flex-start;
+        &--broj{
+            flex: none;
+            width: 100%;
+        }
+    }
 }
  
