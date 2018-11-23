@@ -154,6 +154,7 @@
         // recreate table, only for _engine_schema_column update and delete (sqlite dont support drop column)
         if ($orgsqlstring=='_engine_schema_column' && ($action=='update' || $action=='delete') ) {
             $params['_action'] = '';
+            $params['tablename'] = $params['table_name'];
             return api('_recreate_user_table', $params);
         }
 
