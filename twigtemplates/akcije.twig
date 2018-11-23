@@ -10,25 +10,31 @@
                 {% set tip = _GET['1'] ? _GET['1'] : Akcije[0]['Slug'] %}
                 {% set SelektovanaAkcija = {} %}
                 {% for item in Akcije %}
-                    {% if (item.Slug == tip) or ( item.id == tip) %}    
-                        {% set SelektovanaAkcija = item %}
-                    {% endif %}
 
-                    <div class="sub_titles akcije--left--naslov">
-                        <a style="font-weight: bold;" class="{{(item.Slug==tip or item.id==tip)?'clicked':''}}" href="akcije/{{item.Slug}}">{{ item.Naslov }}</a>
+                    <div class="sub_titles akcije--left--naslov" id = "{{item.id}}">
+                        <a style="font-weight: bold;" class="{{(item.Slug==tip or item.id==tip)?'clicked':''}}" href="akcije/{{item.Slug}}#{{item.id}}">{{ item.Naslov }}</a>
                         <div class="dates">{{ item.Datum | date("d.m.Y") }}</div>
+                            {% if (item.Slug == tip) or ( item.id == tip) %}    
+                            {% set SelektovanaAkcija = item %}
+                            <div class="akcije--mobile"> 
+                                {% if SelektovanaAkcija.Slika1 %}
+                                    <div class="akcije--mobile--slika"><img class="akcije--mobile--slika--img" src="img/{{SelektovanaAkcija.Slika1}}"></div>
+                                {% endif %}
+                                <div class="akcije--mobile--text">{{SelektovanaAkcija.Text | raw }}</div>
+                            </div>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
         </div>
-        <div class="akcije--right">
+        <div class="akcije--right"> 
             {% if SelektovanaAkcija.Slika1 %}
                 <img class="akcije--right--slika" src="img/{{SelektovanaAkcija.Slika1}}">
             {% endif %}
             <div class="akcije--right--text">{{SelektovanaAkcija.Text | raw }}</div>
 
         </div>
-        </div>
     </div>
+    {# </div> #}
 
 {% endblock %}
