@@ -36,7 +36,7 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="naslov sub_titles"><a href="vest-suzi/{{vesti_suzi.Slug}}">{{ vesti_suzi.Naslov }}</a></div>
                         {% if vesti_suzi.Slika %}
-                        <a href="vest-suzi/{{vesti_suzi.Slug}}"><img class="slika" src="img/{{ vesti_suzi.Slika }}"></a>
+                        <div class="slika-small"><a href="vest-suzi/{{vesti_suzi.Slug}}"><img class="slika" src="img/{{ vesti_suzi.Slika }}"></a><div>
                         {% endif %}
                         <div class="dates">{{vesti_suzi.Datum | date("d.m.Y")}}</div>
                     </div>
@@ -51,7 +51,7 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="sub_titles"><a href="vest-svet/{{vesti_svet.Slug}}">{{ vesti_svet.Naslov }}</a></div>
                         {% if vesti_svet.Slika1 %}
-                        <a href="vest-svet/{{vesti_svet.Slug}}"><img class="slika" src="img/{{ vesti_svet.Slika1 }}"></a>
+                        <div class="slika-small"><a href="vest-svet/{{vesti_svet.Slug}}"><img class="slika" src="img/{{ vesti_svet.Slika1 }}"></a></div>
                         {% endif %}
                         <div class="dates">{{vesti_svet.Datum | date("d.m.Y")}}</div>
                     </div>
@@ -66,7 +66,7 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="sub_titles"><a href="suzi-prikaz/{{vesti_prikazi.Slug}}">{{ vesti_prikazi.Naslov }}</a></div>
                         {% if vesti_prikazi.Slika1 %}
-                        <a href="suzi-prikaz/{{vesti_prikazi.Slug}}"><img class="slika" src="img/{{ vesti_prikazi.Slika1 }}"></a>
+                        <div class="slika-small"><a href="suzi-prikaz/{{vesti_prikazi.Slug}}"><img class="slika" src="img/{{ vesti_prikazi.Slika1 }}"></a></div>
                         {% endif %}
                         <div class="dates">{{vesti_prikazi.Datum | date("d.m.Y")}}</div>
                     </div>
@@ -95,7 +95,7 @@
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="sub_titles"><a href="publikacije/Suzi-Elektronski-glasnik/{{suzi_eGlasnik.Slug}}">{{ suzi_eGlasnik.Naslov }}</a></div>
                         {% if suzi_eGlasnik.Slika1 %}
-                        <a href="publikacije/Suzi-Elektronski-glasnik/{{suzi_eGlasnik.Slug}}"><img class="slika" src="img/{{ suzi_eGlasnik.Slika1 }}"></a>
+                        <div class="slika-small"><a href="publikacije/Suzi-Elektronski-glasnik/{{suzi_eGlasnik.Slug}}"><img class="slika" src="img/{{ suzi_eGlasnik.Slika1 }}"></a></div>
                         {% endif %}
                         <div class="dates">{{suzi_eGlasnik.Datum | date("d.m.Y")}}</div>
                     </div>

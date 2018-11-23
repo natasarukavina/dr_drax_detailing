@@ -46,9 +46,9 @@
         width: 100%;
         // height: 46px;
       }
-      &--image {
-        padding-top: 25px;
-      }
+      // &--image {
+      //   padding-top: 25px;
+      // }
       &--datum {
         padding: 6px 0px;
       }
@@ -67,9 +67,9 @@
       &--naslov{
         width: 100%;
       }
-      &--image {
-        padding-top: 25px;
-      }
+      // &--image {
+      //   padding-top: 25px;
+      // }
       &--datum {
         padding: 6px 0px;
       }
@@ -107,7 +107,8 @@
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
-      height: 350px;
+      height: 400px;
+      padding-top: 2%;
       -webkit-box-pack: justify;
           -ms-flex-pack: justify;
               justify-content: space-between;
@@ -115,9 +116,8 @@
           -ms-flex-align: center;
               align-items: center;
       img {
-        height: 300px;
-        width: 400px;
-        padding-top: 2%;
+        max-height: 400px;
+        max-width: 100%;
       }
     }
     &-text {
@@ -141,8 +141,61 @@
 @media only screen and (max-width: 960px) {
   .vesti {
     padding: 4% 50px;
+    flex-direction: column;
+    &--suzi{
+      width: 100%;
+      &-naslov{
+        border-bottom: none;
+        padding-top: 20px;
+      }
+      &-vest{
+        padding: 20px 0 20px 0;
+        &:last-child{
+          border-bottom: none;
+        }
+      }
+    }
+    &--svet, &--prikazi{
+      width: 100%;
+      &-naslov{
+        border-bottom: none;
+        padding-top: 20px;
+        border-top: 1px solid @gray-dark;
+      }
+      &-vest{
+        padding: 20px 0 20px 0;
+        &:last-child{
+          border-bottom: none;
+        }
+      }
+    }
+    
+
   }
   .vest {
     padding: 4% 50px;
+    &--title{
+      width: 100%;
+    }
+    &--container{
+      width: 100%;
+      &-imgs{
+        
+        margin: auto;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 360px) {
+  .vesti{
+    padding: 4% 20px;
+  }
+  .vest{
+    padding: 4% 20px;
+    &--container{
+      &-imgs{
+        height: 250px;
+      }
+    }
   }
 }

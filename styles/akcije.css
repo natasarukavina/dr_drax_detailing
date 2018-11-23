@@ -107,6 +107,9 @@
 .akcije--right--text * {
   font-size: inherit !important;
 }
+.akcije--mobile {
+  display: none;
+}
 .clicked {
   color: #f92525 !important;
 }
@@ -118,5 +121,41 @@
 @media only screen and (max-width: 960px) {
   .akcije {
     padding: 4% 50px;
+  }
+  .akcije--left {
+    width: 100%;
+  }
+  .akcije--left--naslov {
+    width: 100%;
+  }
+  .akcije--right {
+    display: none;
+  }
+  .akcije--mobile {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    overflow: hidden;
+  }
+  .akcije--mobile--slika {
+    margin: auto;
+  }
+  .akcije--mobile--slika--img {
+    max-height: 350px;
+  }
+  .akcije--mobile--text {
+    margin-top: 3%;
+    font-size: 11px;
+    font-weight: 300;
+    line-height: 1.69;
+    color: #000000;
+  }
+  .akcije--mobile--text * {
+    font-size: inherit !important;
+  }
+}
+@media only screen and (max-width: 360px) {
+  .akcije {
+    padding: 4% 20px;
   }
 }
