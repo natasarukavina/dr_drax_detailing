@@ -64,6 +64,11 @@
     height: 300px;
   }
 }
+@media screen and (max-width: 360px) {
+  .slika-small {
+    height: 200px;
+  }
+}
 .vesti {
   -webkit-box-flex: 1;
   -ms-flex: 1;
@@ -239,5 +244,11 @@
 @media only screen and (max-width: 360px) {
   .vesti {
     padding: 4% 20px;
+  }
+  .vest {
+    padding: 4% 20px;
+  }
+  .vest--container-imgs {
+    height: 250px;
   }
 }
