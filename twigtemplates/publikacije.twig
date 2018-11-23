@@ -108,15 +108,21 @@
           {% set tip2 = _GET['2'] ? _GET['2'] : eGlasnik[0]['Slug'] %}
           {% set SelektovaniGlasnik = {} %}
           {% for glasnik in eGlasnik %}
-            {% if (glasnik.Slug == tip2) or ( glasnik.id == tip2) %}    
-              {% set SelektovaniGlasnik = glasnik %}
-            {% endif %}
+            {# {% if (glasnik.Slug == tip2) or ( glasnik.id == tip2) %}    
+              {% set SelektovaniGlasnik = glasnik %} #}
+            {# {% endif %} #}
             
               <div class="broj-glasnika">
-                <a class="{{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}">{{glasnik.Broj}}</a><a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}">Pogledaj PDF <img src="images/pdf.svg"></a> <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a></div>
+                <a class="broj-glasnika--broj {{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}#{{glasnik.id}}">{{glasnik.Broj}}</a>
+                <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}">Pogledaj PDF <img src="images/pdf.svg"></a> 
+                <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a>
+              </div>
             
-          {% endfor %}
+          {# {% endfor %} #}
           </div>
+          {% if (glasnik.Slug == tip2) or ( glasnik.id == tip2) %}    
+              {% set SelektovaniGlasnik = glasnik %}
+          <div id="{{SelektovaniGlasnik.id}}">
             <div class="suzi-publikacije--clanak--glasnik-deo1 slika-small">
               {% if SelektovaniGlasnik.Slika1 %}
                 <img class="slika" src="img/{{SelektovaniGlasnik.Slika1}}">
@@ -126,6 +132,9 @@
               <div class="suzi-publikacije--clanak--glasnik-deo2--naslov">{{SelektovaniGlasnik.Naslov}}</div>
               <div class="suzi-publikacije--clanak--glasnik-deo2--text">{{SelektovaniGlasnik.Text | raw}}</div>
             </div>
+          </div>
+          {% endif %}
+          {% endfor %}
           </div>
         {# {% endfor %} #}
         </div>

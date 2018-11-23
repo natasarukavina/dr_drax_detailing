@@ -152,10 +152,28 @@
             }
         }
     }
+    .broj-glasnika{
+        &--broj{
+            flex: 1;
+        }
+        &--pdf{
+            width: 90px;
+            margin-left: 10px;
+        }
+    }
  }
 @media screen and (max-width: 360px){
     .publikacije--mobile{
         padding: 4% 20px;
     } 
+    .broj-glasnika{
+        flex-wrap: wrap;
+        height: 90px;
+        justify-content: flex-start;
+        &--broj{
+            flex: none;
+            width: 100%;
+        }
+    }
 }
  

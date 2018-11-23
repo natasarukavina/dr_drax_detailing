@@ -17,7 +17,7 @@
                             {% if (item.Slug == tip) or ( item.id == tip) %}    
                             {% set SelektovanaAkcija = item %}
                             <div class="akcije--mobile"> 
-                                {% if SelektovanaAkcija.Slika1 %}
+                                {% if SelektovanaAkcija.Slika1 %} 
                                     <div class="akcije--mobile--slika"><img class="akcije--mobile--slika--img" src="img/{{SelektovanaAkcija.Slika1}}"></div>
                                 {% endif %}
                                 <div class="akcije--mobile--text">{{SelektovanaAkcija.Text | raw }}</div>

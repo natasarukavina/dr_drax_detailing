@@ -314,12 +314,6 @@ img {
   .slika-small {
     height: 300px;
   }
-  .titles {
-    font-size: 18px;
-  }
-  .titles--2 {
-    font-size: 18px;
-  }
   .plain-text {
     font-size: 11px;
   }
@@ -1337,10 +1331,26 @@ img {
   .suzi-publikacije--clanak--glasnik-deo2 {
     width: 100%;
   }
+  .broj-glasnika--broj {
+    flex: 1;
+  }
+  .broj-glasnika--pdf {
+    width: 90px;
+    margin-left: 10px;
+  }
 }
 @media screen and (max-width: 360px) {
   .publikacije--mobile {
     padding: 4% 20px;
+  }
+  .broj-glasnika {
+    flex-wrap: wrap;
+    height: 90px;
+    justify-content: flex-start;
+  }
+  .broj-glasnika--broj {
+    flex: none;
+    width: 100%;
   }
 }
 .kontakt {

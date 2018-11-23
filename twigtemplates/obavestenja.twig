@@ -12,6 +12,13 @@
                     <div class="sub_titles akcije--left--naslov">
                         <a style="font-weight: bold;" class="{{(item.Slug == tip)?'clicked':''}}" href="obavestenja/{{item.Slug}}">{{ item.Naslov }}</a>
                     </div>
+                    {% if item.Slug == tip  %} 
+                    <div class="akcije--mobile">
+                        {# <div class="akcije--right--naslov sub_titles">{{Selektovano_obavestenje.Naslov}}</div> #}
+                        <div class="dates">{{ item.Datum | date("d.m.Y") }}</div>
+                        <div class="akcije--mobile--text">{{item.Text | raw }}</div>
+                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
