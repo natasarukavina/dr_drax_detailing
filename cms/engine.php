@@ -55,6 +55,8 @@
     }
     function api($sqlstring, $params=array()){
         global $db;
+        $orgsqlstring = $sqlstring;
+        $action = isset($params['_action'])?$params['_action']:'';
         $is_multiple = true; // $is_multiple results, not queries
         $is_eval = false;
         $wc = str_word_count($sqlstring,0, '1234567890:@&_');
@@ -90,7 +92,7 @@
             //$stmt->execute( array('sql_name' => $sqlstring) );
             $stmt->execute( array(
                 'sql_name' => $sqlstring,
-                '_action' => isset($params['_action'])?$params['_action']:'',
+                '_action' => $action,
                 '_session_user_role' => isset($params['_session_user_role'])?$params['_session_user_role']:'1'
             ) );
 
@@ -148,6 +150,13 @@
                 $stmt->execute( remove_extra_params($sql, $params) );
                 $resp = $stmt->fetchAll(PDO::FETCH_ASSOC);  
             }
+
+        // recreate table, only for _engine_schema_column update and delete (sqlite dont support drop column)
+        if ($orgsqlstring=='_engine_schema_column' && ($action=='update' || $action=='delete') ) {
+            $params['_action'] = '';
+            return api('_recreate_user_table', $params);
+        }
+
         if ($is_multiple) {
 //            echo json_encode(nest_array($resp)); // response only from last query if multiple
             return nest_array($resp); // response only from last query if multiple
