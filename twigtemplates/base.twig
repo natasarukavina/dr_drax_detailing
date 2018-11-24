@@ -119,6 +119,7 @@
         var serachArray = [];
         var substringMatcher = function() {
             return function findMatches(q, cb) {
+                q = q.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
                 var matches, substringRegex;
                 matches = [];
                 substrRegex = new RegExp(q, 'i');
