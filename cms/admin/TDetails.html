@@ -61,7 +61,7 @@
             <input style="width: calc(100% - 39rem); margin-right: 1rem;" type="text" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}>
             <button id="browse" style="width: 14rem;" on-click="@this.fire('showFileBrowse', .compId)">Browse
             </button>    
-            <img src="{{HOSTNAME}}image.php?id={{row[.compId]}}" alt="{{row[.compId]}}" style="max-width: 8rem; max-height: 6rem;">
+            <img src="{{HOSTNAME}}image.php?id={{row[.compId]}}&forcethumb" alt="{{row[.compId]}}" style="max-width: 8rem; max-height: 6rem;">
         </div>
         {{/if}}
 
