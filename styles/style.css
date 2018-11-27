@@ -536,6 +536,7 @@ img {
   color: #000000;
   line-height: 1.85;
   padding-bottom: 4%;
+  text-align: justify;
 }
 .oNama--2 {
   display: -webkit-box;
@@ -669,6 +670,7 @@ img {
   font-size: 13px;
   font-weight: normal;
   line-height: 1.69;
+  text-align: justify;
   color: #000000;
 }
 .akcije--right--text * {
@@ -839,6 +841,7 @@ img {
 .vest--container-text {
   width: 100%;
   padding: 2% 0px;
+  text-align: justify;
 }
 .vest--container-text p {
   margin-top: 22px;
@@ -981,6 +984,7 @@ img {
   font-size: 13px;
   font-weight: normal;
   line-height: 1.83;
+  text-align: justify;
   color: #000000;
 }
 .komisije--right--deo-table {
@@ -1036,6 +1040,7 @@ img {
 }
 .clanovi--opis-paragraf {
   margin-bottom: 20px;
+  text-align: justify;
 }
 .clanovi--pridruzi {
   width: 100%;
@@ -1113,7 +1118,7 @@ img {
   display: flex;
   padding: 1px 0px;
   margin-bottom: 30px;
-  border-bottom: 1px solid #d0d0d0;
+  border-bottom: 1px solid #a8a8a8;
 }
 .clanovi--spisak-telo--header-naslov {
   width: 50%;
