@@ -63,6 +63,12 @@
   .slika-small {
     height: 300px;
   }
+  .plain-text {
+    font-size: 11px;
+  }
+  .plain-text-red {
+    font-size: 14px;
+  }
 }
 @media screen and (max-width: 360px) {
   .slika-small {
@@ -180,6 +186,7 @@
 .vest--container-text {
   width: 100%;
   padding: 2% 0px;
+  text-align: justify;
 }
 .vest--container-text p {
   margin-top: 22px;
