@@ -121,9 +121,9 @@ bottom: inherit;
     <section style="padding-bottom:0; padding-top:2rem; flex: 1;display: flex;flex-flow: column;overflow: auto; display:{{selectedModule?'none':'flex'}}">
     {{#each sqlite_tables}}
         {{#if .is_multiple == 'false'}}
-        <button primary m-full style="background-color:{{(selected_tablename==.name)?'#235':'#679'}}; height:100%;font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem" on-click="@this.fire('onModuleSelect',@this.event,'TDetailsSingle', .name)" >{{.nice_name}}</button>
+        <button primary m-full style="background-color:{{(selected_tablename==.name)?'#235':'#679'}}; font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem" on-click="@this.fire('onModuleSelect',@this.event,'TDetailsSingle', .name)" >{{.nice_name}}</button>
         {{else}}
-        <button primary m-full style="background-color:{{(selected_tablename==.name)?'#235':'#679'}}; height:100%;font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem" on-click="@this.fire('onModuleSelect',@this.event,'TGrid', .name)" >{{.nice_name}}</button>
+        <button primary m-full style="background-color:{{(selected_tablename==.name)?'#235':'#679'}}; font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem" on-click="@this.fire('onModuleSelect',@this.event,'TGrid', .name)" >{{.nice_name}}</button>
         {{/if}}
     {{/each}}
     </section>                       
