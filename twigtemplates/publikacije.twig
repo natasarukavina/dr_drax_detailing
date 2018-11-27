@@ -5,9 +5,9 @@
   <div class="publikacije">
     {% set tip= (_GET['1'])?_GET['1']:'Suzi-Publikacije' %}
       <div class="publikacije--top"> 
-          <div class="publikacije--top-title {{('Suzi-Publikacije'==tip)?'active':''}}"><a  href="publikacije/Suzi-Publikacije" class="{{('Suzi-Publikacije'==tip)?'red':''}}">SUZI Publikacije</a></div>
-          <div class="publikacije--top-title {{('Ostale-Publikacije'==tip)?'active':''}}"><a  href="publikacije/Ostale-Publikacije" class="{{('Ostale-Publikacije'==tip)?'red':''}}">Ostale Publikacije</a></div>
-          <div class="publikacije--top-title {{('Suzi-Elektronski-glasnik'==tip)?'active':''}}"><a  href="publikacije/Suzi-Elektronski-glasnik" class="{{('Suzi-Elektronski-glasnik'==tip)?'red':''}}">SUZI Elektronski glasnik</a></div> 
+          <div class="publikacije--top-title"><a  href="publikacije/Suzi-Publikacije" class="{{('Suzi-Publikacije'==tip)?'red':''}}">SUZI Publikacije</a></div>
+          <div class="publikacije--top-title"><a  href="publikacije/Ostale-Publikacije" class="{{('Ostale-Publikacije'==tip)?'red':''}}">Ostale Publikacije</a></div>
+          <div class="publikacije--top-title"><a  href="publikacije/Suzi-Elektronski-glasnik" class="{{('Suzi-Elektronski-glasnik'==tip)?'red':''}}">SUZI Elektronski glasnik</a></div> 
 
       </div>
       <div class="publikacije--bottom"> 
@@ -54,11 +54,13 @@
             {% endif %}
             
               <div class="broj-glasnika">
-                <a class="{{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}">{{glasnik.Broj}}</a><a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}">Pogledaj PDF <img src="images/pdf.svg"></a> <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a></div>
+                <div style="flex: 1;" class="{{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}">{{glasnik.Broj}}</div>
+                <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a> 
+                <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" target="_blank">Pogledaj PDF <img src="images/pdf.svg"></a></div>
             
           {% endfor %}
           </div>
-            <div class="suzi-publikacije--clanak--glasnik-deo1">
+            {# <div class="suzi-publikacije--clanak--glasnik-deo1">
               {% if SelektovaniGlasnik.Slika1 %}
                 <img src="img/{{SelektovaniGlasnik.Slika1}}">
               {% endif %}
@@ -66,7 +68,7 @@
             <div class="suzi-publikacije--clanak--glasnik-deo2">
               <div class="suzi-publikacije--clanak--glasnik-deo2--naslov">{{SelektovaniGlasnik.Naslov}}</div>
               <div class="suzi-publikacije--clanak--glasnik-deo2--text">{{SelektovaniGlasnik.Text | raw}}</div>
-            </div>
+            </div> #}
           </div>
         {# {% endfor %} #}
         </div>
@@ -114,8 +116,8 @@
             
               <div class="broj-glasnika">
                 <a class="broj-glasnika--broj {{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}#{{glasnik.id}}">{{glasnik.Broj}}</a>
-                <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}">Pogledaj PDF <img src="images/pdf.svg"></a> 
                 <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a>
+                <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" target="_blank">Pogledaj PDF <img src="images/pdf.svg"></a> 
               </div>
             
           {# {% endfor %} #}

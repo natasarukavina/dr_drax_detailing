@@ -116,14 +116,17 @@
 }
 .akcije--right--slika {
   max-height: 450px;
+  max-width: 250px;
+  width: auto;
+  float: left;
+  margin-right: 3%;
 }
 .akcije--right--naslov {
   color: #f92525;
 }
 .akcije--right--text {
-  margin-top: 3%;
   font-size: 13px;
-  font-weight: 300;
+  font-weight: normal;
   line-height: 1.69;
   color: #000000;
 }

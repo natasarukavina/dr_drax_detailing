@@ -49,8 +49,31 @@
   color: #000000;
 }
 .slika {
+  max-height: 100%;
   max-width: 100%;
+}
+.slika-small {
+  max-height: 330px;
+  height: auto;
   padding-top: 25px;
+  padding-bottom: 5px;
+  text-align: center;
+}
+@media screen and (max-width: 960px) {
+  .slika-small {
+    height: 300px;
+  }
+  .plain-text {
+    font-size: 11px;
+  }
+  .plain-text-red {
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 360px) {
+  .slika-small {
+    height: 200px;
+  }
 }
 .home {
   display: -webkit-box;
@@ -78,13 +101,14 @@
   padding-bottom: 20px;
 }
 .home--part-istaknuta-akcija .title {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
   color: #202124;
+  line-height: 1.71;
   padding: 20px 0;
 }
 .home--part-istaknuta-akcija .text {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.71;
   color: #000000;
   height: 90px;

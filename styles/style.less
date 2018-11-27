@@ -158,9 +158,9 @@ img {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
-      width: 75%;
+      width: 100%;
       &--suzi{
-        width: 30%;
+        width: 25%;
         border-right: 1px solid @white;
         font-size: 15px;
         font-weight: bold;
@@ -247,14 +247,21 @@ img {
   color:black; 
 }
 .tt-selectable { 
-  color:black;
-  width:90%;
+  color: black;
+  width: 90%;
   font-size: 13px;
   margin: auto;
-  margin-top: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5%;
+  padding-right: 5%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
+  &:hover{
+    background-color: @gray-lighter;
+  }
   
 }
 .tt-cursor { 
