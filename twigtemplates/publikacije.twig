@@ -54,7 +54,9 @@
             {% endif %}
             
               <div class="broj-glasnika">
-                <a class="{{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}">{{glasnik.Broj}}</a><a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}">Pogledaj PDF <img src="images/pdf.svg"></a> <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a></div>
+                <a class="{{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}">{{glasnik.Broj}}</a>
+                <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a> 
+                <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" target="_blank">Pogledaj PDF <img src="images/pdf.svg"></a></div>
             
           {% endfor %}
           </div>
@@ -114,8 +116,8 @@
             
               <div class="broj-glasnika">
                 <a class="broj-glasnika--broj {{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}#{{glasnik.id}}">{{glasnik.Broj}}</a>
-                <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}">Pogledaj PDF <img src="images/pdf.svg"></a> 
                 <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a>
+                <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" target="_blank">Pogledaj PDF <img src="images/pdf.svg"></a> 
               </div>
             
           {# {% endfor %} #}

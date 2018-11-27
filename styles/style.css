@@ -152,10 +152,10 @@ img {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  width: 75%;
+  width: 100%;
 }
 .footer--1--suzi {
-  width: 30%;
+  width: 25%;
   border-right: 1px solid #ffffff;
   font-size: 15px;
   font-weight: bold;
@@ -243,10 +243,17 @@ img {
   width: 90%;
   font-size: 13px;
   margin: auto;
-  margin-top: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5%;
+  padding-right: 5%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
+}
+.tt-selectable:hover {
+  background-color: #f2f2f2;
 }
 .tt-cursor {
   background-color: #d0d0d0;
@@ -354,13 +361,14 @@ img {
   padding-bottom: 20px;
 }
 .home--part-istaknuta-akcija .title {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
   color: #202124;
+  line-height: 1.71;
   padding: 20px 0;
 }
 .home--part-istaknuta-akcija .text {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.71;
   color: #000000;
   height: 90px;
@@ -649,14 +657,17 @@ img {
 }
 .akcije--right--slika {
   max-height: 450px;
+  max-width: 250px;
+  width: auto;
+  float: left;
+  margin-right: 3%;
 }
 .akcije--right--naslov {
   color: #f92525;
 }
 .akcije--right--text {
-  margin-top: 3%;
   font-size: 13px;
-  font-weight: 300;
+  font-weight: normal;
   line-height: 1.69;
   color: #000000;
 }
@@ -968,7 +979,7 @@ img {
 }
 .komisije--right--deo-text {
   font-size: 13px;
-  font-weight: 300;
+  font-weight: normal;
   line-height: 1.83;
   color: #000000;
 }
@@ -1273,16 +1284,16 @@ img {
   flex-direction: column;
 }
 .suzi-publikacije--clanak--glasnik-deo2--naslov {
-  font-size: 13px;
+  font-size: 14px;
   color: #f92525;
-  font-weight: normal;
+  font-weight: bold;
   margin-bottom: 4%;
 }
 .suzi-publikacije--clanak--glasnik-deo2--text {
-  font-size: 12px;
+  font-size: 13px;
   color: #000000;
   line-height: 1.83;
-  font-weight: 300;
+  font-weight: normal;
 }
 .broj-glasnika {
   height: 30px;

@@ -154,16 +154,16 @@
   flex-direction: column;
 }
 .suzi-publikacije--clanak--glasnik-deo2--naslov {
-  font-size: 13px;
+  font-size: 14px;
   color: #f92525;
-  font-weight: normal;
+  font-weight: bold;
   margin-bottom: 4%;
 }
 .suzi-publikacije--clanak--glasnik-deo2--text {
-  font-size: 12px;
+  font-size: 13px;
   color: #000000;
   line-height: 1.83;
-  font-weight: 300;
+  font-weight: normal;
 }
 .broj-glasnika {
   height: 30px;

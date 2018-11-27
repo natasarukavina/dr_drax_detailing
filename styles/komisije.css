@@ -63,6 +63,12 @@
   .slika-small {
     height: 300px;
   }
+  .plain-text {
+    font-size: 11px;
+  }
+  .plain-text-red {
+    font-size: 14px;
+  }
 }
 @media screen and (max-width: 360px) {
   .slika-small {
@@ -131,7 +137,7 @@
 }
 .komisije--right--deo-text {
   font-size: 13px;
-  font-weight: 300;
+  font-weight: normal;
   line-height: 1.83;
   color: #000000;
 }
