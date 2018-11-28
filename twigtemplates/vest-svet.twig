@@ -1,8 +1,9 @@
 {% extends "base.twig" %}
+{% set vesti_svet = fetch("Vesti_svet", {"id": _GET['1']})[0] %}
+{% block description %}{{vesti_svet.Naslov}}{% endblock %}
 
 {% block content %}
 {#% set id = _GET['vest'] %#}
-{% set vesti_svet = fetch("Vesti_svet", {"id": _GET['1']})[0] %}
 
 <div class="vest">
   <div class="vest--title titles">Vesti iz sveta</div>

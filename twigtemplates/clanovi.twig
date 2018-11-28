@@ -1,13 +1,13 @@
 {% extends "base.twig" %}
+{% block description %}Postanite clan SUZI udruzenja!{% endblock %}
+
 {% block content %}
   <div class="clanovi">
     <div class="clanovi--left">
-
         <div class="clanovi--left-title"><a href="clanovi/Clanstvo-u-Suzi" class="{{('Clanstvo-u-Suzi'==_GET[1]) or (''==_GET[1])?'red':''}}">Članstvo u SUZI</a></div>
         <div class="clanovi--left-title"><a href="clanovi/Spisak-clanova" class="{{('Spisak-clanova'==_GET[1])?'red':''}}">Spisak članova</a></div>
         <div class="clanovi--left-title"><a href="clanovi/Postanite-clan-Suzi" class="{{('Postanite-clan-Suzi'==_GET[1])?'red':''}}">Zašto SUZI?</a></div>
-         <div class="clanovi--pridruzi"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdr7vF_FmhxHgAh6SUYnVjgZFSPizvjwkm7JSeSDiGjXLq-3w/viewform?c=0&w=1" target="_blank"><div class="clanovi--pridruzi-button">Učlanite se</div></a></div>
-
+        <div class="clanovi--pridruzi"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdr7vF_FmhxHgAh6SUYnVjgZFSPizvjwkm7JSeSDiGjXLq-3w/viewform?c=0&w=1" target="_blank"><div class="clanovi--pridruzi-button">Učlanite se</div></a></div>
     </div>
 
     <div class="clanovi--right">

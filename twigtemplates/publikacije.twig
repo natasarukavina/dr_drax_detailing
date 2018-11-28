@@ -1,15 +1,16 @@
 {% extends "base.twig" %}
+{% block description %}SUZI publikacije i elektronski glasnik{% endblock %}
 
 {% block content %}
-  
+ 
   <div class="publikacije">
     {% set tip= (_GET['1'])?_GET['1']:'Suzi-Publikacije' %}
       <div class="publikacije--top"> 
           <div class="publikacije--top-title"><a  href="publikacije/Suzi-Publikacije" class="{{('Suzi-Publikacije'==tip)?'red':''}}">SUZI Publikacije</a></div>
           <div class="publikacije--top-title"><a  href="publikacije/Ostale-Publikacije" class="{{('Ostale-Publikacije'==tip)?'red':''}}">Ostale Publikacije</a></div>
           <div class="publikacije--top-title"><a  href="publikacije/Suzi-Elektronski-glasnik" class="{{('Suzi-Elektronski-glasnik'==tip)?'red':''}}">SUZI eGlasnik</a></div> 
-
       </div>
+
       <div class="publikacije--bottom"> 
       {% if 'Suzi-Publikacije'==tip %}
         {% set Publikacije_Suzi = fetch("Publikacije_Suzi") %}
