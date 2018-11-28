@@ -2,15 +2,15 @@
 {% block content %}
 
     <div class="komisije">
-        {% set slug = _GET['1']?_GET['1']:'komisija-za-zastitu-stanovnistva' %}
+        {% set slug = _GET['1']?_GET['1']: fetch('Home').Komisija  %}
             <div class="komisije--left">
             {% set Selektovana_komisija = {} %}
                 {% for item in fetch("Komisija") %}
-                    {% if item.Slug == slug %} 
+                    {% if (item.Slug == slug) or (item.id == slug) %} 
                         {% set Selektovana_komisija = item %} 
                     {% endif %}
                     <div class="komisije--left--naslov">
-                        <a class="{{(item.Slug == slug)?'clicked':''}}" href="komisije/{{item.Slug}}#{{item.id}}"> {{item.Naziv}}</a>
+                        <a class="{{((item.Slug == slug) or (item.id == slug))?'clicked':''}}" href="komisije/{{item.Slug}}#{{item.id}}"> {{item.Naziv}}</a>
                     </div>
                     
                 {% endfor %}
