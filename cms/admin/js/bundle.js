@@ -38575,7 +38575,7 @@ module.exports = Ractive.extend(component.exports);
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
+/* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
 var component = module;
 
       component.exports = {
@@ -38583,7 +38583,8 @@ var component = module;
             //console.log('TGrid onrender')
             var self = this;
             window.TGrid = self;
-            this.on('refresh', async function(){
+            console.log('TGrid')
+            this.on('refresh', async function(){    
                 var selected_tablename = self.get('selected_tablename');
                 //console.log('refreshing ' + selected_tablename);
 //                var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename)
@@ -38659,7 +38660,7 @@ var component = module;
 component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"style",f:"padding-bottom:0; padding-top:2rem; display:flex; flex-flow: row; justify-content:space-between",t:13}],f:[{p:[2,5,118],t:7,e:"span",m:[{n:"style",f:"font-weight: bold",t:13}],f:[{p:[3,9,159],t:7,e:"tag",f:[{t:2,r:"fr.length",p:[3,14,164]}," item",{t:2,x:{r:["fr.length"],s:"_0==1?\"\":\"s\""},p:[3,32,182]}]}]}," ",{p:[5,5,234],t:7,e:"span",m:[{n:"style",f:"flex: 1; text-align: center; font-weight: bold; text-transform: uppercase;",t:13}],f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"nice_name"]},p:[6,9,332]}]}," ",{p:[8,5,394],t:7,e:"button",m:[{n:"style",f:"padding: 9px; margin: 0;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"addNew\",true)]"}},t:70},{n:"id",f:"addNew",t:13}],f:[{p:[9,9,492],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-plus",t:13}]}," Add new"]}]}," ",{p:[14,1,581],t:7,e:"section",m:[{n:"style",f:"flex:1; padding-bottom:1rem; padding-top:0; overflow:auto",t:13}],f:[{p:[15,5,661],t:7,e:"div",m:[{n:"id",f:"testbtn",t:13},{n:"style",f:"display:box; display:flex; height:100%; overflow:auto; flex:1",t:13}],f:[{p:[16,9,758],t:7,e:"f2table",m:[{n:"style",f:"width:100%",t:13},{n:"rows",f:[{t:2,r:"rows",p:[16,42,791]}],t:13},{n:"visible",f:"true",t:13},{n:"headerFixedHeight",f:[{t:2,x:{r:[],s:"false"},p:[16,84,833]}],t:13},{n:"alternateColor",f:[{t:2,x:{r:[],s:"true"},p:[16,110,859]}],t:13},{n:"columns",f:[{t:2,r:"columns",p:[17,21,890]}],t:13},{n:"ipp",f:"50",t:13},{n:"refresh",f:[{t:2,r:"refresh",p:[17,50,919]}],t:13},{n:"fr",f:[{t:2,r:"fr",p:[17,65,934]}],t:13},{n:"row",f:[{t:2,r:"row",p:[17,76,945]}],t:13},{n:"group_by",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"group_by"]},p:[18,23,976]}],t:13},{n:"group_by_order_asc",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"group_by_order_asc"]},p:[19,33,1054]}],t:13},{n:"variableRowHeight",f:[{t:2,x:{r:[],s:"false"},p:[20,31,1140]}],t:13},{n:"showSearch",f:[{t:2,x:{r:[],s:"true"},p:[20,52,1161]}],t:13},{n:"showPaginator",f:[{t:2,x:{r:[],s:"true"},p:[20,75,1184]}],t:13},{n:"showHeaders",f:[{t:2,x:{r:[],s:"true"},p:[20,96,1205]}],t:13},{n:"loading",f:[{t:2,r:"loading",p:[20,113,1222]}],t:13},{n:"nodata",f:[{t:2,x:{r:[],s:"false"},p:[20,132,1241]}],t:13}],f:[]}," "]}]}," ",{t:4,f:[{p:[28,1,1354],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showDetails",p:[28,14,1367]}],t:13},{n:"zoomFrom",f:[{t:2,r:"currFilterIndex",p:[28,41,1394]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[28,66,1419]}],t:13},{n:"title",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"nice_name"]},p:[28,81,1434]}," details"],t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"false"},p:[29,43,1532]}],t:13},{n:"style",f:"\nheight: initial;\nwidth: auto;\nleft: 30%;\nright: 0;\ntop: 5rem;\nbottom: 0;",t:13}],f:[{p:[36,5,1631],t:7,e:"TDetails",m:[{n:"row",f:[{t:2,r:"row",p:[36,19,1645]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"true"},p:[36,34,1660]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[36,48,1674]}],t:13},{n:"show",f:[{t:2,r:"showDetails",p:[36,66,1692]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[36,93,1719]}],t:13}]}]}],n:50,r:"showDetails",p:[27,1,1334]},{t:4,f:[{p:[41,1,1787],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"addNew",p:[41,14,1800]}],t:13},{n:"zoomFrom",f:"addNew",t:13},{n:"cw",f:[{t:2,r:"cw",p:[41,48,1834]}],t:13},{n:"title",f:["Add new ",{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"nice_name"]},p:[41,71,1857]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[41,131,1917]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[48,5,2049],t:7,e:"TDetails",m:[{n:"show",f:[{t:2,r:"addNew",p:[48,21,2065]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"false"},p:[48,40,2084]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[48,55,2099]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[48,77,2121]}],t:13}]}]}],n:50,r:"addNew",p:[40,1,1772]}],e:{"_0==1?\"\":\"s\"":function (_0){return(_0==1?"":"s");},"[_0.set(\"addNew\",true)]":function (_0){return([_0.set("addNew",true)]);},"false":function (){return(false);},"true":function (){return(true);}}};
 module.exports = Ractive.extend(component.exports);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
 /* 23 */
@@ -38771,6 +38772,7 @@ var component = module;
                 , update:null
                 , mapvarname:''
                 , loading:false
+                , G:null
             }
         }
     ,computed:{
@@ -39353,7 +39355,15 @@ module.exports = Ractive.extend(component.exports);
 var component = module;
 
   component.exports ={
-    onrender: function(){
+    onteardown: function(){
+      $('#summernote').summernote('destroy');
+      // cleanup after summernote
+      var elements = document.getElementsByClassName('note-tooltip');
+      while(elements.length > 0){
+          elements[0].parentNode.removeChild(elements[0]);
+      }
+    }
+    ,onrender: function(){
         var self = this;
         var HelloButton = function (context) {
             var ui = $.summernote.ui;
@@ -39363,14 +39373,17 @@ var component = module;
                 tooltip: 'Image',
                 click: function () {
                 // invoke insertText method with 'hello' on editor module.
-                    self.set('showFileBrowse',true);
-                    //context.invoke('editor.insertText', 'Image odje');
+                  $('#summernote').summernote('editor.saveRange');
+                  self.set('showFileBrowse',true);
+                  //context.invoke('editor.insertText', 'Image odje');
                 }
             });
             return button.render();   // return button as jquery object
         }
         this.on('path', function(path){
-            $('#summernote').summernote('insertImage', 'image.php?id='+path, path)
+          $('#summernote').summernote('editor.restoreRange');
+          $('#summernote').summernote('editor.focus');
+          $('#summernote').summernote('insertImage', 'image.php?id='+path, path)
         })
 
         var e = $(this.find('*')).summernote({
@@ -39380,12 +39393,12 @@ var component = module;
                     ['font', ['strikethrough', 'superscript', 'subscript']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],                            
-                    ['imagez', ['link','image', 'video']],
+                    ['imagez', ['link','img', 'video']],
                     ['tables', ['table']],
                     ['codeview', ['codeview']]
                 ],
                 buttons: {
-                    image: HelloButton
+                    img: HelloButton
                 },
                 height: 300,               
                 minHeight: null,             

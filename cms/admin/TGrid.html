@@ -56,7 +56,8 @@ bottom: inherit;" >
             //console.log('TGrid onrender')
             var self = this;
             window.TGrid = self;
-            this.on('refresh', async function(){
+            console.log('TGrid')
+            this.on('refresh', async function(){    
                 var selected_tablename = self.get('selected_tablename');
                 //console.log('refreshing ' + selected_tablename);
 //                var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename)

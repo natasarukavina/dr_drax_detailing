@@ -16,7 +16,15 @@ bottom: inherit;" >
 
 <script>
   component.exports ={
-    onrender: function(){
+    onteardown: function(){
+      $('#summernote').summernote('destroy');
+      // cleanup after summernote
+      var elements = document.getElementsByClassName('note-tooltip');
+      while(elements.length > 0){
+          elements[0].parentNode.removeChild(elements[0]);
+      }
+    }
+    ,onrender: function(){
         var self = this;
         var HelloButton = function (context) {
             var ui = $.summernote.ui;
@@ -26,14 +34,17 @@ bottom: inherit;" >
                 tooltip: 'Image',
                 click: function () {
                 // invoke insertText method with 'hello' on editor module.
-                    self.set('showFileBrowse',true);
-                    //context.invoke('editor.insertText', 'Image odje');
+                  $('#summernote').summernote('editor.saveRange');
+                  self.set('showFileBrowse',true);
+                  //context.invoke('editor.insertText', 'Image odje');
                 }
             });
             return button.render();   // return button as jquery object
         }
         this.on('path', function(path){
-            $('#summernote').summernote('insertImage', 'image.php?id='+path, path)
+          $('#summernote').summernote('editor.restoreRange');
+          $('#summernote').summernote('editor.focus');
+          $('#summernote').summernote('insertImage', 'image.php?id='+path, path)
         })
 
         var e = $(this.find('*')).summernote({
@@ -43,12 +54,12 @@ bottom: inherit;" >
                     ['font', ['strikethrough', 'superscript', 'subscript']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],                            
-                    ['imagez', ['link','image', 'video']],
+                    ['imagez', ['link','img', 'video']],
                     ['tables', ['table']],
                     ['codeview', ['codeview']]
                 ],
                 buttons: {
-                    image: HelloButton
+                    img: HelloButton
                 },
                 height: 300,               
                 minHeight: null,             
