@@ -7,7 +7,7 @@
       <div class="publikacije--top"> 
           <div class="publikacije--top-title"><a  href="publikacije/Suzi-Publikacije" class="{{('Suzi-Publikacije'==tip)?'red':''}}">SUZI Publikacije</a></div>
           <div class="publikacije--top-title"><a  href="publikacije/Ostale-Publikacije" class="{{('Ostale-Publikacije'==tip)?'red':''}}">Ostale Publikacije</a></div>
-          <div class="publikacije--top-title"><a  href="publikacije/Suzi-Elektronski-glasnik" class="{{('Suzi-Elektronski-glasnik'==tip)?'red':''}}">SUZI Elektronski glasnik</a></div> 
+          <div class="publikacije--top-title"><a  href="publikacije/Suzi-Elektronski-glasnik" class="{{('Suzi-Elektronski-glasnik'==tip)?'red':''}}">SUZI eGlasnik</a></div> 
 
       </div>
       <div class="publikacije--bottom"> 
@@ -18,7 +18,6 @@
           <div class="suzi-publikacije--clanak">
             <div style="margin-bottom: 20px;" class="suzi-publikacije--clanak-link">{{suzi.Autor}}: {{ suzi.Naziv }} , {{suzi.Izdavac}}</div>
             <div style="margin-bottom: 10px;">
-              {# <a class="preuzmi-publikaciju" href='img/{{suzi.Link}}' download="{{suzi.Naziv}}" >Preuzmi publikaciju</a> #}
               <a style="margin-left: 20px;" class="preuzmi-publikaciju" href='img/{{suzi.Link}}' target="_blank" >Pogledaj publikaciju</a>
             </div>
           </div>
@@ -54,10 +53,21 @@
             {% endif %}
             
               <div class="broj-glasnika">
-                <div style="flex: 1;" class="{{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}">{{glasnik.Broj}}</div>
-                {# <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a>  #}
-                <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" target="_blank">Pogledaj PDF <img src="images/pdf.svg"></a></div>
-            
+                <div style="display: flex; width: 100%;">
+                  <div style="flex: 1; cursor: pointer;" id="js-glasnik" class="{{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}">{{glasnik.Broj}}</div> 
+                  <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" target="_blank">Pogledaj PDF <img src="images/pdf.svg"></a></div>
+                </div>
+                <div id="eGlasnik" class="broj-glasnika--e-glasnik">
+                  <div class="suzi-publikacije--clanak--glasnik-deo1">
+                    {% if SelektovaniGlasnik.Slika1 %}
+                      <img src="img/{{SelektovaniGlasnik.Slika1}}">
+                    {% endif %}
+                  </div>
+                  <div class="suzi-publikacije--clanak--glasnik-deo2">
+                    <div class="suzi-publikacije--clanak--glasnik-deo2--naslov">{{SelektovaniGlasnik.Naslov}}</div>
+                    <div class="suzi-publikacije--clanak--glasnik-deo2--text">{{SelektovaniGlasnik.Text | raw}}</div>
+                  </div>
+                </div>
           {% endfor %}
           </div>
             {# <div class="suzi-publikacije--clanak--glasnik-deo1">
@@ -101,12 +111,12 @@
           </div>
         {% endfor %}
       {% set eGlasnik = fetch("eGlasnik") %}
-          <div class="publikacije--top-title {{('Suzi-Elektronski-glasnik'==tip)?'active':''}}">SUZI Elektronski glasnik</div> 
+          <div class="publikacije--top-title {{('Suzi-Elektronski-glasnik'==tip)?'active':''}}">SUZI eGlasnik</div> 
 
           
         <div class="{%if ('Suzi-Elektronski-glasnik'==tip) %} suzi-publikacije {% endif %}">
           <div class="suzi-publikacije--clanak--glasnik">
-          <div style="display: flex; flex-direction: column;" class="suzi-publikacije--clanak--glasnik-deo">
+          <div style="display: flex; flex-direction: column;" id="glasnik-anim" class="suzi-publikacije--clanak--glasnik-deo">
           {% set tip2 = _GET['2'] ? _GET['2'] : eGlasnik[0]['Slug'] %}
           {% set SelektovaniGlasnik = {} %}
           {% for glasnik in eGlasnik %}
@@ -143,4 +153,19 @@
 
       {# </div> #}
   </div>
+<script>
+   
+    let eGlasnik = document.getElementById('eGlasnik');
+    let glasnik = document.getElementById('js-glasnik');
+
+    glasnik.addEventListener('click', function(){
+        if (eGlasnik.classList.contains('active-glasnik')) {
+            eGlasnik.classList.remove('active-glasnik');
+        }
+        else {
+            eGlasnik.classList.add('active-glasnik');
+        }
+    });
+
+</script>
 {% endblock %}

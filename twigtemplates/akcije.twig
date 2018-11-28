@@ -17,9 +17,14 @@
                             {% if (item.Slug == tip) or ( item.id == tip) %}    
                             {% set SelektovanaAkcija = item %}
                             <div class="akcije--mobile"> 
+                            <div class="akcije--mobile--slika">
                                 {% if SelektovanaAkcija.Slika1 %} 
-                                    <div class="akcije--mobile--slika"><img class="akcije--mobile--slika--img" src="img/{{SelektovanaAkcija.Slika1}}"></div>
+                                    <img class="akcije--mobile--slika--img" src="img/{{SelektovanaAkcija.Slika1}}">
                                 {% endif %}
+                                {% if SelektovanaAkcija.Slika2 %} 
+                                    <img class="akcije--mobile--slika--img" src="img/{{SelektovanaAkcija.Slika2}}">
+                                {% endif %}
+                                </div>
                                 <div class="akcije--mobile--text">{{SelektovanaAkcija.Text | raw }}</div>
                             </div>
                         {% endif %}
@@ -29,9 +34,14 @@
         </div>
         <div class="akcije--right"> 
             <div class="akcije--right--text">
-                {% if SelektovanaAkcija.Slika1 %}
-                    <img class="akcije--right--slika" src="img/{{SelektovanaAkcija.Slika1}}">
-                {% endif %}
+                <div style="float: left; max-width: 250px; margin-right: 3%;">
+                    {% if SelektovanaAkcija.Slika1 %}
+                        <img class="akcije--right--slika" src="img/{{SelektovanaAkcija.Slika1}}">
+                    {% endif %}
+                    {% if SelektovanaAkcija.Slika2 %}
+                        <img class="akcije--right--slika" src="img/{{SelektovanaAkcija.Slika2}}">
+                    {% endif %}
+                </div>
                 {{SelektovanaAkcija.Text | raw }}
             </div>
         </div>

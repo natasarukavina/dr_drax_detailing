@@ -35,8 +35,8 @@
                     {% for vesti_suzi in fetch('Vesti_suzi') %}
                     <div class="home--part2--vesti--naslovi-1">
                         <div class="naslov sub_titles"><a href="vest-suzi/{{vesti_suzi.Slug}}">{{ vesti_suzi.Naslov }}</a></div>
-                        {% if vesti_suzi.Slika %}
-                        <div class="slika-small"><a href="vest-suzi/{{vesti_suzi.Slug}}"><img class="slika" src="img/{{ vesti_suzi.Slika }}"></a><div>
+                        {% if vesti_suzi.Slika1 %}
+                        <div class="slika-small"><a href="vest-suzi/{{vesti_suzi.Slug}}"><img class="slika" src="img/{{ vesti_suzi.Slika1 }}"></a></div>
                         {% endif %}
                         <div class="dates">{{vesti_suzi.Datum | date("d.m.Y")}}</div>
                     </div>
