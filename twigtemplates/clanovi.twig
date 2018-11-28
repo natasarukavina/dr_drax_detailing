@@ -1,7 +1,7 @@
 {% extends "base.twig" %}
 {% block content %}
   <div class="clanovi">
-    <div class="clanovi--opis">
+    {# <div class="clanovi--opis">
         <p class="clanovi--opis-paragraf plain-text">
             Članovi SUZI su svi zainteresovani inženjeri, geolozi, seizmolozi, arhitekte i urbanisti, edukatori, istraživači, ekonomisti, sociolozi, predstavnici državnih institucija, opštinski kadrovi zaduženi za primenu propisa i gradjevinsku inspekciju, pripadnici službi za hitne intervencije u kriznim situacijama, i pripradnici ostalih struka koje zemljotresi dotiču i koji se bave uzrocima i posledicama zemljotresa.
         </p>
@@ -24,9 +24,9 @@
         <p class="clanovi--opis-paragraf plain-text">
             4) Članovi studenti.
         </p>
-    </div>
+    </div> #}
     
-    <div class="clanovi--pridruzi"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdr7vF_FmhxHgAh6SUYnVjgZFSPizvjwkm7JSeSDiGjXLq-3w/viewform?c=0&w=1" target="_blank"><div class="clanovi--pridruzi-button">Postanite član</div></a></div>
+    {# <div class="clanovi--pridruzi"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdr7vF_FmhxHgAh6SUYnVjgZFSPizvjwkm7JSeSDiGjXLq-3w/viewform?c=0&w=1" target="_blank"><div class="clanovi--pridruzi-button">Postanite član</div></a></div>
     {% set tip = _GET['1'] ? _GET['1'] : 'Redovni' %}
     <div class="clanovi--spisak" id="spisak">
         <div class="clanovi--spisak-tip">
@@ -57,6 +57,112 @@
         {% endfor %}
         </div>
 
+    </div> #}
+
+    <div class="clanovi--left">
+        
+        <div class="publikacije--top-title"><a href="clanovi/Clanstvo-u-Suzi"   class="{{('Clanstvo-u-Suzi'==_GET[1])?'red':''}}">Članstvo u SUZI</a></div>
+        <div class="publikacije--top-title"><a href="clanovi/Spisak-clanova" class="{{('Spisak-clanova'==_GET[1])?'red':''}}">Spisak članova</a></div> 
+        <div class="publikacije--top-title"><a href="clanovi/Postanite-clan-Suzi" class="{{('Postanite-clan-Suzi'==_GET[1])?'red':''}}">Zašto SUZI?</a></div>
+         <div class="clanovi--pridruzi"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdr7vF_FmhxHgAh6SUYnVjgZFSPizvjwkm7JSeSDiGjXLq-3w/viewform?c=0&w=1" target="_blank"><div class="clanovi--pridruzi-button">Učlanite se</div></a></div>
+        
+    </div>
+
+    <div class="clanovi--right">
+        <div>
+            {% if 'Clanstvo-u-Suzi'== _GET[1] %}
+            <div class="clanovi--opis">
+                <p class="clanovi--opis-paragraf plain-text">
+                    Članovi SUZI su svi zainteresovani inženjeri, geolozi, seizmolozi, arhitekte i urbanisti, edukatori, istraživači, ekonomisti, sociolozi, predstavnici državnih institucija, opštinski kadrovi zaduženi za primenu propisa i gradjevinsku inspekciju, pripadnici službi za hitne intervencije u kriznim situacijama, i pripradnici ostalih struka koje zemljotresi dotiču i koji se bave uzrocima i posledicama zemljotresa.
+                </p>
+                <p class="clanovi--opis-paragraf plain-text">
+                    Prema Statutu SUZI: Članom se postaje popunjavanjem pristupnice i prijemom od strane Upravnog odbora. Član Udruženja može biti svako lice koje prihvata ciljeve Udruženja i Statut i podnese prijavu za učlanjenje Upravnom odboru Udruženja. Svi članovi Udruženja se upisuju u evidenciju koju vodi Generalni sekretar Udruženja. Članovi Udruženja plaćaju godišnju članarinu.
+                </p>
+                <p class="clanovi--opis-paragraf plain-text-red">
+                    Članovi Udruženja mogu biti:
+                </p>
+                <p class="clanovi--opis-paragraf plain-text">
+                    1) Redovni članovi – oni koji ispunjavaju uslove iz prethodnog stava
+                </p>
+                <p class="clanovi--opis-paragraf plain-text">
+                    2) Počasni članovi: renomirani stručnjaci koji su svojim zalaganjem dali doprinos razvoju, unapređenju, i/ili širenju zemljotresnog inženjerstva u zemlji i/ili svetu.
+                    Počasne članove bira Skupština na predlog Upravnog odbora;
+                </p>
+                <p class="clanovi--opis-paragraf plain-text">
+                    3) Mladi članovi – članovi do 35 god starosti koji nisu studenti;
+                </p>
+                <p class="clanovi--opis-paragraf plain-text">
+                    4) Članovi studenti.
+                </p>
+            </div>
+            {% endif %}
+        </div>
+        <div>
+            {% if 'Spisak-clanova'== _GET[1] %}
+            {% set tip = _GET['2'] ? _GET['2'] : 'Redovni' %}
+            <div class="clanovi--spisak" id="spisak">
+                <div class="clanovi--spisak-tip">
+                <div class="clanovi--spisak-tip--naslov titles">Članovi</div>
+                <div class="mobile">
+                {% for item in fetch("TipClana") %}
+                    <div class="clanovi--spisak-tip--red plain-text {{(item.Naziv == tip) ? 'active-list' : ''}}">
+                        <a href="clanovi/Spisak-clanova/{{item.Naziv}}#spisak"> {{item.Naziv}}</a>
+                    </div>
+                {% endfor %}
+                </div>
+                </div>
+
+                <div class="clanovi--spisak-telo">
+                <div class="clanovi--spisak-telo--header">
+                    <div class="clanovi--spisak-telo--header-naslov titles">Prezime i ime</div>
+                    <div class="clanovi--spisak-telo--header-naslov titles">Organizacija</div>
+                </div>
+                {% for item in fetch("Clanovi") %}
+                    {% if (item.Grupa_label == tip) %}
+                    <div class="clanovi--spisak-telo--red">
+                        <div class="clanovi--spisak-telo--red-osoba"> {{item.Ime}} </div>
+                        <div class="clanovi--spisak-telo--red-osoba"> {{item.Mejl}} </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+        </div>
+            {% endif %}
+        </div>
+        <div>
+            {% if 'Postanite-clan-Suzi'== _GET[1] %}
+            <div class="clanovi--opis">
+                <p class="clanovi--opis-paragraf plain-text-red">
+                    Pozivamo vas da postanete član SUZI i svojim angažovanjem doprinesete radu novoosnovanog udruženja. Članovi SUZI imaju obezbeđeno:
+                </p>
+                <p class="clanovi--opis-paragraf plain-text">
+                    1) Besplatno učešće na stručnim predavanjima organizovanim od strane SUZI (planiramo 2-4 predavanja godišnje)
+                </p>
+                <p class="clanovi--opis-paragraf plain-text">
+                    2) Besplatni elektronski glasnik SUZI dva puta godišnje
+
+                </p>
+                <p class="clanovi--opis-paragraf plain-text">
+                    3) Popust od 50% za pohadjanje kratkih kurseva, radionica, i drugih stručnih aktivnosti organizovanih od strane SUZI
+                </p>
+                <p class="clanovi--opis-paragraf plain-text">
+                    4) Besplatne elektronske publikacije SUZI u vezi tema od posebnog značaja i popust na štampane verzije tih publikacija
+                </p>
+                <p class="clanovi--opis-paragraf plain-text-red">
+                   Iznos članarine za 2019. godinu je 2.000 rsd za redovne članove i 1.000 rsd za mlade članove do 35 godina starosti koji nisu studenti. Članstvo za studente je besplatno.  Da biste poslali član SUZI neophodno je:
+                </p>
+                <p class="clanovi--opis-paragraf plain-text">
+                    1) da platite clanarinu (u zavisnosti od vrste clanstva) na tekuci racun
+                </p>
+                <p class="clanovi--opis-paragraf plain-text">
+                    2) da popunite prijavu 
+                </p>
+                
+            </div>
+           
+            {% endif %}
+        </div>
     </div>
   </div>
 

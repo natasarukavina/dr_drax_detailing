@@ -354,7 +354,7 @@ img {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #d0d0d0;
 }
 .home--part-istaknuta-akcija {
   width: 66%;
@@ -413,7 +413,7 @@ img {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #d0d0d0;
 }
 .home--part2:last-child {
   border-bottom: none;
@@ -432,7 +432,6 @@ img {
 .home--part2--vesti--title {
   width: 80%;
   padding-bottom: 20px;
-  border-bottom: 1px solid #000000;
 }
 .home--part2--vesti--naslovi {
   width: 80%;
@@ -748,7 +747,6 @@ img {
 .vesti--suzi-naslov {
   width: 100%;
   height: 35px;
-  border-bottom: 1px solid #000000;
 }
 .vesti--suzi-vest {
   width: 100%;
@@ -764,7 +762,6 @@ img {
 .vesti--svet-naslov {
   width: 100%;
   height: 35px;
-  border-bottom: 1px solid #000000;
 }
 .vesti--svet-vest {
   border-bottom: 1px solid #d0d0d0;
@@ -782,7 +779,6 @@ img {
 .vesti--prikazi-naslov {
   width: 100%;
   height: 35px;
-  border-bottom: 1px solid #000000;
 }
 .vesti--prikazi-vest {
   padding: 25px 0px 5px 0px;
@@ -1036,7 +1032,18 @@ img {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   padding: 4% 90px;
+}
+.clanovi--left {
+  width: 30%;
+}
+.clanovi--right {
+  width: 70%;
+  border-left: 1px solid #d0d0d0;
+  padding-left: 5%;
 }
 .clanovi--opis-paragraf {
   margin-bottom: 20px;
@@ -1051,7 +1058,6 @@ img {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  border-bottom: 1px solid #000000;
 }
 .clanovi--pridruzi-button {
   height: 40px;
@@ -1080,10 +1086,10 @@ img {
   justify-content: space-around;
 }
 .clanovi--spisak-tip {
-  width: 30%;
+  width: 25%;
 }
 .clanovi--spisak-tip--naslov {
-  height: 80px;
+  height: 70px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1092,7 +1098,8 @@ img {
   align-items: center;
   padding: 1px 0px;
   margin-bottom: 30px;
-  border-bottom: 1px solid #a8a8a8;
+  font-size: 18px;
+  border-bottom: 1px solid #d0d0d0;
 }
 .clanovi--spisak-tip--red {
   font-size: 18px;
@@ -1102,7 +1109,7 @@ img {
   font-size: inherit;
 }
 .clanovi--spisak-telo {
-  width: 70%;
+  width: 75%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1112,20 +1119,21 @@ img {
   flex-direction: column;
 }
 .clanovi--spisak-telo--header {
-  min-height: 80px;
+  min-height: 70px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   padding: 1px 0px;
   margin-bottom: 30px;
-  border-bottom: 1px solid #a8a8a8;
+  border-bottom: 1px solid #d0d0d0;
 }
 .clanovi--spisak-telo--header-naslov {
   width: 50%;
-  height: 80px;
+  height: 70px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  font-size: 18px;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
@@ -1142,7 +1150,7 @@ img {
 }
 .clanovi--spisak-telo--red-osoba {
   width: 50%;
-  font-size: 18px;
+  font-size: 13px;
   line-height: 24px;
   color: #000000;
 }

@@ -5,7 +5,18 @@
   -webkit-box-flex: 1;
       -ms-flex: 1;
       flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   padding: 4% 90px;
+  &--left{
+    width: 30%;
+  }
+  &--right{
+    width: 70%;
+    border-left: 1px solid @gray-light;
+    padding-left: 5%;
+  }
   &--opis {
     // min-height: 50%;
     &-paragraf {
@@ -22,7 +33,7 @@
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
-    border-bottom: 1px solid @black;
+    // border-bottom: 1px solid @black;
     &-button {
       height: 40px;
       width: 140px;
@@ -51,9 +62,9 @@
     -ms-flex-pack: distribute;
         justify-content: space-around;
     &-tip {
-      width: 30%;
+      width: 25%;
       &--naslov {
-        height: 80px;
+        height: 70px;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -62,7 +73,8 @@
                 align-items: center;
         padding: 1px 0px;
         margin-bottom: 30px;
-        border-bottom: 1px solid @gray-border;
+        font-size: 18px;
+        border-bottom: 1px solid @gray-light;
       }
       &--red {
         font-size: 18px;
@@ -74,7 +86,7 @@
 
     }
     &-telo {
-      width: 70%;
+      width: 75%;
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
@@ -83,19 +95,20 @@
           -ms-flex-direction: column;
               flex-direction: column;
       &--header {
-        min-height: 80px;
+        min-height: 70px;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
         padding: 1px 0px;
         margin-bottom: 30px;
-        border-bottom: 1px solid @gray-border;
+        border-bottom: 1px solid @gray-light;
         &-naslov {
           width: 50%;
-          height: 80px;
+          height: 70px;
           display: -webkit-box;
           display: -ms-flexbox;
           display: flex;
+          font-size: 18px;
           -webkit-box-align: center;
               -ms-flex-align: center;
                   align-items: center;
@@ -112,7 +125,7 @@
         }
         &-osoba {
           width: 50%;
-          font-size: 18px;
+          font-size: 13px;
           line-height: 24px;
           color: @black;
         }
