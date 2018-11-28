@@ -1177,7 +1177,7 @@ img {
   .clanovi--left {
     width: 100%;
     margin-bottom: 10px;
-    border-bottom: 1px solid #202124;
+    border-bottom: 1px solid #d0d0d0;
   }
   .clanovi--pridruzi {
     margin-top: 5%;
@@ -1192,6 +1192,12 @@ img {
   }
   .clanovi--left {
     width: 100%;
+  }
+  .clanovi--right {
+    width: 100%;
+    border-left: none;
+    padding-top: 0px;
+    padding-left: 0px;
   }
   .clanovi--pridruzi {
     margin-top: 5%;
