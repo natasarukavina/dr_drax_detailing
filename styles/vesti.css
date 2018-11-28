@@ -183,10 +183,13 @@
 .vest--container-text {
   width: 100%;
   padding: 2% 0px;
-  text-align: justify;
 }
 .vest--container-text p {
   margin-top: 22px;
+}
+.vest--container-text p a {
+  text-decoration-line: underline;
+  color: #202124;
 }
 @media only screen and (max-width: 1024px) {
   .vesti {

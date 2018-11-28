@@ -152,7 +152,7 @@ img {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  width: 100%;
+  width: 85%;
 }
 .footer--1--suzi {
   width: 25%;
@@ -173,16 +173,18 @@ img {
   text-align: center;
 }
 .footer--icons {
-  width: 10%;
+  width: 15%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+  justify-content: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+.footer--icons img {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .footer-mob {
   display: none;
@@ -526,7 +528,7 @@ img {
   padding: 4% 90px;
 }
 .oNama--1 {
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #d0d0d0;
 }
 .oNama--1--text {
   width: 80%;
@@ -535,7 +537,6 @@ img {
   color: #000000;
   line-height: 1.85;
   padding-bottom: 4%;
-  text-align: justify;
 }
 .oNama--2 {
   display: -webkit-box;
@@ -639,7 +640,6 @@ img {
 .akcije--left--suzi {
   width: 80%;
   padding: 25px 0;
-  border-bottom: 1px solid #000000;
 }
 .akcije--left--naslov {
   width: 90%;
@@ -658,9 +658,9 @@ img {
 .akcije--right--slika {
   max-height: 450px;
   max-width: 250px;
+  margin-bottom: 20px;
   width: auto;
   float: left;
-  margin-right: 3%;
 }
 .akcije--right--naslov {
   color: #f92525;
@@ -669,7 +669,6 @@ img {
   font-size: 13px;
   font-weight: normal;
   line-height: 1.69;
-  text-align: justify;
   color: #000000;
 }
 .akcije--right--text * {
@@ -712,6 +711,9 @@ img {
   }
   .akcije--mobile--slika--img {
     max-height: 350px;
+    max-width: 250px;
+    margin-left: 10px;
+    margin-right: 10px;
   }
   .akcije--mobile--text {
     margin-top: 3%;
@@ -837,7 +839,6 @@ img {
 .vest--container-text {
   width: 100%;
   padding: 2% 0px;
-  text-align: justify;
 }
 .vest--container-text p {
   margin-top: 22px;
@@ -1653,7 +1654,7 @@ img {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    height: 90px;
+    height: 100px;
     background-color: #ff0000;
     flex-wrap: wrap;
     padding: 0 4%;
@@ -1674,7 +1675,6 @@ img {
     -ms-flex-pack: center;
     justify-content: center;
     text-align: center;
-    border-bottom: 1px solid #ffffff;
   }
   .footer-mob-icon {
     display: -webkit-box;
@@ -1683,9 +1683,13 @@ img {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
     width: 40%;
     padding: 0 5%;
+  }
+  .footer-mob-icon img {
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
 @media only screen and (max-width: 360px) {

@@ -11,6 +11,9 @@
       {% for suzi in vesti_suzi %}
       <div class="vesti--suzi-vest">
         <div class="vesti--suzi-vest--link sub_titles"><a href="vest-suzi/{{suzi.Slug}}">{{ suzi.Naslov }}</a></div>
+        {% if suzi.Slika1 %}
+          <div class="slika-small"><a href="vest-svet/{{suzi.Slug}}"><img class="slika" src="img/{{ suzi.Slika1 }}"></a></div>
+        {% endif %}
         <div class="dates">{{ suzi.Datum | date("d.m.Y") }}</div>
       </div>
       {% endfor %}
