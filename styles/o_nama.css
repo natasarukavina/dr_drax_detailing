@@ -89,7 +89,7 @@
   padding: 4% 90px;
 }
 .oNama--1 {
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #d0d0d0;
 }
 .oNama--1--text {
   width: 80%;
@@ -98,7 +98,6 @@
   color: #000000;
   line-height: 1.85;
   padding-bottom: 4%;
-  text-align: justify;
 }
 .oNama--2 {
   display: -webkit-box;
