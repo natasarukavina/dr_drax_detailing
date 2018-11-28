@@ -1044,6 +1044,15 @@ img {
 .clanovi--left {
   width: 30%;
 }
+.clanovi--left-title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: 18px;
+  font-weight: 300;
+  color: #000000;
+  padding: 10px 0;
+}
 .clanovi--right {
   width: 70%;
   border-left: 1px solid #d0d0d0;
@@ -1062,6 +1071,7 @@ img {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  margin-top: 21%;
 }
 .clanovi--pridruzi-button {
   height: 40px;
@@ -1158,14 +1168,44 @@ img {
   line-height: 24px;
   color: #000000;
 }
+@media only screen and (max-width: 1366px) {
+  .clanovi--pridruzi {
+    margin-top: 19%;
+  }
+}
 @media only screen and (max-width: 1024px) {
   .clanovi {
+    flex-direction: column;
     padding: 4% 60px;
+  }
+  .clanovi--left {
+    width: 100%;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #d0d0d0;
+  }
+  .clanovi--pridruzi {
+    margin-top: 5%;
+  }
+  .clanovi--right {
+    padding-top: 20px;
   }
 }
 @media only screen and (max-width: 960px) {
   .clanovi {
     padding: 4% 50px;
+  }
+  .clanovi--left {
+    width: 100%;
+    margin-bottom: 0px;
+  }
+  .clanovi--right {
+    width: 100%;
+    border-left: none;
+    padding-top: 0px;
+    padding-left: 0px;
+  }
+  .clanovi--pridruzi {
+    margin-top: 5%;
   }
   .clanovi--spisak {
     flex-direction: column;
@@ -1195,6 +1235,39 @@ img {
   }
   .clanovi--spisak-telo--red-osoba {
     font-size: 14px;
+  }
+}
+@media only screen and (max-width: 680px) {
+  .clanovi--right {
+    width: 95%;
+  }
+}
+@media only screen and (max-width: 420px) {
+  .clanovi--left {
+    margin-bottom: 0px;
+  }
+  .clanovi--right {
+    width: 100%;
+    padding-left: 0px;
+    padding-top: 0px;
+    border-left: none;
+  }
+  .clanovi--spisak-telo--header {
+    flex-wrap: wrap;
+  }
+  .clanovi--spisak-telo--header-naslov {
+    width: 100%;
+    height: 50px;
+  }
+  .clanovi--spisak-telo--red {
+    flex-wrap: wrap;
+  }
+  .clanovi--spisak-telo--red-osoba {
+    width: 100%;
+  }
+  .clanovi--spisak-tip--red {
+    width: 100%;
+    padding: 10px 0px;
   }
 }
 @media only screen and (max-width: 360px) {
