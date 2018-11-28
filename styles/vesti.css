@@ -93,7 +93,6 @@
 .vesti--suzi-naslov {
   width: 100%;
   height: 35px;
-  border-bottom: 1px solid #000000;
 }
 .vesti--suzi-vest {
   width: 100%;
@@ -109,7 +108,6 @@
 .vesti--svet-naslov {
   width: 100%;
   height: 35px;
-  border-bottom: 1px solid #000000;
 }
 .vesti--svet-vest {
   border-bottom: 1px solid #d0d0d0;
@@ -127,7 +125,6 @@
 .vesti--prikazi-naslov {
   width: 100%;
   height: 35px;
-  border-bottom: 1px solid #000000;
 }
 .vesti--prikazi-vest {
   padding: 25px 0px 5px 0px;
