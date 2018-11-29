@@ -1129,6 +1129,9 @@ img {
   font-size: 18px;
   padding: 15px 0px;
 }
+.clanovi--spisak-tip--red:first-child {
+  padding-top: 5px;
+}
 .clanovi--spisak-tip--red a {
   font-size: inherit;
 }
@@ -1170,7 +1173,7 @@ img {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding: 10px 0px;
+  padding: 5px 0px;
 }
 .clanovi--spisak-telo--red-naslov {
   width: 50%;
@@ -1181,6 +1184,10 @@ img {
   font-size: 13px;
   line-height: 24px;
   color: #000000;
+}
+.flex {
+  display: flex;
+  width: 50%;
 }
 @media only screen and (max-width: 1366px) {
   .clanovi--pridruzi {
@@ -1249,6 +1256,9 @@ img {
   }
   .clanovi--spisak-telo--red-osoba {
     font-size: 14px;
+  }
+  .flex {
+    width: 100%;
   }
 }
 @media only screen and (max-width: 680px) {
