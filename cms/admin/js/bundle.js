@@ -39356,7 +39356,7 @@ var component = module;
 
   component.exports ={
     onteardown: function(){
-      $('#summernote').summernote('destroy');
+      $(this.nodes.summernote).summernote('destroy');
       // cleanup after summernote
       var elements = document.getElementsByClassName('note-tooltip');
       while(elements.length > 0){
@@ -39373,7 +39373,7 @@ var component = module;
                 tooltip: 'Image',
                 click: function () {
                 // invoke insertText method with 'hello' on editor module.
-                  $('#summernote').summernote('editor.saveRange');
+                  $(self.nodes.summernote).summernote('editor.saveRange');
                   self.set('showFileBrowse',true);
                   //context.invoke('editor.insertText', 'Image odje');
                 }
@@ -39381,12 +39381,12 @@ var component = module;
             return button.render();   // return button as jquery object
         }
         this.on('path', function(path){
-          $('#summernote').summernote('editor.restoreRange');
-          $('#summernote').summernote('editor.focus');
-          $('#summernote').summernote('insertImage', 'image.php?id='+path, path)
+          $(self.nodes.summernote).summernote('editor.restoreRange');
+          $(self.nodes.summernote).summernote('editor.focus');
+          $(self.nodes.summernote).summernote('insertImage', 'image.php?id='+path, path)
         })
 
-        var e = $(this.find('*')).summernote({
+        var e = $(self.nodes.summernote).summernote({
                 disableDragAndDrop: true,
                 toolbar: [
                     ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -39410,7 +39410,7 @@ var component = module;
                         var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
                         e.preventDefault();
                         setTimeout( function(){
-                            $('#summernote').summernote( 'insertText', bufferText );
+                            $(self.nodes.summernote).summernote( 'insertText', bufferText );
                         }, 10 );
                     },                    
                     onFocus: function(e) {  $('.note-dialog').parents().removeClass('animated');  },  //modal fix                  
@@ -39426,7 +39426,7 @@ var component = module;
         this.observe('code', function(v){
             if( self.get('fromParent') ) {
                 //e.summernote(v);
-                $('#summernote').summernote('code', v)
+                $(self.nodes.summernote).summernote('code', v)
             }
         });
         
@@ -39443,7 +39443,7 @@ var component = module;
 }
 
 
-component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"div",m:[{n:"class",f:[{t:2,r:"class",p:[1,13,12]}],t:13},{n:"id",f:"summernote",t:13},{n:"style",f:[{t:2,r:"style",p:[1,48,47]}],t:13}]}," ",{t:4,f:[{p:[5,1,90],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFileBrowse",p:[5,14,103]}],t:13},{n:"zoomFrom",f:"summernote",t:13},{n:"cw",f:[{t:2,r:"cw",p:[5,60,149]}],t:13},{n:"title",f:"Browse",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[6,43,215]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[13,5,347],t:7,e:"ImageBrowser",m:[{n:"path",f:[{t:2,r:"pathvarname",p:[13,25,367]}],t:13},{n:"show",f:[{t:2,r:"showFileBrowse",p:[13,48,390]}],t:13}]}]}],n:50,r:"showFileBrowse",p:[4,1,67]}],e:{"true":function (){return(true);}}};
+component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"div",m:[{n:"class",f:[{t:2,r:"class",p:[1,13,12]}],t:13},{n:"id",f:"summernote",t:13},{n:"style",f:[{t:2,r:"style",p:[1,48,47]}],t:13}]}," ",{t:4,f:[{p:[5,1,90],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFileBrowse",p:[5,14,103]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[5,38,127]}],t:13},{n:"title",f:"Browse",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[6,43,193]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[13,5,325],t:7,e:"ImageBrowser",m:[{n:"path",f:[{t:2,r:"pathvarname",p:[13,25,345]}],t:13},{n:"show",f:[{t:2,r:"showFileBrowse",p:[13,48,368]}],t:13}]}]}],n:50,r:"showFileBrowse",p:[4,1,67]}],e:{"true":function (){return(true);}}};
 module.exports = Ractive.extend(component.exports);
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
