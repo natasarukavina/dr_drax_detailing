@@ -33,7 +33,6 @@
           <div class="suzi-publikacije--clanak">
             <div style="margin-bottom: 20px;" class="suzi-publikacije--clanak-link">{{svet.Autor}}: {{ svet.Naziv }} , {{svet.Izdavac}}</div>
             <div style="margin-bottom: 10px;">
-              {# <a class="preuzmi-publikaciju" href='img/{{svet.Link}}' download="{{svet.Naziv}}">Preuzmi publikaciju</a> #}
               <a style="margin-left: 20px;" class="preuzmi-publikaciju" href='img/{{svet.Link}}' target="_blank">Pogledaj publikaciju</a>
             </div>
           </div>
@@ -71,31 +70,19 @@
                 </div>
           {% endfor %}
           </div>
-            {# <div class="suzi-publikacije--clanak--glasnik-deo1">
-              {% if SelektovaniGlasnik.Slika1 %}
-                <img src="img/{{SelektovaniGlasnik.Slika1}}">
-              {% endif %}
-            </div>
-            <div class="suzi-publikacije--clanak--glasnik-deo2">
-              <div class="suzi-publikacije--clanak--glasnik-deo2--naslov">{{SelektovaniGlasnik.Naslov}}</div>
-              <div class="suzi-publikacije--clanak--glasnik-deo2--text">{{SelektovaniGlasnik.Text | raw}}</div>
-            </div> #}
           </div>
-        {# {% endfor %} #}
         </div>
       {% endif %}
 
       </div>
   </div>
   <div class="publikacije--mobile">
-    {# <div class="publikacije--top">  #}
       {% set Publikacije_Suzi = fetch("Publikacije_Suzi") %}
           <div class="publikacije--top-title {{('Suzi-Publikacije'==tip)?'active':''}}">SUZI Publikacije</div>
           {% for suzi in Publikacije_Suzi %}
           <div class="suzi-publikacije--clanak">
             <div style="margin-bottom: 20px;" class="suzi-publikacije--clanak-link">{{suzi.Autor}}: {{ suzi.Naziv }} , {{suzi.Izdavac}}</div>
             <div style="margin-bottom: 10px;">
-              {# <a class="preuzmi-publikaciju" href='img/{{suzi.Link}}' download="{{suzi.Naziv}}" >Preuzmi publikaciju</a> #}
               <a style="margin-left: 20px;" class="preuzmi-publikaciju" href='img/{{suzi.Link}}' target="_blank" >Pogledaj publikaciju</a>
             </div>
           </div>
@@ -106,7 +93,6 @@
           <div class="suzi-publikacije--clanak">
             <div style="margin-bottom: 20px;" class="suzi-publikacije--clanak-link">{{svet.Autor}}: {{ svet.Naziv }} , {{svet.Izdavac}}</div>
             <div style="margin-bottom: 10px;">
-              {# <a class="preuzmi-publikaciju" href='img/{{svet.Link}}' download="{{svet.Naziv}}">Preuzmi publikaciju</a> #}
               <a style="margin-left: 20px;" class="preuzmi-publikaciju" href='img/{{svet.Link}}' target="_blank">Pogledaj publikaciju</a>
             </div>
           </div>
@@ -121,17 +107,12 @@
           {% set tip2 = _GET['2'] ? _GET['2'] : eGlasnik[0]['Slug'] %}
           {% set SelektovaniGlasnik = {} %}
           {% for glasnik in eGlasnik %}
-            {# {% if (glasnik.Slug == tip2) or ( glasnik.id == tip2) %}    
-              {% set SelektovaniGlasnik = glasnik %} #}
-            {# {% endif %} #}
             
               <div class="broj-glasnika">
                 <a class="broj-glasnika--broj {{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}#{{glasnik.id}}">{{glasnik.Broj}}</a>
-                {# <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" download>Preuzmi PDF <img src="images/pdf.svg"></a> #}
                 <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" target="_blank">Pogledaj PDF <img src="images/pdf.svg"></a> 
               </div>
             
-          {# {% endfor %} #}
           </div>
           {% if (glasnik.Slug == tip2) or ( glasnik.id == tip2) %}    
               {% set SelektovaniGlasnik = glasnik %}
@@ -149,10 +130,8 @@
           {% endif %}
           {% endfor %}
           </div>
-        {# {% endfor %} #}
         </div>
 
-      {# </div> #}
   </div>
 <script>
    
