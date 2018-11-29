@@ -1085,7 +1085,7 @@ img {
 }
 .clanovi--pridruzi-button {
   height: 40px;
-  width: 140px;
+  width: 180px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1110,7 +1110,7 @@ img {
   justify-content: space-around;
 }
 .clanovi--spisak-tip {
-  width: 25%;
+  width: 20%;
 }
 .clanovi--spisak-tip--naslov {
   height: 70px;
@@ -1133,7 +1133,7 @@ img {
   font-size: inherit;
 }
 .clanovi--spisak-telo {
-  width: 75%;
+  width: 80%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1161,6 +1161,10 @@ img {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+.clanovi--spisak-telo--header-naslov-deo {
+  width: 50%;
+  font-size: 18px;
 }
 .clanovi--spisak-telo--red {
   display: -webkit-box;
