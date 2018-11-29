@@ -26,13 +26,6 @@
     
     {% set rows = (is_multiple=='false') ? [ fetch( tablename ) ] : fetch( tablename ) %}
 
-    {#
-    <ul>
-    {% for i in cols %}
-        <li><p><a href="table?id={{i.table_name}}"> {{i.field_name}} ({{i.nice_name}})</a></p></li>
-    {% endfor %}
-    </ul>
-    #}
 
 <h2>{{tablename}}</h2>
     <table>
