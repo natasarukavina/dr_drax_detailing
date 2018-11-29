@@ -653,7 +653,7 @@ img {
 .akcije--right {
   width: 67%;
   padding-left: 3%;
-  border-left: 1px solid #979797;
+  border-left: 1px solid #d0d0d0;
 }
 .akcije--right--slika {
   max-height: 450px;
@@ -1058,9 +1058,20 @@ img {
   border-left: 1px solid #d0d0d0;
   padding-left: 5%;
 }
-.clanovi--opis-paragraf {
+.clanovi--opis p {
+  font-size: 13px;
+  line-height: 22px;
+  color: #000000;
   margin-bottom: 20px;
-  text-align: justify;
+}
+.clanovi--opis ol {
+  font-size: 13px;
+  line-height: 22px;
+  color: #000000;
+  margin-left: 15px;
+}
+.clanovi--opis ol li {
+  margin-bottom: 20px;
 }
 .clanovi--pridruzi {
   width: 100%;
@@ -1604,7 +1615,8 @@ img {
   max-height: 100%;
 }
 .prijatelji-boks--1--adresa {
-  font-size: 14px;
+  font-size: 11px;
+  font-weight: 500;
   line-height: 1.71;
   color: #000000;
   margin-top: 20px;
