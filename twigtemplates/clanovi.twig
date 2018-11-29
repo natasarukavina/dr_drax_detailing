@@ -17,30 +17,6 @@
             {% if ('Clanstvo-u-Suzi'== _GET[1]) or (''==_GET[1]) %}
             <div class="clanovi--opis">
               {{Home.Clanstvo | raw}}
-{#            
-                <p class="clanovi--opis-paragraf plain-text">
-                    Članovi SUZI su svi zainteresovani inženjeri, geolozi, seizmolozi, arhitekte i urbanisti, edukatori, istraživači, ekonomisti, sociolozi, predstavnici državnih institucija, opštinski kadrovi zaduženi za primenu propisa i gradjevinsku inspekciju, pripadnici službi za hitne intervencije u kriznim situacijama, i pripradnici ostalih struka koje zemljotresi dotiču i koji se bave uzrocima i posledicama zemljotresa.
-                </p>
-                <p class="clanovi--opis-paragraf plain-text">
-                    Prema Statutu SUZI: Članom se postaje popunjavanjem pristupnice i prijemom od strane Upravnog odbora. Član Udruženja može biti svako lice koje prihvata ciljeve Udruženja i Statut i podnese prijavu za učlanjenje Upravnom odboru Udruženja. Svi članovi Udruženja se upisuju u evidenciju koju vodi Generalni sekretar Udruženja. Članovi Udruženja plaćaju godišnju članarinu.
-                </p>
-                <p class="clanovi--opis-paragraf plain-text-red">
-                    Članovi Udruženja mogu biti:
-                </p>
-                <p class="clanovi--opis-paragraf plain-text">
-                    1) Redovni članovi – oni koji ispunjavaju uslove iz prethodnog stava
-                </p>
-                <p class="clanovi--opis-paragraf plain-text">
-                    2) Počasni članovi: renomirani stručnjaci koji su svojim zalaganjem dali doprinos razvoju, unapređenju, i/ili širenju zemljotresnog inženjerstva u zemlji i/ili svetu.
-                    Počasne članove bira Skupština na predlog Upravnog odbora;
-                </p>
-                <p class="clanovi--opis-paragraf plain-text">
-                    3) Mladi članovi – članovi do 35 god starosti koji nisu studenti;
-                </p>
-                <p class="clanovi--opis-paragraf plain-text">
-                    4) Članovi studenti.
-                </p>
-#}
             </div>
             {% endif %}
         </div>
@@ -80,32 +56,7 @@
         <div>
             {% if 'Postanite-clan-Suzi'== _GET[1] %}
             <div class="clanovi--opis">
-                <p class="clanovi--opis-paragraf plain-text-red">
-                    Pozivamo vas da postanete član SUZI i svojim angažovanjem doprinesete radu novoosnovanog udruženja. Članovi SUZI imaju obezbeđeno:
-                </p>
-                <p class="clanovi--opis-paragraf plain-text">
-                    1) Besplatno učešće na stručnim predavanjima organizovanim od strane SUZI (planiramo 2-4 predavanja godišnje)
-                </p>
-                <p class="clanovi--opis-paragraf plain-text">
-                    2) Besplatni elektronski glasnik SUZI dva puta godišnje
-
-                </p>
-                <p class="clanovi--opis-paragraf plain-text">
-                    3) Popust od 50% za pohadjanje kratkih kurseva, radionica, i drugih stručnih aktivnosti organizovanih od strane SUZI
-                </p>
-                <p class="clanovi--opis-paragraf plain-text">
-                    4) Besplatne elektronske publikacije SUZI u vezi tema od posebnog značaja i popust na štampane verzije tih publikacija
-                </p>
-                <p class="clanovi--opis-paragraf plain-text-red">
-                   Iznos članarine za 2019. godinu je 2.000 rsd za redovne članove i 1.000 rsd za mlade članove do 35 godina starosti koji nisu studenti. Članstvo za studente je besplatno.  Da biste poslali član SUZI neophodno je:
-                </p>
-                <p class="clanovi--opis-paragraf plain-text">
-                    1) da platite clanarinu (u zavisnosti od vrste clanstva) na tekuci racun
-                </p>
-                <p class="clanovi--opis-paragraf plain-text">
-                    2) da popunite prijavu
-                </p>
-
+                {{Home.ZastoSuzi | raw}}
             </div>
 
             {% endif %}

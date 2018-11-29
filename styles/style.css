@@ -467,7 +467,7 @@ img {
   }
   .home--part-istaknuta-akcija {
     width: 100%;
-    border-bottom: 1px solid #202124;
+    border-bottom: 1px solid #d0d0d0;
     padding-bottom: 0;
   }
   .home--part-istaknuta-akcija .title {
@@ -497,7 +497,7 @@ img {
     width: 100%;
     margin: 0;
     padding-top: 20px;
-    border-bottom: 1px solid #202124;
+    border-bottom: 1px solid #d0d0d0;
   }
   .home--part2--vesti--naslovi {
     width: 100%;
@@ -880,7 +880,7 @@ img {
   .vesti--prikazi-naslov {
     border-bottom: none;
     padding-top: 20px;
-    border-top: 1px solid #202124;
+    border-top: 1px solid #d0d0d0;
   }
   .vesti--svet-vest,
   .vesti--prikazi-vest {
@@ -984,7 +984,6 @@ img {
   font-size: 13px;
   font-weight: normal;
   line-height: 1.83;
-  text-align: justify;
   color: #000000;
 }
 .komisije--right--deo-table {
@@ -1018,7 +1017,7 @@ img {
     padding-left: 0;
     padding-top: 20px;
     border-left: none;
-    border-top: 1px solid #202124;
+    border-top: 1px solid #d0d0d0;
   }
   .komisije--right--deo-title {
     font-size: 14px;
@@ -1099,7 +1098,7 @@ img {
   background-color: #f92525;
   border-radius: 3px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: bold;
   line-height: 14px;
   color: #ffffff;
 }
@@ -1438,6 +1437,9 @@ img {
 .publikacije--mobile {
   display: none;
 }
+.active-glasnik-mob {
+  display: none;
+}
 @media screen and (max-width: 1024px) {
   .publikacije {
     padding: 4% 60px;
@@ -1461,10 +1463,10 @@ img {
     margin-top: 50px;
     padding-bottom: 20px;
     width: 100%;
+    color: #f92525;
     -webkit-box-pack: start;
     -ms-flex-pack: start;
     justify-content: flex-start;
-    border-bottom: 1px solid #202124;
   }
   .publikacije--top-title:first-child {
     margin-top: 20px;
@@ -1496,6 +1498,15 @@ img {
   .broj-glasnika--pdf {
     width: 90px;
     margin-left: 10px;
+  }
+  .glasnik-text {
+    display: none;
+  }
+  .active-glasnik-mob {
+    display: block!important;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #d0d0d0;
   }
 }
 @media screen and (max-width: 360px) {
@@ -1697,7 +1708,6 @@ img {
     display: none;
   }
   .head-responsive--meni-title {
-    height: 100%;
     width: 30%;
     display: -webkit-box;
     display: -ms-flexbox;
