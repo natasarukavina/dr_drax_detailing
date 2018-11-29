@@ -100,6 +100,9 @@
       &--red {
         font-size: 18px;
         padding: 15px 0px;
+        &:first-child{
+          padding-top: 5px;
+        }
         a {
           font-size: inherit;
         }
@@ -143,7 +146,7 @@
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
-        padding: 10px 0px;
+        padding: 5px 0px;
         &-naslov {
           width: 50%;
           height: 120px;
@@ -157,6 +160,10 @@
       }
     }
   }
+}
+.flex{
+  display: flex;
+  width: 50%;
 }
 @media only screen and (max-width: 1366px) {
   .clanovi {
@@ -229,6 +236,9 @@
         }
       }
     }
+  }
+  .flex{
+    width: 100%;
   }
 }
 @media only screen and (max-width: 680px) {
