@@ -207,6 +207,9 @@
 .publikacije--mobile {
   display: none;
 }
+.active-glasnik-mob {
+  display: none;
+}
 @media screen and (max-width: 1024px) {
   .publikacije {
     padding: 4% 60px;
@@ -230,10 +233,10 @@
     margin-top: 50px;
     padding-bottom: 20px;
     width: 100%;
+    color: #f92525;
     -webkit-box-pack: start;
     -ms-flex-pack: start;
     justify-content: flex-start;
-    border-bottom: 1px solid #202124;
   }
   .publikacije--top-title:first-child {
     margin-top: 20px;
@@ -265,6 +268,15 @@
   .broj-glasnika--pdf {
     width: 90px;
     margin-left: 10px;
+  }
+  .glasnik-text {
+    display: none;
+  }
+  .active-glasnik-mob {
+    display: block!important;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #d0d0d0;
   }
 }
 @media screen and (max-width: 360px) {
