@@ -137,7 +137,6 @@
             $('#typeahead_m')[0].focus();
             if (searchInit) return;
             searchInit=true;
-            //console.log($('#typeahead_m'))
             $.getJSON("cms/api.php/?query=_search", function(result){
                 serachArray = result        
             });
@@ -154,11 +153,6 @@
         $('#typeahead_m').bind('typeahead:select', function(ev, suggestion) {
             document.location = suggestion.href+'/'+suggestion.Slug
         });   
-
-        
-
-        //$('#typeahead').one('click', prefetchSearch);
-
    </script>
 
 
