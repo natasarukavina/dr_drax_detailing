@@ -19,7 +19,16 @@ function getBaseUrl()
     // output: localhost
     $hostName = $_SERVER['HTTP_HOST']; 
     // output: http://
-    $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
+
+    $isSecure = false;
+    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+        $isSecure = true;
+    }
+    elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
+        $isSecure = true;
+    }
+    $protocol = $isSecure ? 'https://' : 'http://';
+
     // return: http://localhost/myproject/
     //echo $protocol.$hostName;
     //echo dirname($pathInfo['dirname']);
