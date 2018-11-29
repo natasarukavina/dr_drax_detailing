@@ -32,6 +32,9 @@
                         <a href="clanovi/Spisak-clanova/{{item.Naziv}}#spisak"> {{item.Naziv}}</a>
                     </div>
                 {% endfor %}
+                    <div class="clanovi--spisak-tip--red plain-text {{('Svi' == tip) ? 'active-list' : ''}}">
+                        <a href="clanovi/Spisak-clanova/Svi#spisak"> Svi</a>
+                    </div>
                 </div>
                 </div>
                 
@@ -45,7 +48,6 @@
                         <div class="clanovi--spisak-telo--header-naslov titles">Organizacija</div>
                     </div>
                     {% for item in fetch("Clanovi") %}
-                        {% if (item.Grupa_label == tip) %}
                         <div class="clanovi--spisak-telo--red">
                             <div style="display: flex; width: 50%;">
                                 <div style="width: 30%;" class="clanovi--spisak-telo--red-osoba">{{item.Grupa_label}}</div>
@@ -53,7 +55,6 @@
                             </div>
                             <div class="clanovi--spisak-telo--red-osoba"> {{item.Organizacija}} </div>
                         </div>
-                        {% endif %}
                     {% endfor %}
                 {% else %}
                     <div class="clanovi--spisak-telo">
