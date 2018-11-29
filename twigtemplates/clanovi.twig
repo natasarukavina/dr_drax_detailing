@@ -6,10 +6,10 @@
 {% block content %}
   <div class="clanovi">
     <div class="clanovi--left">
-        <div class="clanovi--left-title"><a href="clanovi/Clanstvo-u-Suzi" class="{{('Clanstvo-u-Suzi'==_GET[1]) or (''==_GET[1])?'red':''}}">Članstvo u SUZI</a></div>
+        <div class="clanovi--left-title"><a href="clanovi/Clanstvo-u-Suzi" class="{{('Clanstvo-u-Suzi'==_GET[1]) or (''==_GET[1])?'red':''}}">O članstvu u SUZI</a></div>
         <div class="clanovi--left-title"><a href="clanovi/Spisak-clanova" class="{{('Spisak-clanova'==_GET[1])?'red':''}}">Spisak članova</a></div>
-        <div class="clanovi--left-title"><a href="clanovi/Postanite-clan-Suzi" class="{{('Postanite-clan-Suzi'==_GET[1])?'red':''}}">Zašto SUZI?</a></div>
-        <div class="clanovi--pridruzi"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdr7vF_FmhxHgAh6SUYnVjgZFSPizvjwkm7JSeSDiGjXLq-3w/viewform?c=0&w=1" target="_blank"><div class="clanovi--pridruzi-button">Učlanite se</div></a></div>
+        <div class="clanovi--left-title"><a href="clanovi/Postanite-clan-Suzi" class="{{('Postanite-clan-Suzi'==_GET[1])?'red':''}}">Postanite član!</a></div>
+        <div class="clanovi--pridruzi"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdr7vF_FmhxHgAh6SUYnVjgZFSPizvjwkm7JSeSDiGjXLq-3w/viewform?c=0&w=1" target="_blank"><div class="clanovi--pridruzi-button">Prijava za učlanjenje</div></a></div>
     </div>
 
     <div class="clanovi--right">
@@ -34,20 +34,49 @@
                 {% endfor %}
                 </div>
                 </div>
-
-                <div class="clanovi--spisak-telo">
-                <div class="clanovi--spisak-telo--header">
-                    <div class="clanovi--spisak-telo--header-naslov titles">Prezime i ime</div>
-                    <div class="clanovi--spisak-telo--header-naslov titles">Organizacija</div>
-                </div>
-                {% for item in fetch("Clanovi") %}
-                    {% if (item.Grupa_label == tip) %}
-                    <div class="clanovi--spisak-telo--red">
-                        <div class="clanovi--spisak-telo--red-osoba"> {{item.Ime}} </div>
-                        <div class="clanovi--spisak-telo--red-osoba"> {{item.Mejl}} </div>
+                
+                {% if (tip == 'Svi') %}
+                    <div class="clanovi--spisak-telo">
+                    <div class="clanovi--spisak-telo--header">
+                        <div class="clanovi--spisak-telo--header-naslov">
+                            <div style="width: 30%;" class="clanovi--spisak-telo--header-naslov-deo titles">Status</div>
+                            <div style="width: 70%;" class="clanovi--spisak-telo--header-naslov-deo titles">Prezime i Ime</div>
+                        </div>
+                        <div class="clanovi--spisak-telo--header-naslov titles">Organizacija</div>
                     </div>
-                    {% endif %}
-                {% endfor %}
+                    {% for item in fetch("Clanovi") %}
+                        {% if (item.Grupa_label == tip) %}
+                        <div class="clanovi--spisak-telo--red">
+                            <div style="display: flex; width: 50%;">
+                                <div style="width: 30%;" class="clanovi--spisak-telo--red-osoba">{{item.Grupa_label}}</div>
+                                <div style="width: 70%;" class="clanovi--spisak-telo--red-osoba">{{item.Prezime}} {{item.Ime}}</div>
+                            </div>
+                            <div class="clanovi--spisak-telo--red-osoba"> {{item.Organizacija}} </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="clanovi--spisak-telo">
+                    <div class="clanovi--spisak-telo--header">
+                        <div class="clanovi--spisak-telo--header-naslov">
+                            <div class="clanovi--spisak-telo--header-naslov-deo titles">Prezime</div>
+                            <div class="clanovi--spisak-telo--header-naslov-deo titles">Ime</div>
+                        </div>
+                        <div class="clanovi--spisak-telo--header-naslov titles">Organizacija</div>
+                    </div>
+                    {% for item in fetch("Clanovi") %}
+                        {% if (item.Grupa_label == tip) %}
+                        <div class="clanovi--spisak-telo--red">
+                            <div style="display: flex; width: 50%;">
+                                <div class="clanovi--spisak-telo--red-osoba">{{item.Prezime}}</div>
+                                <div class="clanovi--spisak-telo--red-osoba">{{item.Ime}}</div>
+                            </div>
+                            <div class="clanovi--spisak-telo--red-osoba"> {{item.Organizacija}} </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                
             </div>
 
         </div>
