@@ -2,7 +2,7 @@
 
 
 {{#if showFileBrowse}}
-<modal show="{{showFileBrowse}}" zoomFrom="summernote" cw="{{cw}}" title="Browse" 
+<modal show="{{showFileBrowse}}" cw="{{cw}}" title="Browse" 
 class="animated fadeInRight" showOverlay="{{true}}" style="
 height: 44em;
 width: 50em;
@@ -17,7 +17,7 @@ bottom: inherit;" >
 <script>
   component.exports ={
     onteardown: function(){
-      $('#summernote').summernote('destroy');
+      $(this.nodes.summernote).summernote('destroy');
       // cleanup after summernote
       var elements = document.getElementsByClassName('note-tooltip');
       while(elements.length > 0){
@@ -34,7 +34,7 @@ bottom: inherit;" >
                 tooltip: 'Image',
                 click: function () {
                 // invoke insertText method with 'hello' on editor module.
-                  $('#summernote').summernote('editor.saveRange');
+                  $(self.nodes.summernote).summernote('editor.saveRange');
                   self.set('showFileBrowse',true);
                   //context.invoke('editor.insertText', 'Image odje');
                 }
@@ -42,12 +42,12 @@ bottom: inherit;" >
             return button.render();   // return button as jquery object
         }
         this.on('path', function(path){
-          $('#summernote').summernote('editor.restoreRange');
-          $('#summernote').summernote('editor.focus');
-          $('#summernote').summernote('insertImage', 'image.php?id='+path, path)
+          $(self.nodes.summernote).summernote('editor.restoreRange');
+          $(self.nodes.summernote).summernote('editor.focus');
+          $(self.nodes.summernote).summernote('insertImage', 'image.php?id='+path, path)
         })
 
-        var e = $(this.find('*')).summernote({
+        var e = $(self.nodes.summernote).summernote({
                 disableDragAndDrop: true,
                 toolbar: [
                     ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -71,7 +71,7 @@ bottom: inherit;" >
                         var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
                         e.preventDefault();
                         setTimeout( function(){
-                            $('#summernote').summernote( 'insertText', bufferText );
+                            $(self.nodes.summernote).summernote( 'insertText', bufferText );
                         }, 10 );
                     },                    
                     onFocus: function(e) {  $('.note-dialog').parents().removeClass('animated');  },  //modal fix                  
@@ -87,7 +87,7 @@ bottom: inherit;" >
         this.observe('code', function(v){
             if( self.get('fromParent') ) {
                 //e.summernote(v);
-                $('#summernote').summernote('code', v)
+                $(self.nodes.summernote).summernote('code', v)
             }
         });
         
