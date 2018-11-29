@@ -136,7 +136,14 @@
             {{/if}}
 -->
         {{/each}}
-    </grid>
+        <!--
+        {{#if tablename=='TipClana'}}
+        <div col='1/1'>
+          <TGridNested G={{G}} selected_tablename = "Clanovi"></TGridNested>
+        </div>
+        {{/if}}
+        -->
+      </grid>
     <div xx class="buttonBar">
         <button disabled="{{!row.id || loading}}" on-click="delete">
             <span class="glyphicon glyphicon-remove"></span> Delete
@@ -163,7 +170,7 @@ right: inherit;
 top: calc(50% - 20em);
 bottom: inherit;
 " >
-    <map G={{.}} gps="{{row[mapvarname]}}" show="{{showMap}}"></map>
+    <map G={{G}} gps="{{row[mapvarname]}}" show="{{showMap}}"></map>
 </modal>  
 {{/if}}   
 

@@ -33,7 +33,7 @@ left: 30%;
 right: 0;
 top: 5rem;
 bottom: 0;" >
-    <TDetails row={{row}} update={{true}} cols={{columns}} show="{{showDetails}}" tablename={{selected_tablename}}></TDetails>
+    <TDetails row={{row}} update={{true}} cols={{columns}} show="{{showDetails}}" tablename={{selected_tablename}} G={{G}}></TDetails>
 </modal>
 {{/if}}
 
@@ -45,7 +45,7 @@ left: calc(50% - 25em);
 right: inherit;
 top: calc(50% - 22em);
 bottom: inherit;" >
-    <TDetails show="{{addNew}}" update={{false}} cols={{columns}} tablename={{selected_tablename}}></TDetails>
+    <TDetails show="{{addNew}}" update={{false}} cols={{columns}} tablename={{selected_tablename}} G={{G}}></TDetails>
 </modal>
 {{/if}}
     
@@ -102,6 +102,8 @@ bottom: inherit;" >
                     , addNew:false 
                     , selected_tablename:''   
                     , columns:null  
+                    , showDetails:false
+
   /*
                      , columns: [
                       {visible:true , filter:true, compId:"category_en", compType:"text", label:"Category (En.)", w:"50%"},

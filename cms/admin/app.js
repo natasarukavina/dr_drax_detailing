@@ -233,6 +233,7 @@ Ractive.components.ShowImage               =  require('./ShowImage.html');
 Ractive.components.UserList                =  require('./user/UserList.html');
 Ractive.components.UserDetail              =  require('./user/UserDetail.html');
 Ractive.components.About                   =  require('./About.html');
+Ractive.components.TGridNested             =  require('./TGridNested.html');
 
 //document.addEventListener("deviceready", onDeviceReady, false);
 //if (!window.cordova) onDeviceReady()

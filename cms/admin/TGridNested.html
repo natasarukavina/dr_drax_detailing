@@ -19,13 +19,11 @@
             group_by_order_asc="{{G.schemas[~/selected_tablename].group_by_order_asc}}"
             variableRowHeight={{false}} showSearch={{true}} showPaginator={{true}} showHeaders={{true}} loading={{loading}} nodata={{false}} >
         </f2table>
-        <!--selectid={{selectid}} -->
     </div>
 </section>
 
-
 {{#if showDetails}}
-<modal show="{{showDetails}}" zoomFrom="{{currFilterIndex}}" cw="{{cw}}" title="{{G.schemas[~/selected_tablename].nice_name}} details" 
+<modal show="{{showDetails}}"  cw="{{cw}}" title="{{G.schemas[~/selected_tablename].nice_name}} details" 
 class="animated fadeInRight" showOverlay="{{false}}" style="
 height: initial;
 width: auto;
@@ -38,7 +36,7 @@ bottom: 0;" >
 {{/if}}
 
 {{#if addNew}}
-<modal show="{{addNew}}" zoomFrom="addNew" cw="{{cw}}" title="Add new {{G.schemas[~/selected_tablename].nice_name}}" showOverlay="{{true}}" style="
+<modal show="{{addNew}}"  cw="{{cw}}" title="Add new {{G.schemas[~/selected_tablename].nice_name}}" showOverlay="{{true}}" style="
 height: 44em;
 width: 50em;
 left: calc(50% - 25em);
@@ -48,7 +46,7 @@ bottom: inherit;" >
     <TDetails show="{{addNew}}" update={{false}} cols={{columns}} tablename={{selected_tablename}}></TDetails>
 </modal>
 {{/if}}
-    
+
     
     <script>
       component.exports = {
@@ -74,7 +72,7 @@ bottom: inherit;" >
 //                if (resp) self.set( { rows: resp, columns: cols } )
                 if (resp) self.set('rows', resp)
             })
-            //this.fire('refresh')
+            this.fire('refresh')
 
             /*
             this.observe('selected_tablename', function(){
@@ -83,7 +81,6 @@ bottom: inherit;" >
             }, {init:false})
 */
             this.on('*.clickhandlerfromtable', function(e,e1,e2){
-    //            console.log('clickhandlerfromtable',e,e1,e2)
                 self.set('currFilterIndex', 'fgr'+e)
                 self.set('showDetails',true)
             })
@@ -103,6 +100,7 @@ bottom: inherit;" >
                     , addNew:false 
                     , selected_tablename:''   
                     , columns:null  
+                    , showDetails:false
   /*
                      , columns: [
                       {visible:true , filter:true, compId:"category_en", compType:"text", label:"Category (En.)", w:"50%"},
