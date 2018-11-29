@@ -1058,9 +1058,20 @@ img {
   border-left: 1px solid #d0d0d0;
   padding-left: 5%;
 }
-.clanovi--opis-paragraf {
+.clanovi--opis p {
+  font-size: 13px;
+  line-height: 22px;
+  color: #000000;
   margin-bottom: 20px;
-  text-align: justify;
+}
+.clanovi--opis ol {
+  font-size: 13px;
+  line-height: 22px;
+  color: #000000;
+  margin-left: 15px;
+}
+.clanovi--opis ol li {
+  margin-bottom: 20px;
 }
 .clanovi--pridruzi {
   width: 100%;
