@@ -54,10 +54,10 @@
             
               <div class="broj-glasnika">
                 <div style="display: flex; width: 100%;">
-                  <div style="flex: 1; cursor: pointer;" id="js-glasnik" class="{{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}">{{glasnik.Broj}}</div> 
+                  <div style="flex: 1; cursor: pointer;" class="js-glasnik">{{glasnik.Broj}}</div> 
                   <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" target="_blank">Pogledaj PDF <img src="images/pdf.svg"></a></div>
                 </div>
-                <div id="eGlasnik" class="broj-glasnika--e-glasnik">
+                <div class="eGlasnik broj-glasnika--e-glasnik">
                   <div class="suzi-publikacije--clanak--glasnik-deo1">
                     {% if SelektovaniGlasnik.Slika1 %}
                       <img src="img/{{SelektovaniGlasnik.Slika1}}">
@@ -78,7 +78,7 @@
   </div>
   <div class="publikacije--mobile">
       {% set Publikacije_Suzi = fetch("Publikacije_Suzi") %}
-          <div class="publikacije--top-title {{('Suzi-Publikacije'==tip)?'active':''}}">SUZI Publikacije</div>
+          <div class="publikacije--top-title">SUZI Publikacije</div>
           {% for suzi in Publikacije_Suzi %}
           <div class="suzi-publikacije--clanak">
             <div style="margin-bottom: 20px;" class="suzi-publikacije--clanak-link">{{suzi.Autor}}: {{ suzi.Naziv }} , {{suzi.Izdavac}}</div>
@@ -88,7 +88,7 @@
           </div>
         {% endfor %}
       {% set Publikacije_Ostale = fetch("Publikacije_Ostale") %}
-          <div class="publikacije--top-title {{('Ostale-Publikacije'==tip)?'active':''}}">Ostale Publikacije</div>
+          <div class="publikacije--top-title">Ostale Publikacije</div>
           {% for svet in Publikacije_Ostale %}
           <div class="suzi-publikacije--clanak">
             <div style="margin-bottom: 20px;" class="suzi-publikacije--clanak-link">{{svet.Autor}}: {{ svet.Naziv }} , {{svet.Izdavac}}</div>
@@ -98,7 +98,7 @@
           </div>
         {% endfor %}
       {% set eGlasnik = fetch("eGlasnik") %}
-          <div class="publikacije--top-title {{('Suzi-Elektronski-glasnik'==tip)?'active':''}}">SUZI eGlasnik</div> 
+          <div class="publikacije--top-title">SUZI eGlasnik</div> 
 
           
         <div class="{%if ('Suzi-Elektronski-glasnik'==tip) %} suzi-publikacije {% endif %}">
@@ -109,14 +109,14 @@
           {% for glasnik in eGlasnik %}
             
               <div class="broj-glasnika">
-                <a class="broj-glasnika--broj {{(glasnik.Slug==tip2 or glasnik.id==tip2)?'red':''}}" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}#{{glasnik.id}}">{{glasnik.Broj}}</a>
+                <a class="js-glasnik broj-glasnika--broj" href="publikacije/Suzi-Elektronski-glasnik/{{glasnik.Slug}}#{{glasnik.id}}">{{glasnik.Broj}}</a>
                 <a class="broj-glasnika--pdf" href="img/{{SelektovaniGlasnik.Pdf}}" target="_blank">Pogledaj PDF <img src="images/pdf.svg"></a> 
               </div>
             
           </div>
           {% if (glasnik.Slug == tip2) or ( glasnik.id == tip2) %}    
               {% set SelektovaniGlasnik = glasnik %}
-          <div id="{{SelektovaniGlasnik.id}}">
+          <div class="eGlasnik glasnik-text" id="{{SelektovaniGlasnik.id}}">
             <div class="suzi-publikacije--clanak--glasnik-deo1 slika-small">
               {% if SelektovaniGlasnik.Slika1 %}
                 <img class="slika" src="img/{{SelektovaniGlasnik.Slika1}}">
@@ -135,15 +135,27 @@
   </div>
 <script>
    
-    let eGlasnik = document.getElementById('eGlasnik');
-    let glasnik = document.getElementById('js-glasnik');
+    let eGlasnik = document.getElementsByClassName('eGlasnik');
+    let glasnik = document.getElementsByClassName('js-glasnik');
 
-    glasnik.addEventListener('click', function(){
-        if (eGlasnik.classList.contains('active-glasnik')) {
-            eGlasnik.classList.remove('active-glasnik');
+    glasnik[0].addEventListener('click', function(){
+        if (eGlasnik[0].classList.contains('active-glasnik')) {
+            eGlasnik[0].classList.remove('active-glasnik');
+            glasnik[0].classList.remove('red');
         }
         else {
-            eGlasnik.classList.add('active-glasnik');
+            eGlasnik[0].classList.add('active-glasnik');
+            glasnik[0].classList.add('red');
+        }
+    });
+    glasnik[1].addEventListener('click', function(){
+        if (eGlasnik[1].classList.contains('active-glasnik-mob')) {
+            eGlasnik[1].classList.remove('active-glasnik-mob');
+            glasnik[1].classList.remove('red');
+        }
+        else {
+            eGlasnik[1].classList.add('active-glasnik-mob');
+            glasnik[1].classList.add('red');
         }
     });
 
