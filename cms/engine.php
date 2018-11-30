@@ -59,6 +59,13 @@
         $action = isset($params['_action'])?$params['_action']:'';
         $is_multiple = true; // $is_multiple results, not queries
         $is_eval = false;
+
+        if ($orgsqlstring == 'get_usec') {
+          $t = gettimeofday();
+          $usec = ($t['sec'] - 1543000000) . str_pad($t['usec'], 6, "0", STR_PAD_LEFT) ;
+          return array('usec'=> $usec);        
+        }
+        
         $wc = str_word_count($sqlstring,0, '1234567890:@&_');
         if ($wc==0) {
             return array();
