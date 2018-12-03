@@ -7,7 +7,7 @@
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    padding: 4% 90px 0;
+            padding: 175px 90px 4% 90px;
     &--part{
         max-height: 550px;
         height: auto;
@@ -138,9 +138,14 @@
         }
     }
   }
+  @media screen and (max-width: 1024px){
+      .home{
+        padding: 175px 60px 4% 60px;
+      }
+  }
   @media only screen and (max-width: 960px) {
     .home{
-        padding: 4% 40px 4%;
+        padding: 175px 50px 4% 50px;
         &--part{
             max-height: 5000px;
             flex-direction: column;
@@ -192,6 +197,6 @@
   }
   @media only screen and (max-width: 360px) {
       .home{
-          padding: 4% 20px;
+        padding: 110px 20px 4% 20px;
       }
   }

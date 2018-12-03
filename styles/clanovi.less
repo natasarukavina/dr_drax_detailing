@@ -8,7 +8,7 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding: 4% 90px;
+  padding: 175px 90px 4% 90px;
   &--left{
     width: 30%;
     &-title{
@@ -175,7 +175,7 @@
 @media only screen and (max-width: 1024px) {
   .clanovi {
     flex-direction: column;
-    padding: 4% 60px;
+    padding: 175px 60px 4% 60px;
     &--left {
       width: 100%;
       margin-bottom: 10px;
@@ -186,12 +186,14 @@
     }
     &--right {
       padding-top: 20px;
+      padding-left: 0;
+      border-left: none;
     }
   }
 }
 @media only screen and (max-width: 960px) {
   .clanovi {
-    padding: 4% 50px;
+    padding: 175px 50px 4% 50px;
     &--left {
       width: 100%;
       margin-bottom: 0px;
@@ -199,7 +201,6 @@
     &--right {
       width: 100%;
       border-left: none;
-      padding-top: 0px;
       padding-left: 0px;
     }
     &--pridruzi {
@@ -228,10 +229,18 @@
         &--header{
           border-top: 1px solid @gray-light;
           margin-top: 20px;
+          &-naslov{
+            &-deo{
+              width: auto;
+              margin-right: 10px;
+            }
+          }
         }
         &--red{
           &-osoba{
             font-size: 14px;
+            width: auto;
+            margin-right: 10px;
           }
         }
       }
@@ -239,6 +248,9 @@
   }
   .flex{
     width: 100%;
+  }
+  .bold{
+    font-weight: bold;
   }
 }
 @media only screen and (max-width: 680px) {
@@ -256,7 +268,6 @@
     &--right {
       width: 100%;
       padding-left: 0px;
-      padding-top: 0px;
       border-left: none;
     }
     &--spisak {
@@ -270,9 +281,9 @@
         }
         &--red {
           flex-wrap: wrap;
-          &-osoba {
-            width: 100%;
-          }
+          // &-osoba {
+          //   width: 100%;
+          // }
         }
       }
       &-tip {
@@ -286,13 +297,13 @@
 }
 @media only screen and (max-width: 360px) {
   .clanovi{
-    padding: 4% 20px;
+    padding: 110px 20px 4% 20px;
     &--spisak{
       &-telo{
         &--red{
           flex-direction: column;
           &-osoba{
-            width: 100%;
+            // width: 100%;
             font-size: 13px;
           }
         }

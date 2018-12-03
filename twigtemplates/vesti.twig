@@ -4,7 +4,7 @@
 {% block content %}
   {% set vesti_svet = fetch("Vesti_svet") %}
   {% set vesti_suzi = fetch("Vesti_suzi") %}
-  {% set suzi_prikazi = fetch("Prikazi") %}
+  {% set obavestenja = fetch("Obavestenja") %}
 
   <div class="vesti">
     <div class="vesti--suzi">
@@ -31,7 +31,7 @@
       </div>
       {% endfor %}
     </div>
-    <div class="vesti--prikazi">
+    {# <div class="vesti--prikazi">
       <div class="vesti--prikazi-naslov titles">SUZI prikazi</div>
       {% for prikaz in suzi_prikazi %}
       <div class="vesti--prikazi-vest">
@@ -42,6 +42,19 @@
         <div class="dates">{{ prikaz.Datum | date("d.m.Y") }}</div>
       </div>
       {% endfor %}
-    </div>
+    </div> #}
+    <div class="vesti--prikazi">
+      <div class="vesti--prikazi-naslov titles">SUZI Obaveštenja</div>
+      {% for item in obavestenja %}
+      <div class="vesti--prikazi-vest">
+        <div class="vesti--prikazi-vest--naslov sub_titles"><a href="obavestenja/{{item.Slug}}">{{ item.Naslov }}</a></div>
+        {% if item.Slika1 %}
+          <div class="slika-small"><a href="obavestenja/{{item.Slug}}"><img class="slika" src="img/{{ item.Slika1 }}"></a></div>
+        {% endif %}
+        <div class="dates">{{ item.Datum | date("d.m.Y") }}</div>
+      </div>
+      {% endfor %}
+    </div> 
+    
   </div>
 {% endblock %}
