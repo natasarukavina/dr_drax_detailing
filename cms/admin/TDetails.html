@@ -104,6 +104,13 @@
         </div>
         {{/if}}
 
+        {{#if .compType=='CHILD' && .visible_details=='true'}}
+        <hr style="margin: 0">
+        <div col='1/1'>
+          <TGridNested G={{G}} parent_id={{row.id}} selected_tablename = "{{.lookup_table}}"></TGridNested>
+        </div>
+        {{/if}}
+
         <!--            
             {{#if .type=='TEXT' && .name != 'sql_select'}}
             <div col='1/1'>
@@ -136,13 +143,6 @@
             {{/if}}
 -->
         {{/each}}
-        <!-- 
-        {{#if tablename=='TipClana'}}
-        <div col='1/1'>
-          <TGridNested G={{G}} selected_tablename = "Clanovi"></TGridNested>
-        </div>
-        {{/if}}
-        -->
       </grid>
     <div xx class="buttonBar">
         <button disabled="{{!row.id || loading}}" on-click="delete">
@@ -215,10 +215,12 @@ bottom: inherit;" >
 </style>
 <script>
     component.exports = {
-    onrender: function () {
+    onrender: async function () {
         var self = this;
         self.set('HOSTNAME', HOSTNAME);
         TDetails = self;
+        var hasChild = false;
+
         if (!self.get('update')){
             // set default values from columns definition
             var cols = self.get('cols');
@@ -227,10 +229,18 @@ bottom: inherit;" >
                 row[ cols[i].compId ] = cols[i].default_value;
                 if (cols[i].default_value == 'now' && cols[i].compType == 'DATE')
                     row[ cols[i].compId ] = new Date().toISOString().substr(0, 10);
+                if (cols[i].compType == 'CHILD')
+                    hasChild=true;
             }
             self.set('row', row);
         } 
         self.focusFirstElement();
+
+        if (hasChild) {
+          var [resp, err] = await self.fetch2('?query=get_usec');
+          console.log('resp.usec', resp.usec);
+          self.set('row.id', resp.usec)
+        }
 
         this.on('blur', async function(val){
             console.log('BLUR', val);
@@ -259,6 +269,8 @@ bottom: inherit;" >
 */
         this.on('save', async function(){
             var row = self.get('row');
+            var parent_id = self.get('parent_id')
+            if (parent_id) row.parent_id = parent_id;
 /*
             var cn=[];
             var cu=[];
@@ -272,7 +284,7 @@ bottom: inherit;" >
             var qupdate = 'update '+self.get('tablename') +' set ' + cu.join(',') + ' where id = :id'
             var [resp, err] = await self.fetch2('?query='+(self.get('row.id')?qupdate:qinsert) , self.get('row'))
 */
-            var [resp, err] = await self.fetch2('?query='+self.get('tablename')+'&_action='+(self.get('row.id')?'update':'insert') , self.get('row'))
+            var [resp, err] = await self.fetch2('?query='+self.get('tablename')+'&_action='+(self.get('update')?'update':'insert') , row)
 
             if (resp) {
                 izitoast.success({ message: 'Record saved.'});
