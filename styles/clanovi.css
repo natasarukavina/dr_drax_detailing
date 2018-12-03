@@ -356,6 +356,9 @@
     width: 100%;
     padding: 10px 0px;
   }
+  .clanovi--spisak-tip--red:first-child {
+    padding-top: 10px;
+  }
   .flex {
     width: 100%;
   }
