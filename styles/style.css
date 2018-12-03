@@ -59,7 +59,14 @@ img {
   src: url('fonts/Raleway/Raleway-Regular.ttf');
 }
 .head-responsive {
+  position: fixed;
+  background-color: #ffffff;
+  left: 0;
+  right: 0;
+  z-index: 100;
   min-height: 45px;
+  max-width: 1420px;
+  margin: auto;
   height: auto;
   border-bottom: 1px solid #d0d0d0;
   display: -webkit-box;
@@ -345,7 +352,7 @@ img {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  padding: 4% 90px 0;
+  padding: 175px 90px 4% 90px;
 }
 .home--part {
   max-height: 550px;
@@ -457,9 +464,14 @@ img {
     max-height: 580px;
   }
 }
+@media screen and (max-width: 1024px) {
+  .home {
+    padding: 175px 60px 4% 60px;
+  }
+}
 @media only screen and (max-width: 960px) {
   .home {
-    padding: 4% 40px 4%;
+    padding: 175px 50px 4% 50px;
   }
   .home--part {
     max-height: 5000px;
@@ -511,7 +523,7 @@ img {
 }
 @media only screen and (max-width: 360px) {
   .home {
-    padding: 4% 20px;
+    padding: 110px 20px 4% 20px;
   }
 }
 .oNama {
@@ -525,7 +537,7 @@ img {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  padding: 4% 90px;
+  padding: 175px 90px 4% 90px;
 }
 .oNama--1 {
   border-bottom: 1px solid #d0d0d0;
@@ -581,12 +593,12 @@ img {
 }
 @media only screen and (max-width: 1024px) {
   .oNama {
-    padding: 4% 60px;
+    padding: 175px 60px 4% 60px;
   }
 }
 @media only screen and (max-width: 960px) {
   .oNama {
-    padding: 4% 50px;
+    padding: 175px 50px 4% 50px;
   }
   .oNama--1--text {
     width: 100%;
@@ -614,7 +626,7 @@ img {
 }
 @media only screen and (max-width: 360px) {
   .oNama {
-    padding: 4% 20px;
+    padding: 110px 20px 4% 20px;
   }
 }
 .akcije {
@@ -624,7 +636,7 @@ img {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  padding: 4% 90px;
+  padding: 175px 90px 4% 90px;
 }
 .akcije--left {
   width: 30%;
@@ -682,12 +694,12 @@ img {
 }
 @media only screen and (max-width: 1024px) {
   .akcije {
-    padding: 4% 60px;
+    padding: 175px 60px 4% 60px;
   }
 }
 @media only screen and (max-width: 960px) {
   .akcije {
-    padding: 4% 50px;
+    padding: 175px 50px 4% 50px;
   }
   .akcije--left {
     width: 100%;
@@ -728,7 +740,7 @@ img {
 }
 @media only screen and (max-width: 360px) {
   .akcije {
-    padding: 4% 20px;
+    padding: 110px 20px 4% 20px;
   }
 }
 .vesti {
@@ -741,7 +753,7 @@ img {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  padding: 4% 90px;
+  padding: 175px 90px 4% 90px;
 }
 .vesti--suzi {
   width: 30%;
@@ -848,15 +860,15 @@ img {
 }
 @media only screen and (max-width: 1024px) {
   .vesti {
-    padding: 4% 60px;
+    padding: 175px 60px 4% 60px;
   }
   .vest {
-    padding: 4% 60px;
+    padding: 175px 60px 4% 60px;
   }
 }
 @media only screen and (max-width: 960px) {
   .vesti {
-    padding: 4% 50px;
+    padding: 175px 50px 4% 50px;
     flex-direction: column;
   }
   .vesti--suzi {
@@ -891,7 +903,7 @@ img {
     border-bottom: none;
   }
   .vest {
-    padding: 4% 50px;
+    padding: 175px 50px 4% 50px;
   }
   .vest--title {
     width: 100%;
@@ -911,10 +923,10 @@ img {
 }
 @media only screen and (max-width: 360px) {
   .vesti {
-    padding: 4% 20px;
+    padding: 110px 20px 4% 20px;
   }
   .vest {
-    padding: 4% 20px;
+    padding: 110px 20px 4% 20px;
   }
   .vest--container-imgs {
     height: 250px;
@@ -927,7 +939,7 @@ img {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  padding: 4% 90px;
+  padding: 175px 90px 4% 90px;
 }
 .komisije--left {
   width: 30%;
@@ -997,12 +1009,12 @@ img {
 }
 @media only screen and (max-width: 1024px) {
   .komisije {
-    padding: 4% 60px;
+    padding: 175px 60px 4% 60px;
   }
 }
 @media only screen and (max-width: 960px) {
   .komisije {
-    padding: 4% 50px;
+    padding: 175px 50px 4% 50px;
     flex-direction: column;
   }
   .komisije--left {
@@ -1028,7 +1040,7 @@ img {
 }
 @media only screen and (max-width: 360px) {
   .komisije {
-    padding: 4% 20px;
+    padding: 110px 20px 4% 20px;
   }
 }
 .clanovi {
@@ -1038,7 +1050,7 @@ img {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding: 4% 90px;
+  padding: 175px 90px 4% 90px;
 }
 .clanovi--left {
   width: 30%;
@@ -1197,7 +1209,7 @@ img {
 @media only screen and (max-width: 1024px) {
   .clanovi {
     flex-direction: column;
-    padding: 4% 60px;
+    padding: 175px 60px 4% 60px;
   }
   .clanovi--left {
     width: 100%;
@@ -1209,11 +1221,13 @@ img {
   }
   .clanovi--right {
     padding-top: 20px;
+    padding-left: 0;
+    border-left: none;
   }
 }
 @media only screen and (max-width: 960px) {
   .clanovi {
-    padding: 4% 50px;
+    padding: 175px 50px 4% 50px;
   }
   .clanovi--left {
     width: 100%;
@@ -1222,7 +1236,6 @@ img {
   .clanovi--right {
     width: 100%;
     border-left: none;
-    padding-top: 0px;
     padding-left: 0px;
   }
   .clanovi--pridruzi {
@@ -1254,11 +1267,20 @@ img {
     border-top: 1px solid #d0d0d0;
     margin-top: 20px;
   }
+  .clanovi--spisak-telo--header-naslov-deo {
+    width: auto;
+    margin-right: 10px;
+  }
   .clanovi--spisak-telo--red-osoba {
     font-size: 14px;
+    width: auto;
+    margin-right: 10px;
   }
   .flex {
     width: 100%;
+  }
+  .bold {
+    font-weight: bold;
   }
 }
 @media only screen and (max-width: 680px) {
@@ -1273,7 +1295,6 @@ img {
   .clanovi--right {
     width: 100%;
     padding-left: 0px;
-    padding-top: 0px;
     border-left: none;
   }
   .clanovi--spisak-telo--header {
@@ -1286,9 +1307,6 @@ img {
   .clanovi--spisak-telo--red {
     flex-wrap: wrap;
   }
-  .clanovi--spisak-telo--red-osoba {
-    width: 100%;
-  }
   .clanovi--spisak-tip--red {
     width: 100%;
     padding: 10px 0px;
@@ -1296,13 +1314,12 @@ img {
 }
 @media only screen and (max-width: 360px) {
   .clanovi {
-    padding: 4% 20px;
+    padding: 110px 20px 4% 20px;
   }
   .clanovi--spisak-telo--red {
     flex-direction: column;
   }
   .clanovi--spisak-telo--red-osoba {
-    width: 100%;
     font-size: 13px;
   }
   .clanovi--spisak-telo--header {
@@ -1328,7 +1345,7 @@ img {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding: 4% 90px;
+  padding: 175px 90px 4% 90px;
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -1456,7 +1473,7 @@ img {
 }
 @media screen and (max-width: 1024px) {
   .publikacije {
-    padding: 4% 60px;
+    padding: 175px 60px 4% 60px;
   }
 }
 @media screen and (max-width: 960px) {
@@ -1464,7 +1481,7 @@ img {
     display: none;
   }
   .publikacije--mobile {
-    padding: 4% 50px;
+    padding: 175px 50px 4% 50px;
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
@@ -1525,7 +1542,7 @@ img {
 }
 @media screen and (max-width: 360px) {
   .publikacije--mobile {
-    padding: 4% 20px;
+    padding: 110px 20px 4% 20px;
   }
   .broj-glasnika {
     flex-wrap: wrap;
@@ -1541,7 +1558,7 @@ img {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  padding: 4% 90px;
+  padding: 175px 90px 4% 90px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1568,12 +1585,12 @@ img {
 }
 @media only screen and (max-width: 1024px) {
   .kontakt {
-    padding: 4% 60px;
+    padding: 175px 60px 4% 60px;
   }
 }
 @media only screen and (max-width: 960px) {
   .kontakt {
-    padding: 4% 50px;
+    padding: 175px 50px 4% 50px;
     flex-direction: column;
   }
   .kontakt--left {
@@ -1589,7 +1606,7 @@ img {
 }
 @media only screen and (max-width: 360px) {
   .kontakt {
-    padding: 4% 20px;
+    padding: 110px 20px 4% 20px;
   }
   .kontakt--right {
     height: 300px;
@@ -1603,7 +1620,7 @@ img {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  padding: 4% 90px 0;
+  padding: 175px 90px 4% 90px;
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -1654,12 +1671,12 @@ img {
 }
 @media screen and (max-width: 1024px) {
   .prijatelji {
-    padding: 4% 60px;
+    padding: 175px 60px 4% 60px;
   }
 }
 @media screen and (max-width: 960px) {
   .prijatelji {
-    padding: 4% 50px;
+    padding: 175px 50px 4% 50px;
   }
   .prijatelji-boks {
     width: 100%;
@@ -1677,7 +1694,7 @@ img {
 }
 @media screen and (max-width: 360px) {
   .prijatelji {
-    padding: 4% 20px;
+    padding: 110px 20px 4% 20px;
   }
 }
 @media only screen and (max-width: 1120px) {

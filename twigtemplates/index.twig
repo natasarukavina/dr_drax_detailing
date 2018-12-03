@@ -68,7 +68,7 @@
                     </div>
                     {% endfor %}
             </div>
-            <a class="more" href= "obavestenja">Sva SUZI obaveštenja...</a>
+            <a class="more" href= "vesti">Sva SUZI obaveštenja...</a>
         </div>
     </div>
     <div class="home--part2">
@@ -77,15 +77,15 @@
                 <div class="home--part2--vesti--naslovi">
                     {% for vesti_prikazi in fetch('Prikazi') %}
                     <div class="home--part2--vesti--naslovi-1">
-                        <div class="sub_titles"><a href="suzi-prikaz/{{vesti_prikazi.Slug}}">{{ vesti_prikazi.Naslov }}</a></div>
+                        <div class="sub_titles"><a href="suzi_prikazi/{{vesti_prikazi.Slug}}">{{ vesti_prikazi.Naslov }}</a></div>
                         {% if vesti_prikazi.Slika1 %}
-                        <div class="slika-small"><a href="suzi-prikaz/{{vesti_prikazi.Slug}}"><img class="slika" src="img/{{ vesti_prikazi.Slika1 }}"></a></div>
+                        <div class="slika-small"><a href="suzi_prikazi/{{vesti_prikazi.Slug}}"><img class="slika" src="img/{{ vesti_prikazi.Slika1 }}"></a></div>
                         {% endif %}
                         <div class="dates">{{vesti_prikazi.Datum | date("d.m.Y")}}</div>
                     </div>
                     {% endfor %}
                 </div>
-                <a class="more" href= "vesti">Svi prikazi...</a>
+                <a class="more" href= "suzi_prikazi">Svi prikazi...</a>
         </div>
         <div class="home--part2--vesti">
                 <div class="home--part2--vesti--title titles">SUZI eGlasnik</div>

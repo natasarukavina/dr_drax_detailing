@@ -50,8 +50,8 @@
                     {% for item in fetch("Clanovi") %}
                         <div class="clanovi--spisak-telo--red">
                             <div class="flex">
-                                <div style="width: 30%;" class="clanovi--spisak-telo--red-osoba">{{item.Grupa_label}}</div>
-                                <div style="width: 70%;" class="clanovi--spisak-telo--red-osoba">{{item.Prezime}} {{item.Ime}}</div>
+                                <div style="width: 30%;" class="clanovi--spisak-telo--red-osoba bold">{{item.Grupa_label}}</div>
+                                <div style="width: 70%;" class="clanovi--spisak-telo--red-osoba bold">{{item.Prezime}} {{item.Ime}}</div>
                             </div>
                             <div class="clanovi--spisak-telo--red-osoba"> {{item.Organizacija}} </div>
                         </div>
@@ -69,8 +69,8 @@
                         {% if (item.Grupa_label == tip) %}
                         <div class="clanovi--spisak-telo--red">
                             <div class="flex">
-                                <div class="clanovi--spisak-telo--red-osoba">{{item.Prezime}}</div>
-                                <div class="clanovi--spisak-telo--red-osoba">{{item.Ime}}</div>
+                                <div class="clanovi--spisak-telo--red-osoba bold">{{item.Prezime}}</div>
+                                <div class="clanovi--spisak-telo--red-osoba bold">{{item.Ime}}</div>
                             </div>
                             <div class="clanovi--spisak-telo--red-osoba"> {{item.Organizacija}} </div>
                         </div>
