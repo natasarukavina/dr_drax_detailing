@@ -255,6 +255,7 @@
     padding-top: 0;
     padding-left: 0;
     border-left: none;
+    width: 100%;
   }
   .clanovi--opis {
     margin-top: 20px;
@@ -285,6 +286,9 @@
   .clanovi--spisak-tip--red {
     font-size: 14px;
   }
+  .clanovi--spisak-tip--red:first-child {
+    padding-top: 15px;
+  }
   .clanovi--spisak-tip--naslov {
     margin-bottom: 20px;
   }
@@ -303,16 +307,16 @@
     margin-top: 20px;
   }
   .clanovi--spisak-telo--header-naslov-deo {
-    width: auto;
+    width: 50%;
     margin-right: 10px;
   }
   .clanovi--spisak-telo--red-osoba {
     font-size: 14px;
-    width: auto;
+    width: 50%;
     margin-right: 10px;
   }
   .flex {
-    width: 100%;
+    width: 50%;
   }
   .bold {
     font-weight: bold;
@@ -320,7 +324,7 @@
 }
 @media only screen and (max-width: 680px) {
   .clanovi--right {
-    width: 95%;
+    width: 100%;
   }
 }
 @media only screen and (max-width: 420px) {
@@ -339,12 +343,21 @@
     width: 100%;
     height: 50px;
   }
+  .clanovi--spisak-telo--header-naslov-deo {
+    width: auto;
+  }
   .clanovi--spisak-telo--red {
     flex-wrap: wrap;
+  }
+  .clanovi--spisak-telo--red-osoba {
+    width: auto;
   }
   .clanovi--spisak-tip--red {
     width: 100%;
     padding: 10px 0px;
+  }
+  .flex {
+    width: 100%;
   }
 }
 @media only screen and (max-width: 360px) {
