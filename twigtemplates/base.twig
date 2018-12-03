@@ -148,6 +148,24 @@
         $('#typeahead_m').bind('typeahead:select', function(ev, suggestion) {
             document.location = suggestion.href+'/'+suggestion.Slug
         });   
+
+
+
+
+        var lastScrollTop = 0;
+        $(window).scroll(function(event){
+          var st = $(this).scrollTop();
+          console.log(st);
+          if (st<60) { $( ".head-responsive" ).css( "opacity", "1" ); return }
+          if (st > lastScrollTop){
+            // downscroll code
+            $( ".head-responsive" ).css( "opacity", "0" )//.fadeOut( "slow" );
+          } else {
+            // upscroll code
+            $( ".head-responsive" ).css( "opacity", "1" )//.fadeOut( "slow" );
+          }
+          lastScrollTop = st;
+        });
    </script>
 
 
