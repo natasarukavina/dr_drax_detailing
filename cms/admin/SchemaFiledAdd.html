@@ -56,6 +56,15 @@
         </div>
         {{/if}}
 
+        {{#if row.field_type=='CHILD' }}
+        <div col='1/1'>
+            <label style="width:14em">Lookup table</label>
+            <Select style="display: inline-block; width:calc(99% - 14em);" url="?query=_cms_tables_list_get" value={{row.lookup_table}} labelf="name" valuef="name" >
+                <option disabled selected value="" >Pick</option>
+            </Select>
+        </div>
+        {{/if}}
+
         {{#if row.field_type=='DROPDOWN' || row.field_type=='MULTISELECT' }}
         <div col='1/1'>
             <label style="width:14em">Lookup table</label>
@@ -195,7 +204,8 @@
                 'RANGE': {sqlitename:'NUMERIC', myname:'RANGE'} ,
                 'DROPDOWN': {sqlitename:'INTEGER', myname:'DROPDOWN'} ,
                 'MULTISELECT': {sqlitename:'TEXT', myname:'MULTISELECT'} ,
-                'HTMLEDIT': {sqlitename:'TEXT', myname:'HTMLEDIT'}
+                'HTMLEDIT': {sqlitename:'TEXT', myname:'HTMLEDIT'},
+                'CHILD': {sqlitename:'TEXT', myname:'CHILD'}
             }
             , row:{
                 table_name:''

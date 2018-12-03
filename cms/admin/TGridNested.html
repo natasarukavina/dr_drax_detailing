@@ -7,7 +7,7 @@
     </span>
     <button style="padding: 9px; margin: 0;" on-click="@this.set('addNew',true)" id="addNew">
         <span class="glyphicon glyphicon-plus"></span>
-        Add new
+        Add new ({{parent_id}})
     </button>
 </section>
 
@@ -25,13 +25,13 @@
 {{#if showDetails}}
 <modal show="{{showDetails}}"  cw="{{cw}}" title="{{G.schemas[~/selected_tablename].nice_name}} details" 
 class="animated fadeInRight" showOverlay="{{false}}" style="
-height: initial;
-width: auto;
-left: 30%;
-right: 0;
-top: 5rem;
-bottom: 0;" >
-    <TDetails row={{row}} update={{true}} cols={{columns}} show="{{showDetails}}" tablename={{selected_tablename}}></TDetails>
+height: 44em;
+width: 50em;
+left: calc(50% - 25em);
+right: inherit;
+top: calc(50% - 22em);
+bottom: inherit;" >
+    <TDetails row={{row}} parent_id={{parent_id}} update={{true}} cols={{columns}} show="{{showDetails}}" tablename={{selected_tablename}}></TDetails>
 </modal>
 {{/if}}
 
@@ -43,7 +43,7 @@ left: calc(50% - 25em);
 right: inherit;
 top: calc(50% - 22em);
 bottom: inherit;" >
-    <TDetails show="{{addNew}}" update={{false}} cols={{columns}} tablename={{selected_tablename}}></TDetails>
+    <TDetails show="{{addNew}}" parent_id={{parent_id}} update={{false}} cols={{columns}} tablename={{selected_tablename}}></TDetails>
 </modal>
 {{/if}}
 
@@ -62,7 +62,7 @@ bottom: inherit;" >
                 var cols = self.get('G.schemas.'+selected_tablename+'.field');
                 self.set( 'columns', cols );
 
-                var [resp,err] = await self.fetch2('?query='+ selected_tablename)
+                var [resp,err] = await self.fetch2('?query='+ selected_tablename+'&parent_id='+self.get('parent_id'))
 //                if (columns) self.set('columns', columns)
                 if (!cols){
                     //var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename);
@@ -72,14 +72,14 @@ bottom: inherit;" >
 //                if (resp) self.set( { rows: resp, columns: cols } )
                 if (resp) self.set('rows', resp)
             })
-            this.fire('refresh')
+            //this.fire('refresh')
 
-            /*
-            this.observe('selected_tablename', function(){
-                self.set('columns', null)
+            this.observe('parent_id', function(n){
+              console.log(n)
+              if (n)
                 self.fire('refresh');
-            }, {init:false})
-*/
+            }, {init:true})
+
             this.on('*.clickhandlerfromtable', function(e,e1,e2){
                 self.set('currFilterIndex', 'fgr'+e)
                 self.set('showDetails',true)
@@ -101,6 +101,8 @@ bottom: inherit;" >
                     , selected_tablename:''   
                     , columns:null  
                     , showDetails:false
+                    , cw:3
+                    , parent_id:null
   /*
                      , columns: [
                       {visible:true , filter:true, compId:"category_en", compType:"text", label:"Category (En.)", w:"50%"},
