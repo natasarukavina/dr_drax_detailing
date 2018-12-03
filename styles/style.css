@@ -75,7 +75,7 @@ img {
   flex-direction: column;
   padding: 0 90px 0;
   opacity: 1;
-  transition: opacity 1s ease 0s;
+  transition: top 1s ease 0s;
 }
 .head-responsive-bar {
   display: -webkit-box;
