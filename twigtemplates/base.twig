@@ -155,7 +155,7 @@
         var lastScrollTop = 0;
         $(window).scroll(function(event){
           var st = $(this).scrollTop();
-          if (st<160) { $( ".head-responsive" ).css( "opacity", "1" ); return }
+          if (st<160) { $( ".head-responsive" ).css( "top", "0" ); return }
           if (st > lastScrollTop){
             // downscroll code
             $( ".head-responsive" ).css( "top", "-200px" );
