@@ -92,7 +92,7 @@
                 <div class="home--part2--vesti--naslovi">
                     {% for suzi_eGlasnik in fetch('eGlasnik') %}
                     <div class="home--part2--vesti--naslovi-1">
-                        <div class="sub_titles"><a href="publikacije/Suzi-Elektronski-glasnik/{{suzi_eGlasnik.Slug}}">{{ suzi_eGlasnik.Naslov }}</a></div>
+                        <div class="sub_titles"><a href="img/{{suzi_eGlasnik.Pdf}}" target="_blank">{{ suzi_eGlasnik.Naslov }}</a></div>
                         {% if suzi_eGlasnik.Slika1 %}
                         <div class="slika-small"><a href="publikacije/Suzi-Elektronski-glasnik/{{suzi_eGlasnik.Slug}}"><img class="slika" src="img/{{ suzi_eGlasnik.Slika1 }}"></a></div>
                         {% endif %}
