@@ -86,6 +86,10 @@
         {{#if nodata}}
         <div class="animated infinite flash" style="position: absolute;top: 50%; bottom: 50%; margin: auto; left: 0; right: 0;font-weight: bold; color:grey; text-align:center">No data</div>
         {{/if}}
+        {{#if rows.length==0 && !loading}}
+        {{yield}}
+        {{/if}}
+
         
     </div>
 

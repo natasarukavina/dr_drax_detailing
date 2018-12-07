@@ -184,7 +184,7 @@ left: calc(50% - 25em);
 right: inherit;
 top: calc(50% - 22em);
 bottom: inherit;" >
-    <ImageBrowser path="{{row[pathvarname]}}" show="{{showFileBrowse}}"></ImageBrowser>
+    <ImageBrowser G={{G}} path="{{row[pathvarname]}}" show="{{showFileBrowse}}"></ImageBrowser>
 </modal>
 {{/if}}
 
@@ -323,13 +323,18 @@ bottom: inherit;" >
     },        
     data:function() {
             return {
-                row:{}
+                  G:{}
+                , row:{}
                 , tablename:null
                 , cols:[]
                 , update:null
                 , mapvarname:''
+                , showMap:false
                 , loading:false
-                , G:null
+                , pathvarname:null
+                , showFileBrowse:false
+                , show:false
+                , parent_id:null
             }
         }
     ,computed:{

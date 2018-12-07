@@ -196,7 +196,7 @@ bottom: inherit;
             if (resp) self.set('sqlite_tables', resp)
             if (resp) self.set('sqlite_schema', resp)
 
-            // TODO: popravi, odje ne trebaju 2 poziva
+            // TODO: popravi, odje ne trebaju 2 poziva; hm, trebaju za tabele koje ne treba da se vide u root-u
             var [resparr, err] = await fetch2('?query=_engine_schema');
             if (resparr){
                 var respkv={}

@@ -1,14 +1,16 @@
-<section style="padding-bottom:0; padding-top:2rem; display:flex; flex-flow: row; justify-content:space-between">
-    <span style="font-weight: bold">
+<section style="padding-bottom:0; padding-top:2rem; text-align: center; position: relative;">
+    <span style="font-weight: bold; position: absolute; left: 0;">
         <tag>{{fr.length}} item{{fr.length==1?'':'s'}}</tag>
     </span>      
-    <span style="flex: 1; text-align: center; font-weight: bold; text-transform: uppercase;">
+    <span style="font-weight: bold; text-transform: uppercase;">
         {{G.schemas[~/selected_tablename].nice_name}}
     </span>
-    <button style="padding: 9px; margin: 0;" on-click="@this.set('addNew',true)" id="addNew">
+    {{#if rows.length>0 || loading2 }}
+    <button style="position: absolute; right: 0; padding: 9px; margin: 0" on-click="@this.set('addNew',true)" id="addNew">
         <span class="glyphicon glyphicon-plus"></span>
         Add new
     </button>
+    {{/if}}
 </section>
 
 <section style="flex:1; padding-bottom:1rem; padding-top:0; overflow:auto">
@@ -17,14 +19,18 @@
             columns={{columns}} ipp="50" refresh={{refresh}} fr={{fr}} row={{row}} 
             group_by="{{G.schemas[~/selected_tablename].group_by}}"
             group_by_order_asc="{{G.schemas[~/selected_tablename].group_by_order_asc}}"
-            variableRowHeight={{false}} showSearch={{true}} showPaginator={{true}} showHeaders={{true}} loading={{loading}} nodata={{false}} >
-        </f2table>
+            variableRowHeight={{false}} showSearch={{true}} showPaginator={{true}} showHeaders={{true}} loading={{loading2}} nodata={{false}} >
+
+            <button style="width:100%" on-click="@this.set('addNew',true)" id="addNew">
+                <span class="glyphicon glyphicon-plus"></span> Add 
+            </button>        
+          </f2table>
         <!--selectid={{selectid}} -->
     </div>
 </section>
 
 
-{{#if showDetails}}
+{{#if showDetails && selected_tablename != "_Folders"}}
 <!--zoomFrom="{{currFilterIndex}}"-->
 <modal show="{{showDetails}}"  cw="{{cw}}" title="{{G.schemas[~/selected_tablename].nice_name}} details" 
 class="animated fadeInRight" showOverlay="{{false}}" style="
@@ -38,7 +44,21 @@ bottom: 0;" >
 </modal>
 {{/if}}
 
-{{#if addNew}}
+{{#if showDetails && selected_tablename == "_Folders"}}
+<!--zoomFrom="{{currFilterIndex}}"-->
+<modal show="{{showDetails}}"  cw="{{cw}}" title="{{G.schemas[~/selected_tablename].nice_name}} details" 
+class="animated fadeInRight" showOverlay="{{false}}" style="
+height: 34em;
+width: 24em;
+left: calc(50% - 12em);
+right: inherit;
+top: calc(50% - 17em);
+bottom: inherit;" >
+    <TDetails row={{row}} update={{true}} cols={{columns}} show="{{showDetails}}" tablename={{selected_tablename}} G={{G}}></TDetails>
+</modal>
+{{/if}}
+
+{{#if addNew && selected_tablename != "_Folders"}}
 <modal show="{{addNew}}" zoomFrom="addNew" cw="{{cw}}" title="Add new {{G.schemas[~/selected_tablename].nice_name}}" showOverlay="{{true}}" style="
 height: 44em;
 width: 50em;
@@ -49,14 +69,27 @@ bottom: inherit;" >
     <TDetails show="{{addNew}}" update={{false}} cols={{columns}} tablename={{selected_tablename}} G={{G}}></TDetails>
 </modal>
 {{/if}}
+
+{{#if addNew && selected_tablename == "_Folders"}}
+<modal show="{{addNew}}" zoomFrom="addNew" cw="{{cw}}" title="Add new {{G.schemas[~/selected_tablename].nice_name}}" showOverlay="{{true}}" style="
+height: 34em;
+width: 24em;
+left: calc(50% - 12em);
+right: inherit;
+top: calc(50% - 17em);
+bottom: inherit;" >
+    <TDetails show="{{addNew}}" update={{false}} cols={{columns}} tablename={{selected_tablename}} G={{G}}></TDetails>
+</modal>
+{{/if}}
     
+
     
     <script>
       component.exports = {
         onrender: async function () {
             //console.log('TGrid onrender')
             var self = this;
-            window.TGrid = self;
+            //window.TGrid = self;
             console.log('TGrid')
             this.on('refresh', async function(){    
                 var selected_tablename = self.get('selected_tablename');
@@ -64,16 +97,18 @@ bottom: inherit;" >
 //                var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename)
                 var cols = self.get('G.schemas.'+selected_tablename+'.field');
                 self.set( 'columns', cols );
-
+                self.set('loading2', true);
                 var [resp,err] = await self.fetch2('?query='+ selected_tablename)
 //                if (columns) self.set('columns', columns)
+
                 if (!cols){
-                    //var [columns, err] = await self.fetch2("?query=engine_table_columns_get&table_name="+selected_tablename);
                     var [columns, err] = await self.fetch2("?query=_engine_schema_column&table_name="+selected_tablename);                    
                     cols = columns;
                 }
 //                if (resp) self.set( { rows: resp, columns: cols } )
                 if (resp) self.set('rows', resp)
+                self.set('loading2', false);
+
             })
             this.fire('refresh')
             /*
@@ -98,6 +133,7 @@ bottom: inherit;" >
                     , refresh:0
                     , fr:[]
                     , loading:false
+                    , loading2:false
                     , currFilterIndex:''
                     , row:{}
                     , addNew:false 
@@ -115,6 +151,7 @@ bottom: inherit;" >
 */
                 }
             }
+/*
         ,computed:{
             construction_total:function(){
                     var fr = this.get('fr')
@@ -131,5 +168,6 @@ bottom: inherit;" >
                     return tc
                 },
         }
+        */
       };
       </script>
