@@ -2,29 +2,25 @@
 {% block description %}SUZI je nacionalno nevladino tehničko udruženje koje se bavi istrazivanjem uzroka i posledica zemljotresa{% endblock %}
 
 {% block content %}
-
+    {% set Home =  fetch('Home') %}
     <div class="oNama">
         <div class="oNama--1">
             <div class="oNama--1--text">
-            SUZI je nacionalno nevladino tehničko udruženje osnovano u januaru 2018-e godine u Beogradu, Srbija. Članovi SUZI su svi zainteresovani inženjeri,
-geolozi, seizmolozi, arhitekte i urbanisti, edukatori, istraživači, ekonomisti, sociolozi, predstavnici državnih institucija, opštinski kadrovi zaduženi
-za primenu propisa i gradjevinsku inspekciju, pripadnici službi za hitne intervencije u kriznim situacijama, i pripradnici ostalih struka koje zemljotresi dotiču
-i koji se bave uzrocima i posledicama zemljotresa. SUZI je multidisciplinarna organizacija koja želi da saradjuje sa drugim tehničkim i profesionalnim društvima
-u zemlji i inostranstvu. SUZI je nacionalna organizacija, član Internacionalne Asocijacije za Zemljotresno Inženjerstvo (International Association for Earthquake Engineering – IAEE).
+            {{Home.Onama}}
             </div>
         </div>
         <div class="oNama--2">
             <div class="oNama--2--blok">
-                <div class="oNama--2--blok-naslov">Organizacija SUZI</div>
-                <a href="PDF/Organizacija SUZI.pdf" target="_blank" class="oNama--2--blok-pdf">Pogledaj PDF <img style="margin-left: 10px;" src="images/pdf.svg"></a>
+                <div class="oNama--2--blok-naslov">Organi SUZI</div>
+                <a href="img/{{Home.OrganiSUZI}}" target="_blank" class="oNama--2--blok-pdf">Pogledaj PDF <img style="margin-left: 10px;" src="images/pdf.svg"></a>
             </div>
             <div class="oNama--2--blok">
                 <div class="oNama--2--blok-naslov">Program SUZI 29. Oktobar 2018.</div>
-                <a href="PDF/Program SUZI 29 okt 2018.pdf" target="_blank" class="oNama--2--blok-pdf">Pogledaj PDF <img style="margin-left: 10px;" src="images/pdf.svg"></a>
+                <a href="img/{{Home.ProgramSUZI}}" target="_blank" class="oNama--2--blok-pdf">Pogledaj PDF <img style="margin-left: 10px;" src="images/pdf.svg"></a>
             </div>
             <div class="oNama--2--blok">
                 <div class="oNama--2--blok-naslov">Statut SUZI 25. Maj 2018.</div>
-                <a href="PDF/Statut SUZI maj 25. maj 2018.pdf" target="_blank" class="oNama--2--blok-pdf">Pogledaj PDF <img style="margin-left: 10px;" src="images/pdf.svg"></a>
+                <a href="img/{{Home.StatutSUZI}}" target="_blank" class="oNama--2--blok-pdf">Pogledaj PDF <img style="margin-left: 10px;" src="images/pdf.svg"></a>
             </div>
         </div>
     </div>
