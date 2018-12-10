@@ -322,6 +322,7 @@ img {
 }
 .slika {
   max-height: 300px;
+  max-width: 250px;
 }
 .slika-small {
   max-height: 330px;
