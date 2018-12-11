@@ -7,7 +7,7 @@
                 {% set IstaknutaAkcija =  fetch('IstaknutaAkcija') %}
                 {% if IstaknutaAkcija.Slika1 %}
                     <a href="akcije/{{IstaknutaAkcija.Slug}}"><div style="background-image: url('img/{{IstaknutaAkcija.Slika1}}'); background-size: contain;
-                    background-repeat: no-repeat;     background-position: center; height: 335px;"></div></a>
+                    background-repeat: no-repeat; height: 335px;"></div></a>
                 {% endif %}
                 <div class="title">{{ IstaknutaAkcija.Naslov }}</div>
                 <div class="text">{{IstaknutaAkcija.Text | raw}}  </div>
