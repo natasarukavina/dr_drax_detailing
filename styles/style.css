@@ -404,6 +404,7 @@ img {
 }
 .home--part-2 .overflow {
   overflow: auto;
+  height: 100%;
 }
 .home--part-2 .overflow-border {
   border-bottom: 1px solid #d0d0d0;
@@ -447,6 +448,7 @@ img {
 }
 .home--part2--vesti--naslovi {
   width: 100%;
+  height: 100%;
   overflow: auto;
 }
 .home--part2--vesti--naslovi-1 {
@@ -838,7 +840,8 @@ img {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding-top: 2%;
+  float: left;
+  padding: 2% 2% 2% 0;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
@@ -919,6 +922,7 @@ img {
   }
   .vest--container-imgs {
     margin: auto;
+    float: none;
   }
   .vest--container-text {
     font-size: 11px;

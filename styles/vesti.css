@@ -10,6 +10,7 @@
   color: #202124;
 }
 .sub_titles {
+  width: 95%;
   font-size: 14px;
   font-weight: bold;
   line-height: 1.71;
@@ -49,8 +50,8 @@
   color: #000000;
 }
 .slika {
-  max-height: 100%;
-  max-width: 100%;
+  max-height: 300px;
+  max-width: 250px;
 }
 .slika-small {
   max-height: 330px;
@@ -61,7 +62,7 @@
 }
 @media screen and (max-width: 960px) {
   .slika-small {
-    height: 300px;
+    max-height: 300px;
   }
   .plain-text {
     font-size: 11px;
@@ -72,7 +73,7 @@
 }
 @media screen and (max-width: 360px) {
   .slika-small {
-    height: 200px;
+    max-height: 200px;
   }
 }
 .vesti {
@@ -167,7 +168,8 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  padding-top: 2%;
+  float: left;
+  padding: 2% 2% 2% 0;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
@@ -248,6 +250,7 @@
   }
   .vest--container-imgs {
     margin: auto;
+    float: none;
   }
   .vest--container-text {
     font-size: 11px;
