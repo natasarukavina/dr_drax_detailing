@@ -250,6 +250,7 @@
   }
   .vest--container-imgs {
     margin: auto;
+    float: none;
   }
   .vest--container-text {
     font-size: 11px;
