@@ -343,6 +343,9 @@ img {
   }
 }
 @media screen and (max-width: 360px) {
+  .slika {
+    max-height: 200px;
+  }
   .slika-small {
     max-height: 200px;
   }
