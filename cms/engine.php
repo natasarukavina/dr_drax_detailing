@@ -72,6 +72,10 @@
             //echo json_encode(array()); // todo
             //return;
         }
+        if ($wc>1 && session_status() == PHP_SESSION_ACTIVE){
+          // only api.php starts session  
+          return array('message'=>'Custom queryes from outer word are disabled');
+        }        
         if ($wc==1) {
 //            $stmt = $db->prepare(" select sql_select, is_multiple from _sql where sql_name = :sql_name");
             $stmt = $db->prepare("

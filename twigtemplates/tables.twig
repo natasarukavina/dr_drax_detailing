@@ -1,6 +1,6 @@
 {% extends "base.twig" %}
-
 {% block content %}
+<section style="flex:1">
 
 {% set tabele = fetch('select * from _table')%}
 
@@ -42,5 +42,6 @@
         </table>
     {% endif %}
 {% endfor %}
+</section>
 
 {% endblock %}

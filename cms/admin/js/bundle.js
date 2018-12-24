@@ -38614,7 +38614,7 @@ var component = module;
 
   };
   
-component.exports.template = {v:4,t:[{p:[2,1,1],t:7,e:"section",m:[{n:"style",f:"flex:1; padding-bottom:0; padding:1rem; overflow:auto",t:13}],f:[{p:[3,5,77],t:7,e:"label",f:["Username"]}," ",{p:[4,5,105],t:7,e:"input",m:[{n:"type",f:"text",t:13},{n:"placeholder",f:"email",t:13},{n:"value",f:[{t:2,r:"email",p:[4,50,150]}],t:13}]}," ",{p:[6,5,171],t:7,e:"label",f:["Password"]}," ",{p:[7,5,199],t:7,e:"input",m:[{n:"type",f:"password",t:13},{n:"placeholder",f:"password",t:13},{n:"value",f:[{t:2,r:"password",p:[7,57,251]}],t:13}]}," ",{p:[9,5,274],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"m-full",f:0,t:13},{n:"style",f:"width: 100%; margin-bottom: 0;",t:13},{n:"click",f:"tryLogin",t:70}],f:["Sign in"]}]}]};
+component.exports.template = {v:4,t:[{p:[2,1,1],t:7,e:"section",m:[{n:"style",f:"flex:1; padding-bottom:0; padding:1rem; overflow:auto",t:13}],f:[{p:[3,5,77],t:7,e:"label",f:["Username"]}," ",{p:[4,5,105],t:7,e:"input",m:[{n:"type",f:"text",t:13},{n:"placeholder",f:"email",t:13},{n:"value",f:[{t:2,r:"email",p:[4,50,150]}],t:13}]}," ",{p:[6,5,171],t:7,e:"label",f:["Password"]}," ",{p:[7,5,199],t:7,e:"input",m:[{n:"type",f:"password",t:13},{n:"placeholder",f:"password",t:13},{n:"value",f:[{t:2,r:"password",p:[7,57,251]}],t:13}]}," ",{p:[9,5,274],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"m-full",f:0,t:13},{n:"style",f:"width: 100%; margin: 0;",t:13},{n:"click",f:"tryLogin",t:70}],f:["Sign in"]}]}]};
 module.exports = Ractive.extend(component.exports);
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
@@ -39510,12 +39510,12 @@ var component = module;
         var e = $(self.nodes.summernote).summernote({
                 disableDragAndDrop: true,
                 toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['style', ['style','bold', 'italic', 'underline', 'clear']],
                     ['font', ['strikethrough', 'superscript', 'subscript']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],                            
                     ['imagez', ['link','img', 'video']],
-                    ['tables', ['table']],
+                    ['tables', ['table', 'blockquote', 'pre']],
                     ['codeview', ['codeview']]
                 ],
                 buttons: {
