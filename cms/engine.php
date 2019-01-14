@@ -59,6 +59,10 @@
         $action = isset($params['_action'])?$params['_action']:'';
         $is_multiple = true; // $is_multiple results, not queries
         $is_eval = false;
+        //print_r($orgsqlstring);
+        //print_r($sqlstring);
+        //print_r($params);
+        if (!isset($params['_session_user_role'])) $params['_session_user_role'] = 1;
 
         if ($orgsqlstring == 'get_usec') {
           $t = gettimeofday();
@@ -72,7 +76,7 @@
             //echo json_encode(array()); // todo
             //return;
         }
-        if ($wc>1 && session_status() == PHP_SESSION_ACTIVE){
+        if ( $wc>1 && session_status() == PHP_SESSION_ACTIVE && $params['_session_user_role'] != 2 ){
           // only api.php starts session  
           return array('message'=>'Custom queryes from outer word are disabled');
         }        
@@ -166,6 +170,8 @@
         if ($orgsqlstring=='_engine_schema_column' && ($action=='insert' || $action=='update' || $action=='delete') ) {
             $params['_action'] = '';
             $params['tablename'] = $params['table_name'];
+            //echo('calling recr with');
+            //print_r($params);
             return api('_recreate_user_table', $params);
         }
 

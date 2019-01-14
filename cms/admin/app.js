@@ -3,6 +3,23 @@ jQuery = $;
 var Ractive  = require("ractive");
 window.Ractive = Ractive;
 require('./js/selectize.min.js');
+
+/*
+var CSSJS = require("jotform-css.js");
+var CSS = new CSSJS.cssjs();
+SummerNoteSharedStyle = []
+fetch('../sharedstyle.css')
+  .then(response => response.text())
+  .then((cssString) => {
+    console.log(cssString)
+    var parsed = CSS.parseCSS(cssString);
+    console.log(parsed);
+    parsed.forEach(function(r){
+      SummerNoteSharedStyle.push(r.selector.substring(1)) // TODO: need to traverse subStyles recursively
+      // save to key/val, trim . , trim after :...
+    })
+  })
+*/
 Ractive.DEBUG = !!(window.location.hostname == "127.0.0.1" || window.location.hostname == "localhost");
 //HOSTNAME = Ractive.DEBUG?'http://test.mobilearea.info/test/':'';
 ISMOBILE = (window.innerWidth <= 800);
@@ -132,7 +149,7 @@ Ractive.prototype.fetch2 = window.fetch2;
 Ractive.prototype.focusFirstElement = function(self){
     var self = self || this;
     var focusableElements = self.el.querySelectorAll('button, [href], input:not([type=checkbox]), select, textarea, [tabindex]:not([tabindex="-1"])')
-    console.log('focusFirstElement', self, focusableElements)
+    //console.log('focusFirstElement', self, focusableElements)
     if (!ISMOBILE && focusableElements && focusableElements.length>0) focusableElements[0].focus();
     self.keydownhandler = function(e){
         //console.log(e)
@@ -274,7 +291,9 @@ Ractive.components.Schema                  =  require('./Schema.html');
 Ractive.components.SchemaNew               =  require('./SchemaNew.html');
 Ractive.components.SchemaFiledAdd          =  require('./SchemaFiledAdd.html');
 Ractive.components.map                     =  require('./map.html');
-Ractive.components.HtmlEdit                =  require('./HtmlEdit.html');
+//Ractive.components.HtmlEdit                =  require('./HtmlEdit.html');
+Ractive.components.HtmlEdit                =  require('./HtmlEditFrame.html');
+GLOBALHtmlEditCounter = 1;
 Ractive.components.Selectize               =  require('./Selectize.html');
 Ractive.components.ShowImage               =  require('./ShowImage.html');
 Ractive.components.UserList                =  require('./user/UserList.html');

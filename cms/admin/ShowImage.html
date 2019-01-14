@@ -4,7 +4,7 @@ background-size: {{ cycleType[cycleId % 3] }} ; background-position: center cent
 </div>
 -->
 
-<div style="text-align:center;position: relative; height:100%; padding-top: 1em;" on-click="add('cycleId',1)">
+<div style="text-align:center;position: relative; height:100%; padding-top: 1em;" on-click="@this.add('cycleId',1)">
     <img src="{{HOSTNAME}}image.php?id={{imgObj.id}}" style="max-width:{{ cycleType[cycleId % 2] }};" />
 </div>
 

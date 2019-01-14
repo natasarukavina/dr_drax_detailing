@@ -33,7 +33,7 @@
 {{/if}}
 
             <div id="fgr{{i}}" style="{{row_style}} {{#if ._rowColor && !(.id && .id==~/selectid) }} color:{{._rowColor}};{{/if}}" 
-            class="flexGridRow {{alternateColor && (i)%2==0?'oddRow':''}}  {{(.id && .id==~/selectid)? ~/highlightClass:''}}" 
+            class="flexGridRow {{alternateColor && (i)%2==0?'oddRow':''}}  {{!# (.id && .id==~/selectid)? ~/highlightClass:''}}" 
             on-click="@this.fire('tableclickhandler',@this.event,i)" 
               >
 <!--                <div class="rowcel {{variableRowHeight?'':'truncate'}}" style="align-self: stretch; width:3px; background-color:{{.id && .id==~/selectid? 'darkorange':'green'}}; margin-top:1px; padding: 0"></div>
