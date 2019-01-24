@@ -1,4 +1,4 @@
-<iframe style="width: 100%; border: 0;height: 400px" id="summernoteframe{{id}}" src="summernoteframe.html"></iframe>
+<iframe style="width: 100%; border: 0;height: 410px" id="summernoteframe{{id}}" src="summernoteframe.html"></iframe>
 
 {{#if showFileBrowse}}
 <modal show="{{showFileBrowse}}" cw="{{cw}}" title="Browse" 
@@ -20,6 +20,7 @@ bottom: inherit;" >
       //this.set('id', GLOBALHtmlEditCounter++)
       var id = this.get('id');
       var child = document.getElementById("summernoteframe"+id).contentWindow.window;
+      console.log('summernoteframe child', child)
       child.PARENT = this
       // store to global var
       window['summernoteframe'+id] = this;
@@ -39,8 +40,8 @@ bottom: inherit;" >
       })
 
       var tryinject = function(v){
-        if (child.$) child.$('#summernote').summernote('code', v)
-        else setTimeout(function(){tryinject(v)}, 1000)
+        if (child.$ && child.summerReady) { child.$('#summernote').summernote('code', v) }
+        else setTimeout(function(){tryinject(v)}, 500)
       }
       this.observe('code', function(v){
           if( self.get('fromParent') ) {
