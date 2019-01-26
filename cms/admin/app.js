@@ -170,7 +170,7 @@ Ractive.prototype.focusFirstElement = function(self){
     })
 }
 
-Ractive.defaults.data.formatNumber = function (n) { return accounting.formatNumber(n,2,' ') }
+Ractive.defaults.data.formatNumber = function (n, p=2) { return accounting.formatNumber(n,p,' ') }
 
 Ractive.components[ 'Checkbox' ] = Ractive.extend( {
 	isolated: true,
