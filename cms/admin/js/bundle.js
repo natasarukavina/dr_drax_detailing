@@ -28548,7 +28548,7 @@ Ractive.prototype.focusFirstElement = function(self){
     })
 }
 
-Ractive.defaults.data.formatNumber = function (n) { return accounting.formatNumber(n,2,' ') }
+Ractive.defaults.data.formatNumber = function (n, p=2) { return accounting.formatNumber(n,p,' ') }
 
 Ractive.components[ 'Checkbox' ] = Ractive.extend( {
 	isolated: true,
@@ -38980,186 +38980,187 @@ module.exports = Ractive.extend(component.exports);
 var component = module;
 
 component.exports = {
-    onteardown: function(){
-        //console.log('imgbroews teardown', this)
-        this.nodes.dropArea.removeEventListener("drop", this.handleDrop, false);
-        this.nodes.dropArea.removeEventListener("dragover", this.handleDragover, false);
-        this.nodes.dropArea.removeEventListener("dragleave", this.handleDragleave, false);
-        this.nodes.dropArea.removeEventListener("dragenter", this.handleDragenter, false);
-    }
-    ,onrender: function () {
-        var self = this;
-        self.set('HOSTNAME', HOSTNAME);
-        self.set('show_confirm_btn', !(self.root == self.parent) );
-        self.set('imgSelect', self.get('path'))
+  onteardown: function(){
+      //console.log('imgbroews teardown', this)
+      this.nodes.dropArea.removeEventListener("drop", this.handleDrop, false);
+      this.nodes.dropArea.removeEventListener("dragover", this.handleDragover, false);
+      this.nodes.dropArea.removeEventListener("dragleave", this.handleDragleave, false);
+      this.nodes.dropArea.removeEventListener("dragenter", this.handleDragenter, false);
+  }
+  ,onrender: function () {
+      var self = this;
+      self.set('HOSTNAME', HOSTNAME);
+      self.set('show_confirm_btn', !(self.root == self.parent) );
+      self.set('imgSelect', self.get('path'))
 
-        this.lastSourceF = null;
-        this.on('DRAG', async function(e) {
-          //console.log('source: ' + e.type, e.node)
-          if (e.type == 'start'){
-            self.lastSourceF = e.node
+      this.lastSourceF = null;
+      this.on('DRAG', async function(e) {
+        //console.log('source: ' + e.type, e.node)
+        if (e.type == 'start'){
+          self.lastSourceF = e.node
+          self.lastTargetF = null
+        }
+        if (e.type == 'end'){
+          console.log('end',e )
+          self.lastSourceF = e.node;
+          if (self.lastTargetF) {
+            var id = self.lastSourceF.dataset.id;
+            var folder_id = self.lastTargetF.dataset.folder_id;
+            console.log('SAD SNIMAJ')
+            console.log(folder_id, id);
+            var [resp, err] = await fetch2('?query=file_folder_update&folder_id='+folder_id+'&id='+id);
+            self.lastSourceF = null
             self.lastTargetF = null
-          }
-          if (e.type == 'end'){
-            console.log('end',e )
-            self.lastSourceF = e.node;
-            if (self.lastTargetF) {
-              var id = self.lastSourceF.dataset.id;
-              var folder_id = self.lastTargetF.dataset.folder_id;
-              console.log('SAD SNIMAJ')
-              console.log(folder_id, id);
-              var [resp, err] = await fetch2('?query=file_folder_update&folder_id='+folder_id+'&id='+id);
-              self.lastSourceF = null
-              self.lastTargetF = null
-              self.fire('refresh')
-            }
-            // resetuj obojicu
-          }
-        })
-        this.lastTargetF = null;
-        this.on('DROP', function(e) {
-          console.log('tagret: ' + e.type)
-          if ((e.type == 'enter') || (e.type == 'over'))
-            self.lastTargetF = e.node;
-          if (e.type == 'leave') setTimeout(function(){self.lastTargetF = null;},1000)
-          //console.log('DROP',event)
-        })
-
-        this.on('showFullScreen', function(o){
-            self.set('showFullScreenObj', o);
-            self.set('showFullScreen', true);
-            //{{HOSTNAME}}image.php?id={{id}}
-        })
-        //this.focusFirstElement();
-        this.handleDragenter = function (e) {
-            //console.log('Dragenter')
-            self.set('drag', true)
-        }
-        this.handleDragleave = function (e) {
-            self.set('drag', false)
-        }
-
-        this.handleDrop = function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            let dt = e.dataTransfer;
-            let files = dt.files;
-            self.fire('upload', files);
-            self.set('drag', false)
-            return false;
-        }
-        this.handleDragover = function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            self.set('drag', true)
-            return false;
-        }
-
-        this.nodes.dropArea.addEventListener('drop', this.handleDrop, false);
-        this.nodes.dropArea.addEventListener('dragover', this.handleDragover, false);
-        this.nodes.dropArea.addEventListener('dragleave', this.handleDragleave, false);
-        this.nodes.dropArea.addEventListener('dragenter', this.handleDragenter, false);
-        
-        this.nodes.inputfile.onchange = function() {
-            self.fire('upload')
-        };        
-        //this.singleUpload = function(file){}
-        this.on('upload', async function(files){
-            //console.log(e)
-            if (!files){
-//                var input = document.querySelector('input[type="file"]');
-                var input = self.nodes.inputfile;
-                files = input.files;
-                //data.append('file', input.files[0])
-            }
-            izitoast.info({ message: 'Uploading to server, please wait...'});
-            var resp;
-            for (var i=0; i<files.length;i++){
-                var data = new FormData()
-                data.append('file', files[i])
-
-                resp = await fetch(HOSTNAME+'uploadfile.php', {
-                    method: 'POST',
-                    credentials:'same-origin',
-                    //'Content-Type': 'application/json',
-                    body: data
-                })
-                //.then(function(resp){
-                    //console.log('up resp',resp)
-                izitoast.success({ message: 'File '+(i+1)+' of '+ files.length+' uploaded.'});
-                    //self.fire('refresh')
-                    
-            }
-            if (resp) resp.text().then(function(id){
-                //console.log('iidd uploada',id)
-                self.set('imgSelect', id)
-            })
             self.fire('refresh')
-            //return false; 
-        })
-
-        this.on('refresh TGrid.refresh', async function(){
-            var [folders, err] = await fetch2('?query=_Folders');
-            if (folders) self.set('folders', folders);
-
-            var selectedfolder = self.get('selectedfolder') || '';
-            var [resp, err] = await fetch2('?query=_files&folder_id='+selectedfolder);
-            if (resp) self.set('rows', resp);
-            
-        })
-        this.fire('refresh')
-
-        this.observe('selectedfolder', function(n){
-          self.fire('refresh');
-        }, {init:false})
-
-        this.on('file_folder_update', function(folder_id, id){
-          console.log(folder_id, id);
-          //var [resp, err] = await fetch2('?query=file_folder_update&folder_id='+folder_id+'&id='+id);
-        })
-
-        this.on('imgSelect', function(r){
-            //console.log('imgSelect',r)
-            self.set('imgSelect', r.slug)
-        })
-
-        this.on('confirm', function(r){
-            self.set('path', self.get('imgSelect'))
-            //console.log('imgSelect',r)
-            if (self.parent) self.parent.fire('path', self.get('imgSelect'));
-            self.set('show', false)
-        })
-        
-        this.on('delete', async function(){
-            ractive.fire('showYesNoDialog', 'Delete file '+self.get('imgSelect') + ' ?', async function(answer){
-                var [resp, err] = await fetch2('?query=_files&_action=delete&id='+self.get('imgSelect') )
-                if (resp ) {
-                    self.set('imgSelect', null);
-                    self.fire('refresh');
-                    izitoast.success({ message: 'File removed'});
-                }
-            })
-        })
-
-    },        
-    data:function() {
-            return {
-                G:null,
-                rows:[],
-                path:null,
-                imgSelect:null,
-                drag:false,
-                showFullScreen:false,
-                showFullScreenObj:{},
-                show_confirm_btn:true,
-                selectedfolder:0,
-                showFoldersModal:false,
-                folders:[]
-            }
+          }
+          // resetuj obojicu
         }
-    };
-    
-component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13},{n:"style",f:["transition: border 2s; border: dashed ",{t:2,x:{r:["drag"],s:"_0?\"8px #689\":\"8px #fff\""},p:[1,84,83]}],t:13}],f:[{p:[2,5,120],t:7,e:"div",m:[{n:"id",f:"dropArea",t:13},{n:"style",f:"display: flex;align-items: center;padding-bottom: 0; padding-top: 2rem;padding-bottom: 1rem; text-align: center;justify-content: center;",t:13}],f:[{p:[3,9,293],t:7,e:"input",m:[{n:"type",f:"file",t:13},{n:"multiple",f:0,t:13},{n:"name",f:"file",t:13},{n:"id",f:"inputfile",t:13},{n:"class",f:"inputfile",t:13}]}," ",{p:[4,9,375],t:7,e:"label",m:[{n:"class",f:"upload",t:13},{n:"for",f:"inputfile",t:13}],f:["Upload file here"]}," ",{p:[5,10,448],t:7,e:"span",m:[{n:"style",f:"padding: 1rem;",t:13}],f:["OR"]}," ",{p:[6,9,502],t:7,e:"div",m:[{n:"class",f:"upload",t:13},{n:"style",f:"border:dashed 1px #679",t:13},{n:"xx",f:0,t:13}],f:["Drag & Drop files here"]}]}," ",{p:[9,5,602],t:7,e:"div",m:[{n:"style",f:"display: flex; align-items: center; padding-top: 1rem; justify-content: center;margin-bottom: 0.5rem;",t:13}],f:[{p:[10,9,726],t:7,e:"span",m:[{n:"class",f:"hr",t:13}]}," ",{p:[11,9,759],t:7,e:"span",m:[{n:"class",f:"subheader",t:13},{n:"xx",f:"",t:13}],f:["or Select existing image"]}," ",{p:[12,9,829],t:7,e:"span",m:[{n:"class",f:"hr",t:13}]}]}," ",{p:[19,1,1048],t:7,e:"div",f:[{p:[20,3,1056],t:7,e:"tag",m:[{n:"dragndrop",f:"DROP",t:70},{n:"data-folder_id",f:"0",t:13},{n:"xx",f:0,t:13},{n:"class",f:["tag ",{t:2,x:{r:["selectedfolder"],s:"(_0==0)?\"selectedfolder\":\"\""},p:[20,62,1115]}],t:13},{n:"tap",f:{x:{r:["@this"],s:"[_0.set(\"selectedfolder\",0)]"}},t:70}],f:["All"]}," ",{t:4,f:[{p:[22,5,1236],t:7,e:"tag",m:[{n:"dragndrop",f:"DROP",t:70},{n:"data-folder_id",f:[{t:2,r:".id",p:[22,47,1278]}],t:13},{n:"xx",f:0,t:13},{n:"class",f:["tag ",{t:2,x:{r:["selectedfolder",".id"],s:"(_0==_1)?\"selectedfolder\":\"\""},p:[22,70,1301]}],t:13},{n:"tap",f:{x:{r:["@this",".id"],s:"[_0.set(\"selectedfolder\",_1)]"}},t:70}],f:[{t:2,r:".Name",p:[22,159,1390]}]}],n:52,r:"folders",p:[21,3,1214]}," ",{p:[24,3,1420],t:7,e:"tag",m:[{n:"id",f:"showFoldersModal",t:13},{n:"xx",f:0,t:13},{n:"class",f:"tag",t:13},{n:"tap",f:{x:{r:["@this"],s:"[_0.set(\"showFoldersModal\",true)]"}},t:70}],f:[{p:[24,90,1507],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-folder-open",t:13}]}," Manage Folders"]}]}," ",{p:[26,9,1592],t:7,e:"div",m:[{n:"style",f:"flex:1; overflow:auto; display: flex; justify-content: space-around; flex-flow: row wrap;",t:13}],f:[{t:4,f:[{p:[28,9,1727],t:7,e:"div",m:[{n:"class",f:"cardholder",t:13},{n:"dblclick",f:"confirm",t:70},{n:"click",f:{x:{r:["@this","."],s:"[_0.fire(\"imgSelect\",_1)]"}},t:70},{n:"dragndrop",f:"DRAG",t:70},{n:"draggable",f:"true",t:13},{n:"data-id",f:[{t:2,r:".id",p:[28,139,1857]}],t:13}],f:[{p:[29,13,1879],t:7,e:"card",m:[{n:"style",f:[{t:2,x:{r:["imgSelect",".slug"],s:"_0==_1?\"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)\":\"\""},p:[29,26,1892]},"; position:relative"],t:13},{n:"id",f:["ib",{t:2,r:".id",p:[29,118,1984]}],t:13}],f:[{p:[30,17,2010],t:7,e:"div",m:[{n:"style",f:"text-align: center; height:3rem",t:13}],f:[{t:4,f:[{p:[31,40,2095],t:7,e:"tag",m:[{n:"style",f:"margin: 0",t:13}],f:[{t:2,r:".folder_name",p:[31,63,2118]}]}],n:50,r:".folder_name",p:[31,19,2074]}]}," ",{p:[33,17,2187],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"img",t:13},{n:"style",f:["background-image:url('",{t:2,r:"HOSTNAME",p:[33,66,2236]},"image.php?id=",{t:2,r:".slug",p:[33,91,2261]},"&forcethumb')"],t:13}],f:[]}," ",{p:[35,17,2325],t:7,e:"p",m:[{n:"xx",f:0,t:13},{n:"class",f:"carddesc",t:13}],f:[{t:2,r:".name",p:[35,40,2348]}]}," ",{p:[36,17,2378],t:7,e:"button",m:[{n:"type",f:"button",t:13},{n:"tap",f:{x:{r:["@this","."],s:"[_0.fire(\"showFullScreen\",_1)]"}},t:70},{n:"style",f:"position: absolute; right:0; top:0; margin-right: 0; margin-bottom: 0;border-radius: 50%; padding: 0.9rem 0.9rem;",t:13}],f:[{p:[37,21,2585],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-fullscreen",t:13}]}]}," ",{p:[39,17,2690],t:7,e:"a",m:[{n:"btn",f:0,t:13},{n:"href",f:[{t:2,r:"HOSTNAME",p:[39,30,2703]},"image.php?id=",{t:2,r:".slug",p:[39,55,2728]}],t:13},{n:"download",f:[{t:2,r:".name",p:[39,76,2749]}],t:13},{n:"style",f:"position: absolute; left:0; top:0; margin-left: 0; margin-bottom: 0;border-radius: 50%; padding: 0.9rem 0.9rem;color: #679;",t:13}],f:[{p:[40,21,2914],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-download-alt",t:13}]}]}]}]}],n:52,r:"rows",p:[27,9,1704]}]}," ",{p:[47,5,3069],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13}],f:[{p:[48,9,3104],t:7,e:"button",m:[{n:"disabled",f:[{t:2,x:{r:["imgSelect"],s:"_0?false:true"},p:[48,26,3121]}],t:13},{n:"click",f:"delete",t:70},{n:"style",f:"margin: 0;",t:13}],f:["Delete file"]}," ",{t:4,f:[{p:[51,9,3258],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:"confirm",t:70},{n:"style",f:"margin: 0;",t:13}],f:["Confirm"]}],n:50,r:"show_confirm_btn",p:[50,9,3225]}]}]}," ",{t:4,f:[{p:[59,1,3439],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[59,14,3452]}],t:13},{n:"zoomFrom",f:["ib",{t:2,r:"showFullScreenObj.id",p:[59,46,3484]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[59,76,3514]}],t:13},{n:"title",f:[{t:2,r:"showFullScreenObj.name",p:[59,91,3529]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[59,132,3570]}],t:13},{n:"style",f:"\nheight: calc(100% - 45px);\nwidth: 100%;\nleft: 0;\nright: inherit;\ntop: 45px;\nbottom: inherit;",t:13}],f:[{p:[66,5,3688],t:7,e:"ShowImage",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[66,22,3705]}],t:13},{n:"imgObj",f:[{t:2,r:"showFullScreenObj",p:[66,49,3732]}],t:13}]}]}],n:50,r:"showFullScreen",p:[58,1,3416]},{t:4,f:[{p:[71,1,3811],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFoldersModal",p:[71,14,3824]}],t:13},{n:"zoomFrom",f:"showFoldersModal",t:13},{n:"title",f:"Manage image folders",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[71,106,3916]}],t:13},{n:"style",f:"\nheight: 34em;\nwidth: 24em;\nleft: calc(50% - 12em);\nright: inherit;\ntop: calc(50% - 17em);\nbottom: inherit;",t:13}],f:[{p:[78,3,4046],t:7,e:"TGrid",m:[{n:"G",f:[{t:2,r:"G",p:[78,12,4055]}],t:13},{n:"selected_tablename",f:"_Folders",t:13}]}]}],n:50,r:"showFoldersModal",p:[70,1,3786]}],e:{"_0?\"8px #689\":\"8px #fff\"":function (_0){return(_0?"8px #689":"8px #fff");},"(_0==0)?\"selectedfolder\":\"\"":function (_0){return((_0==0)?"selectedfolder":"");},"[_0.set(\"selectedfolder\",0)]":function (_0){return([_0.set("selectedfolder",0)]);},"(_0==_1)?\"selectedfolder\":\"\"":function (_0,_1){return((_0==_1)?"selectedfolder":"");},"[_0.set(\"selectedfolder\",_1)]":function (_0,_1){return([_0.set("selectedfolder",_1)]);},"[_0.set(\"showFoldersModal\",true)]":function (_0){return([_0.set("showFoldersModal",true)]);},"[_0.fire(\"imgSelect\",_1)]":function (_0,_1){return([_0.fire("imgSelect",_1)]);},"_0==_1?\"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)\":\"\"":function (_0,_1){return(_0==_1?"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)":"");},"[_0.fire(\"showFullScreen\",_1)]":function (_0,_1){return([_0.fire("showFullScreen",_1)]);},"_0?false:true":function (_0){return(_0?false:true);},"true":function (){return(true);}}};
+      })
+      this.lastTargetF = null;
+      this.on('DROP', function(e) {
+        console.log('tagret: ' + e.type)
+        if ((e.type == 'enter') || (e.type == 'over'))
+          self.lastTargetF = e.node;
+        if (e.type == 'leave') setTimeout(function(){self.lastTargetF = null;},1000)
+        //console.log('DROP',event)
+      })
+
+      this.on('showFullScreen', function(o){
+          self.set('showFullScreenObj', o);
+          self.set('showFullScreen', true);
+          //{{HOSTNAME}}image.php?id={{id}}
+      })
+      //this.focusFirstElement();
+      this.handleDragenter = function (e) {
+          //console.log('Dragenter')
+          self.set('drag', true)
+      }
+      this.handleDragleave = function (e) {
+          self.set('drag', false)
+      }
+
+      this.handleDrop = function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          let dt = e.dataTransfer;
+          let files = dt.files;
+          self.fire('upload', files);
+          self.set('drag', false)
+          return false;
+      }
+      this.handleDragover = function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          self.set('drag', true)
+          return false;
+      }
+
+      this.nodes.dropArea.addEventListener('drop', this.handleDrop, false);
+      this.nodes.dropArea.addEventListener('dragover', this.handleDragover, false);
+      this.nodes.dropArea.addEventListener('dragleave', this.handleDragleave, false);
+      this.nodes.dropArea.addEventListener('dragenter', this.handleDragenter, false);
+      
+      this.nodes.inputfile.onchange = function() {
+          self.fire('upload')
+      };        
+      //this.singleUpload = function(file){}
+      this.on('upload', async function(files){
+          //console.log(e)
+          if (!files){
+//                var input = document.querySelector('input[type="file"]');
+              var input = self.nodes.inputfile;
+              files = input.files;
+              //data.append('file', input.files[0])
+          }
+          izitoast.info({ message: 'Uploading to server, please wait...'});
+          var resp;
+          for (var i=0; i<files.length;i++){
+              var data = new FormData()
+              data.append('file', files[i]);
+              data.append('selectedfolder', self.get('selectedfolder'))
+
+              resp = await fetch(HOSTNAME+'uploadfile.php', {
+                  method: 'POST',
+                  credentials:'same-origin',
+                  //'Content-Type': 'application/json',
+                  body: data
+              })
+              //.then(function(resp){
+                  //console.log('up resp',resp)
+              izitoast.success({ message: 'File '+(i+1)+' of '+ files.length+' uploaded.'});
+                  //self.fire('refresh')
+                  
+          }
+          if (resp) resp.text().then(function(id){
+              //console.log('iidd uploada',id)
+              self.set('imgSelect', id)
+          })
+          self.fire('refresh')
+          //return false; 
+      })
+
+      this.on('refresh TGrid.refresh', async function(){
+          var [folders, err] = await fetch2('?query=_Folders');
+          if (folders) self.set('folders', folders);
+
+          var selectedfolder = self.get('selectedfolder') || '';
+          var [resp, err] = await fetch2('?query=_files&folder_id='+selectedfolder);
+          if (resp) self.set('rows', resp);
+          
+      })
+      this.fire('refresh')
+
+      this.observe('selectedfolder', function(n){
+        self.fire('refresh');
+      }, {init:false})
+
+      this.on('file_folder_update', function(folder_id, id){
+        console.log(folder_id, id);
+        //var [resp, err] = await fetch2('?query=file_folder_update&folder_id='+folder_id+'&id='+id);
+      })
+
+      this.on('imgSelect', function(r){
+          //console.log('imgSelect',r)
+          self.set('imgSelect', r.slug)
+      })
+
+      this.on('confirm', function(r){
+          self.set('path', self.get('imgSelect'))
+          //console.log('imgSelect',r)
+          if (self.parent) self.parent.fire('path', self.get('imgSelect'));
+          self.set('show', false)
+      })
+      
+      this.on('delete', async function(){
+          ractive.fire('showYesNoDialog', 'Delete file '+self.get('imgSelect') + ' ?', async function(answer){
+              var [resp, err] = await fetch2('?query=_files&_action=delete&id='+self.get('imgSelect') )
+              if (resp ) {
+                  self.set('imgSelect', null);
+                  self.fire('refresh');
+                  izitoast.success({ message: 'File removed'});
+              }
+          })
+      })
+
+  },        
+  data:function() {
+          return {
+              G:null,
+              rows:[],
+              path:null,
+              imgSelect:null,
+              drag:false,
+              showFullScreen:false,
+              showFullScreenObj:{},
+              show_confirm_btn:true,
+              selectedfolder:0,
+              showFoldersModal:false,
+              folders:[]
+          }
+      }
+  };
+  
+component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13},{n:"style",f:["transition: border 2s; border: dashed ",{t:2,x:{r:["drag"],s:"_0?\"8px #689\":\"8px #fff\""},p:[1,84,83]}],t:13}],f:[{p:[2,3,118],t:7,e:"div",m:[{n:"id",f:"dropArea",t:13},{n:"style",f:"display: flex;align-items: center;padding-bottom: 0; padding-top: 2rem;padding-bottom: 1rem; text-align: center;justify-content: center;",t:13}],f:[{p:[3,7,289],t:7,e:"input",m:[{n:"type",f:"file",t:13},{n:"multiple",f:0,t:13},{n:"name",f:"file",t:13},{n:"id",f:"inputfile",t:13},{n:"class",f:"inputfile",t:13}]}," ",{p:[4,7,369],t:7,e:"label",m:[{n:"class",f:"upload",t:13},{n:"for",f:"inputfile",t:13}],f:["Upload file here"]}," ",{p:[5,8,440],t:7,e:"span",m:[{n:"style",f:"padding: 1rem;",t:13}],f:["OR"]}," ",{p:[6,7,492],t:7,e:"div",m:[{n:"class",f:"upload",t:13},{n:"style",f:"border:dashed 1px #679",t:13},{n:"xx",f:0,t:13}],f:["Drag & Drop files here"]}]}," ",{p:[9,3,588],t:7,e:"div",m:[{n:"style",f:"display: flex; align-items: center; padding-top: 1rem; justify-content: center;margin-bottom: 0.5rem;",t:13}],f:[{p:[10,7,710],t:7,e:"span",m:[{n:"class",f:"hr",t:13}]}," ",{p:[11,7,741],t:7,e:"span",m:[{n:"class",f:"subheader",t:13},{n:"xx",f:"",t:13}],f:["or Select existing image"]}," ",{p:[12,7,809],t:7,e:"span",m:[{n:"class",f:"hr",t:13}]}]}," ",{p:[19,1,1020],t:7,e:"div",m:[{n:"style",f:"max-height: 6rem; overflow: auto;",t:13}],f:[{p:[20,1,1068],t:7,e:"tag",m:[{n:"dragndrop",f:"DROP",t:70},{n:"data-folder_id",f:"0",t:13},{n:"xx",f:0,t:13},{n:"class",f:["tag ",{t:2,x:{r:["selectedfolder"],s:"(_0==0)?\"selectedfolder\":\"\""},p:[20,60,1127]}],t:13},{n:"tap",f:{x:{r:["@this"],s:"[_0.set(\"selectedfolder\",0)]"}},t:70}],f:["All"]}," ",{t:4,f:[{p:[22,3,1244],t:7,e:"tag",m:[{n:"dragndrop",f:"DROP",t:70},{n:"data-folder_id",f:[{t:2,r:".id",p:[22,45,1286]}],t:13},{n:"xx",f:0,t:13},{n:"class",f:["tag ",{t:2,x:{r:["selectedfolder",".id"],s:"(_0==_1)?\"selectedfolder\":\"\""},p:[22,68,1309]}],t:13},{n:"tap",f:{x:{r:["@this",".id"],s:"[_0.set(\"selectedfolder\",_1)]"}},t:70}],f:[{t:2,r:".Name",p:[22,157,1398]}]}],n:52,r:"folders",p:[21,1,1224]},{p:[24,1,1424],t:7,e:"tag",m:[{n:"id",f:"showFoldersModal",t:13},{n:"xx",f:0,t:13},{n:"class",f:"tag",t:13},{n:"tap",f:{x:{r:["@this"],s:"[_0.set(\"showFoldersModal\",true)]"}},t:70}],f:[{p:[24,88,1511],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-folder-open",t:13}]}," Manage Folders"]}]}," ",{p:[26,7,1594],t:7,e:"div",m:[{n:"style",f:"flex:1; overflow:auto; display: flex; justify-content: space-around; flex-flow: row wrap;",t:13}],f:[{t:4,f:[{p:[28,7,1725],t:7,e:"div",m:[{n:"class",f:"cardholder",t:13},{n:"dblclick",f:"confirm",t:70},{n:"click",f:{x:{r:["@this","."],s:"[_0.fire(\"imgSelect\",_1)]"}},t:70},{n:"dragndrop",f:"DRAG",t:70},{n:"draggable",f:"true",t:13},{n:"data-id",f:[{t:2,r:".id",p:[28,137,1855]}],t:13}],f:[{p:[29,11,1875],t:7,e:"card",m:[{n:"style",f:[{t:2,x:{r:["imgSelect",".slug"],s:"_0==_1?\"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)\":\"\""},p:[29,24,1888]},"; position:relative"],t:13},{n:"id",f:["ib",{t:2,r:".id",p:[29,116,1980]}],t:13}],f:[{p:[30,15,2004],t:7,e:"div",m:[{n:"style",f:"text-align: center; height:3rem",t:13}],f:[{t:4,f:[{p:[31,38,2087],t:7,e:"tag",m:[{n:"style",f:"margin: 0",t:13}],f:[{t:2,r:".folder_name",p:[31,61,2110]}]}],n:50,r:".folder_name",p:[31,17,2066]}]}," ",{p:[33,15,2175],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"img",t:13},{n:"style",f:["background-image:url('",{t:2,r:"HOSTNAME",p:[33,64,2224]},"image.php?id=",{t:2,r:".slug",p:[33,89,2249]},"&forcethumb')"],t:13}],f:[]}," ",{p:[35,15,2309],t:7,e:"p",m:[{n:"xx",f:0,t:13},{n:"class",f:"carddesc",t:13}],f:[{t:2,r:".name",p:[35,38,2332]}]}," ",{p:[36,15,2360],t:7,e:"button",m:[{n:"type",f:"button",t:13},{n:"tap",f:{x:{r:["@this","."],s:"[_0.fire(\"showFullScreen\",_1)]"}},t:70},{n:"style",f:"position: absolute; right:0; top:0; margin-right: 0; margin-bottom: 0;border-radius: 50%; padding: 0.9rem 0.9rem;",t:13}],f:[{p:[37,19,2565],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-fullscreen",t:13}]}]}," ",{p:[39,15,2666],t:7,e:"a",m:[{n:"btn",f:0,t:13},{n:"href",f:[{t:2,r:"HOSTNAME",p:[39,28,2679]},"image.php?id=",{t:2,r:".slug",p:[39,53,2704]}],t:13},{n:"download",f:[{t:2,r:".name",p:[39,74,2725]}],t:13},{n:"style",f:"position: absolute; left:0; top:0; margin-left: 0; margin-bottom: 0;border-radius: 50%; padding: 0.9rem 0.9rem;color: #679;",t:13}],f:[{p:[40,19,2888],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-download-alt",t:13}]}]}]}]}],n:52,r:"rows",p:[27,7,1704]}]}," ",{p:[47,3,3031],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13}],f:[{p:[48,7,3064],t:7,e:"button",m:[{n:"disabled",f:[{t:2,x:{r:["imgSelect"],s:"_0?false:true"},p:[48,24,3081]}],t:13},{n:"click",f:"delete",t:70},{n:"style",f:"margin: 0;",t:13}],f:["Delete file"]}," ",{t:4,f:[{p:[51,7,3212],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:"confirm",t:70},{n:"style",f:"margin: 0;",t:13}],f:["Confirm"]}],n:50,r:"show_confirm_btn",p:[50,7,3181]}]}]}," ",{t:4,f:[{p:[59,1,3385],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[59,14,3398]}],t:13},{n:"zoomFrom",f:["ib",{t:2,r:"showFullScreenObj.id",p:[59,46,3430]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[59,76,3460]}],t:13},{n:"title",f:[{t:2,r:"showFullScreenObj.name",p:[59,91,3475]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[59,132,3516]}],t:13},{n:"style",f:"\nheight: calc(100% - 45px);\nwidth: 100%;\nleft: 0;\nright: inherit;\ntop: 45px;\nbottom: inherit;",t:13}],f:[{p:[66,3,3632],t:7,e:"ShowImage",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[66,20,3649]}],t:13},{n:"imgObj",f:[{t:2,r:"showFullScreenObj",p:[66,47,3676]}],t:13}]}]}],n:50,r:"showFullScreen",p:[58,1,3362]},{t:4,f:[{p:[71,1,3755],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFoldersModal",p:[71,14,3768]}],t:13},{n:"zoomFrom",f:"showFoldersModal",t:13},{n:"title",f:"Manage image folders",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[71,106,3860]}],t:13},{n:"style",f:"\nheight: 34em;\nwidth: 24em;\nleft: calc(50% - 12em);\nright: inherit;\ntop: calc(50% - 17em);\nbottom: inherit;",t:13}],f:[{p:[78,1,3988],t:7,e:"TGrid",m:[{n:"G",f:[{t:2,r:"G",p:[78,10,3997]}],t:13},{n:"selected_tablename",f:"_Folders",t:13}]}]}],n:50,r:"showFoldersModal",p:[70,1,3730]}],e:{"_0?\"8px #689\":\"8px #fff\"":function (_0){return(_0?"8px #689":"8px #fff");},"(_0==0)?\"selectedfolder\":\"\"":function (_0){return((_0==0)?"selectedfolder":"");},"[_0.set(\"selectedfolder\",0)]":function (_0){return([_0.set("selectedfolder",0)]);},"(_0==_1)?\"selectedfolder\":\"\"":function (_0,_1){return((_0==_1)?"selectedfolder":"");},"[_0.set(\"selectedfolder\",_1)]":function (_0,_1){return([_0.set("selectedfolder",_1)]);},"[_0.set(\"showFoldersModal\",true)]":function (_0){return([_0.set("showFoldersModal",true)]);},"[_0.fire(\"imgSelect\",_1)]":function (_0,_1){return([_0.fire("imgSelect",_1)]);},"_0==_1?\"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)\":\"\"":function (_0,_1){return(_0==_1?"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)":"");},"[_0.fire(\"showFullScreen\",_1)]":function (_0,_1){return([_0.fire("showFullScreen",_1)]);},"_0?false:true":function (_0){return(_0?false:true);},"true":function (){return(true);}}};
 component.exports.css = ".tag,.upload{cursor:pointer}.upload,card{text-align:center}.selectedfolder,.tag:hover{background-color:#679;color:#fff}.cardholder{margin:1rem;width:200px}.upload{width:22rem;margin:0;color:#679;display:inline-block;padding:1.4rem 2rem;background:#fff;border:1px solid #679;border-radius:2px;box-shadow:0 0 0 transparent;text-transform:uppercase;text-decoration:none;font-size:1.2rem;font-weight:700;line-height:1rem;-webkit-appearance:none}.carddesc,.img{margin-bottom:1rem}.upload:hover{box-shadow:2px 2px 4px rgba(0,0,0,.3);background:#f4f5f6}.inputfile{width:.1px;height:.1px;opacity:0;overflow:hidden;position:absolute;z-index:-1}card{height:220px;transition:box-shadow 1s;background:rgba(255,255,255,0);padding-top:0}card:hover{box-shadow:0 1px 4px 0 rgba(0,0,0,1)}.carddesc{height:54px;overflow:auto;overflow-wrap:break-word}.img{background-repeat:no-repeat;background-position:center center;background-size:contain;width:100%;height:144px}.componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%;max-width:unset}.buttonBar{display:flex;justify-content:space-between;margin-top:1rem}.subheader{color:#679;font-size:1.8rem;margin-right:.5rem;margin-left:.5rem}.hr{flex:1;background:1px #679;height:1px}";
 module.exports = Ractive.extend(component.exports);
 
