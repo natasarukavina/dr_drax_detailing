@@ -10,7 +10,9 @@ if(!empty($_FILES['file']))
     //$path = "uploads/";
     //$path = $path . basename( $_FILES['uploaded_file']['name']);
     //print_r( $_FILES['file'] );
-    upload2sqlite( $_FILES['file'] );
+    //print_r( $_POST );
+    
+    upload2sqlite( $_FILES['file'], $_POST['selectedfolder'] );
     /*
     if(move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $path)) {
         echo "The file ".  basename( $_FILES['uploaded_file']['name']). 

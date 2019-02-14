@@ -276,7 +276,7 @@
         echo $file[0]['image_blob'];
     }
 
-    function upload2sqlite($uploaded_file){
+    function upload2sqlite($uploaded_file, $selectedfolder){
         // [uploaded_file] => Array ( [name] => bzvz (1).jpg [type] => image/jpeg [tmp_name] => /tmp/phpvZ85y1 [error] => 0 [size] => 23814
         global $db;
 
@@ -287,11 +287,11 @@
         $filename = isset( $path_parts['filename'] ) ? $path_parts['filename'] : ''; // Without extension // Since PHP 5.2.0
         $slug = makeSlugs($filename);// Without extension 
 
-        $stmt = $db->prepare("select ifnull( max(ver),0) + 1 as ver from _files ff where ff.nice_url = :slug and ff.extension = :extension");
+        $stmt = $db->prepare("select ifnull( max(ver), -1) + 1 as ver from _files ff where ff.nice_url = :slug and ff.extension = :extension");
         $stmt->execute( array( 'extension' => $extension, 'slug' => $slug ) );
         $ver = $stmt->fetchColumn();
         
-        $query = $db->prepare("INSERT INTO _files (image_blob, mime_type, name, nice_url, size, extension, ver) VALUES (:image_blob, :mime_type, :name, :slug, :size, :extension, :ver)");
+        $query = $db->prepare("INSERT INTO _files (image_blob, mime_type, name, nice_url, size, extension, ver, folder_id) VALUES (:image_blob, :mime_type, :name, :slug, :size, :extension, :ver, :folder_id)");
         $query->bindValue(':image_blob', fopen($uploaded_file['tmp_name'], "rb"), PDO::PARAM_LOB);
         $query->bindParam(':mime_type',  $uploaded_file['type'], PDO::PARAM_STR);
         $query->bindParam(':name',       $filename, PDO::PARAM_STR);
@@ -299,6 +299,8 @@
         $query->bindParam(':size',       $uploaded_file['size'], PDO::PARAM_INT);
         $query->bindValue(':extension',  $extension, PDO::PARAM_STR);
         $query->bindValue(':ver',        $ver, PDO::PARAM_INT);
+        $query->bindValue(':folder_id',  $selectedfolder, PDO::PARAM_INT);
+        
         $query->execute();
         //echo $db->lastInsertId(); 
         echo $slug.(($ver==0)?'':'_'.$ver).'.'.$extension; 
