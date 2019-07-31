@@ -23,9 +23,12 @@
                 <a  on-click="@this.set('selectedModule',null)" style="{{!selectedModule?'border-color: #679;':''}}" ><span class="glyphicon glyphicon-home"></span> Home</a>
             </li>
         
+            <!-- Only SA can usee media -->
+            {{#if _session_user_role == 2}}
             <li>
                 <a  on-click="@this.set('selectedModule','ImageBrowser')" style="{{selectedModule=='ImageBrowser'?'border-color: #679;':''}}" ><span class="glyphicon glyphicon-picture"></span> Media</a>
             </li>
+            {{/if}}
             
             <!-- Only SA can update schema-->
             {{#if _session_user_role == 2}}

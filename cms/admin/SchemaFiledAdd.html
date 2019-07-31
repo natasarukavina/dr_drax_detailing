@@ -65,6 +65,13 @@
         </div>
         {{/if}}
 
+        {{#if row.field_type=='IMAGE' }}
+        <div col='1/1'>
+            <label style="width:14em">Aspect ratio</label>
+            <input style="width:calc(99% - 14em)" type="text" placeholder="16:9, 2:1, 0.5, 3,..." value={{row.aspect_ratio}}>
+        </div>
+        {{/if}}
+
         {{#if row.field_type=='DROPDOWN' || row.field_type=='MULTISELECT' }}
         <div col='1/1'>
             <label style="width:14em">Lookup table</label>
@@ -165,6 +172,22 @@
                     izitoast.error({ message: "For filed type 'DropDown' you must pick 'lookup field'"}); return;
                 }
             }
+
+            if (self.get('row.aspect_ratio')){
+              var aspect_ratio_str = self.get('row.aspect_ratio');
+              if (!isNaN(aspect_ratio_str)) self.set('row.aspect_ratio', Number(aspect_ratio_str) ) // hm, ovo mozda i ne mora, sqlite-u je svejedno
+              else {
+                var isSlash = aspect_ratio_str.includes("/");
+                var isCol = aspect_ratio_str.includes(":");
+                if (isSlash || isCol) {
+                  var ar2 = aspect_ratio_str.split(isSlash?'/':':');
+                  try{
+                    self.set('row.aspect_ratio', Number(ar2[0]) / Number(ar2[1]) )
+                  } catch(e){}
+                }
+              }
+
+            }
             
             if ( !self.get('row.nice_name') ) self.set('row.nice_name', self.get('row.field_name') )
 
@@ -222,6 +245,7 @@
                 , visible:true
                 , visible_details:true
                 , filter:true
+                , aspect_ratio:null
 
             }
         }

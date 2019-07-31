@@ -18006,7 +18006,7 @@ function hasOwnProperty(obj, prop) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * jQuery JavaScript Library v3.3.1
+ * jQuery JavaScript Library v3.4.1
  * https://jquery.com/
  *
  * Includes Sizzle.js
@@ -18016,7 +18016,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2018-01-20T17:24Z
+ * Date: 2019-05-01T21:04Z
  */
 ( function( global, factory ) {
 
@@ -18098,20 +18098,33 @@ var isWindow = function isWindow( obj ) {
 	var preservedScriptAttributes = {
 		type: true,
 		src: true,
+		nonce: true,
 		noModule: true
 	};
 
-	function DOMEval( code, doc, node ) {
+	function DOMEval( code, node, doc ) {
 		doc = doc || document;
 
-		var i,
+		var i, val,
 			script = doc.createElement( "script" );
 
 		script.text = code;
 		if ( node ) {
 			for ( i in preservedScriptAttributes ) {
-				if ( node[ i ] ) {
-					script[ i ] = node[ i ];
+
+				// Support: Firefox 64+, Edge 18+
+				// Some browsers don't support the "nonce" property on scripts.
+				// On the other hand, just using `getAttribute` is not enough as
+				// the `nonce` attribute is reset to an empty string whenever it
+				// becomes browsing-context connected.
+				// See https://github.com/whatwg/html/issues/2369
+				// See https://html.spec.whatwg.org/#nonce-attributes
+				// The `node.getAttribute` check was added for the sake of
+				// `jQuery.globalEval` so that it can fake a nonce-containing node
+				// via an object.
+				val = node[ i ] || node.getAttribute && node.getAttribute( i );
+				if ( val ) {
+					script.setAttribute( i, val );
 				}
 			}
 		}
@@ -18136,7 +18149,7 @@ function toType( obj ) {
 
 
 var
-	version = "3.3.1",
+	version = "3.4.1",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -18265,25 +18278,28 @@ jQuery.extend = jQuery.fn.extend = function() {
 
 			// Extend the base object
 			for ( name in options ) {
-				src = target[ name ];
 				copy = options[ name ];
 
+				// Prevent Object.prototype pollution
 				// Prevent never-ending loop
-				if ( target === copy ) {
+				if ( name === "__proto__" || target === copy ) {
 					continue;
 				}
 
 				// Recurse if we're merging plain objects or arrays
 				if ( deep && copy && ( jQuery.isPlainObject( copy ) ||
 					( copyIsArray = Array.isArray( copy ) ) ) ) {
+					src = target[ name ];
 
-					if ( copyIsArray ) {
-						copyIsArray = false;
-						clone = src && Array.isArray( src ) ? src : [];
-
+					// Ensure proper type for the source value
+					if ( copyIsArray && !Array.isArray( src ) ) {
+						clone = [];
+					} else if ( !copyIsArray && !jQuery.isPlainObject( src ) ) {
+						clone = {};
 					} else {
-						clone = src && jQuery.isPlainObject( src ) ? src : {};
+						clone = src;
 					}
+					copyIsArray = false;
 
 					// Never move original objects, clone them
 					target[ name ] = jQuery.extend( deep, clone, copy );
@@ -18336,9 +18352,6 @@ jQuery.extend( {
 	},
 
 	isEmptyObject: function( obj ) {
-
-		/* eslint-disable no-unused-vars */
-		// See https://github.com/eslint/eslint/issues/6125
 		var name;
 
 		for ( name in obj ) {
@@ -18348,8 +18361,8 @@ jQuery.extend( {
 	},
 
 	// Evaluates a script in a global context
-	globalEval: function( code ) {
-		DOMEval( code );
+	globalEval: function( code, options ) {
+		DOMEval( code, { nonce: options && options.nonce } );
 	},
 
 	each: function( obj, callback ) {
@@ -18505,14 +18518,14 @@ function isArrayLike( obj ) {
 }
 var Sizzle =
 /*!
- * Sizzle CSS Selector Engine v2.3.3
+ * Sizzle CSS Selector Engine v2.3.4
  * https://sizzlejs.com/
  *
- * Copyright jQuery Foundation and other contributors
+ * Copyright JS Foundation and other contributors
  * Released under the MIT license
- * http://jquery.org/license
+ * https://js.foundation/
  *
- * Date: 2016-08-08
+ * Date: 2019-04-08
  */
 (function( window ) {
 
@@ -18546,6 +18559,7 @@ var i,
 	classCache = createCache(),
 	tokenCache = createCache(),
 	compilerCache = createCache(),
+	nonnativeSelectorCache = createCache(),
 	sortOrder = function( a, b ) {
 		if ( a === b ) {
 			hasDuplicate = true;
@@ -18607,8 +18621,7 @@ var i,
 
 	rcomma = new RegExp( "^" + whitespace + "*," + whitespace + "*" ),
 	rcombinators = new RegExp( "^" + whitespace + "*([>+~]|" + whitespace + ")" + whitespace + "*" ),
-
-	rattributeQuotes = new RegExp( "=" + whitespace + "*([^\\]'\"]*?)" + whitespace + "*\\]", "g" ),
+	rdescend = new RegExp( whitespace + "|>" ),
 
 	rpseudo = new RegExp( pseudos ),
 	ridentifier = new RegExp( "^" + identifier + "$" ),
@@ -18629,6 +18642,7 @@ var i,
 			whitespace + "*((?:-\\d)?\\d*)" + whitespace + "*\\)|)(?=[^-]|$)", "i" )
 	},
 
+	rhtml = /HTML$/i,
 	rinputs = /^(?:input|select|textarea|button)$/i,
 	rheader = /^h\d$/i,
 
@@ -18683,9 +18697,9 @@ var i,
 		setDocument();
 	},
 
-	disabledAncestor = addCombinator(
+	inDisabledFieldset = addCombinator(
 		function( elem ) {
-			return elem.disabled === true && ("form" in elem || "label" in elem);
+			return elem.disabled === true && elem.nodeName.toLowerCase() === "fieldset";
 		},
 		{ dir: "parentNode", next: "legend" }
 	);
@@ -18798,18 +18812,22 @@ function Sizzle( selector, context, results, seed ) {
 
 			// Take advantage of querySelectorAll
 			if ( support.qsa &&
-				!compilerCache[ selector + " " ] &&
-				(!rbuggyQSA || !rbuggyQSA.test( selector )) ) {
+				!nonnativeSelectorCache[ selector + " " ] &&
+				(!rbuggyQSA || !rbuggyQSA.test( selector )) &&
 
-				if ( nodeType !== 1 ) {
-					newContext = context;
-					newSelector = selector;
-
-				// qSA looks outside Element context, which is not what we want
-				// Thanks to Andrew Dupont for this workaround technique
-				// Support: IE <=8
+				// Support: IE 8 only
 				// Exclude object elements
-				} else if ( context.nodeName.toLowerCase() !== "object" ) {
+				(nodeType !== 1 || context.nodeName.toLowerCase() !== "object") ) {
+
+				newSelector = selector;
+				newContext = context;
+
+				// qSA considers elements outside a scoping root when evaluating child or
+				// descendant combinators, which is not what we want.
+				// In such cases, we work around the behavior by prefixing every selector in the
+				// list with an ID selector referencing the scope context.
+				// Thanks to Andrew Dupont for this technique.
+				if ( nodeType === 1 && rdescend.test( selector ) ) {
 
 					// Capture the context ID, setting it first if necessary
 					if ( (nid = context.getAttribute( "id" )) ) {
@@ -18831,17 +18849,16 @@ function Sizzle( selector, context, results, seed ) {
 						context;
 				}
 
-				if ( newSelector ) {
-					try {
-						push.apply( results,
-							newContext.querySelectorAll( newSelector )
-						);
-						return results;
-					} catch ( qsaError ) {
-					} finally {
-						if ( nid === expando ) {
-							context.removeAttribute( "id" );
-						}
+				try {
+					push.apply( results,
+						newContext.querySelectorAll( newSelector )
+					);
+					return results;
+				} catch ( qsaError ) {
+					nonnativeSelectorCache( selector, true );
+				} finally {
+					if ( nid === expando ) {
+						context.removeAttribute( "id" );
 					}
 				}
 			}
@@ -19005,7 +19022,7 @@ function createDisabledPseudo( disabled ) {
 					// Where there is no isDisabled, check manually
 					/* jshint -W018 */
 					elem.isDisabled !== !disabled &&
-						disabledAncestor( elem ) === disabled;
+						inDisabledFieldset( elem ) === disabled;
 			}
 
 			return elem.disabled === disabled;
@@ -19062,10 +19079,13 @@ support = Sizzle.support = {};
  * @returns {Boolean} True iff elem is a non-HTML XML node
  */
 isXML = Sizzle.isXML = function( elem ) {
-	// documentElement is verified for cases where it doesn't yet exist
-	// (such as loading iframes in IE - #4833)
-	var documentElement = elem && (elem.ownerDocument || elem).documentElement;
-	return documentElement ? documentElement.nodeName !== "HTML" : false;
+	var namespace = elem.namespaceURI,
+		docElem = (elem.ownerDocument || elem).documentElement;
+
+	// Support: IE <=8
+	// Assume HTML when documentElement doesn't yet exist, such as inside loading iframes
+	// https://bugs.jquery.com/ticket/4833
+	return !rhtml.test( namespace || docElem && docElem.nodeName || "HTML" );
 };
 
 /**
@@ -19487,11 +19507,8 @@ Sizzle.matchesSelector = function( elem, expr ) {
 		setDocument( elem );
 	}
 
-	// Make sure that attribute selectors are quoted
-	expr = expr.replace( rattributeQuotes, "='$1']" );
-
 	if ( support.matchesSelector && documentIsHTML &&
-		!compilerCache[ expr + " " ] &&
+		!nonnativeSelectorCache[ expr + " " ] &&
 		( !rbuggyMatches || !rbuggyMatches.test( expr ) ) &&
 		( !rbuggyQSA     || !rbuggyQSA.test( expr ) ) ) {
 
@@ -19505,7 +19522,9 @@ Sizzle.matchesSelector = function( elem, expr ) {
 					elem.document && elem.document.nodeType !== 11 ) {
 				return ret;
 			}
-		} catch (e) {}
+		} catch (e) {
+			nonnativeSelectorCache( expr, true );
+		}
 	}
 
 	return Sizzle( expr, document, null, [ elem ] ).length > 0;
@@ -19964,7 +19983,7 @@ Expr = Sizzle.selectors = {
 		"contains": markFunction(function( text ) {
 			text = text.replace( runescape, funescape );
 			return function( elem ) {
-				return ( elem.textContent || elem.innerText || getText( elem ) ).indexOf( text ) > -1;
+				return ( elem.textContent || getText( elem ) ).indexOf( text ) > -1;
 			};
 		}),
 
@@ -20103,7 +20122,11 @@ Expr = Sizzle.selectors = {
 		}),
 
 		"lt": createPositionalPseudo(function( matchIndexes, length, argument ) {
-			var i = argument < 0 ? argument + length : argument;
+			var i = argument < 0 ?
+				argument + length :
+				argument > length ?
+					length :
+					argument;
 			for ( ; --i >= 0; ) {
 				matchIndexes.push( i );
 			}
@@ -21153,18 +21176,18 @@ jQuery.each( {
 		return siblings( elem.firstChild );
 	},
 	contents: function( elem ) {
-        if ( nodeName( elem, "iframe" ) ) {
-            return elem.contentDocument;
-        }
+		if ( typeof elem.contentDocument !== "undefined" ) {
+			return elem.contentDocument;
+		}
 
-        // Support: IE 9 - 11 only, iOS 7 only, Android Browser <=4.3 only
-        // Treat the template element as a regular one in browsers that
-        // don't support it.
-        if ( nodeName( elem, "template" ) ) {
-            elem = elem.content || elem;
-        }
+		// Support: IE 9 - 11 only, iOS 7 only, Android Browser <=4.3 only
+		// Treat the template element as a regular one in browsers that
+		// don't support it.
+		if ( nodeName( elem, "template" ) ) {
+			elem = elem.content || elem;
+		}
 
-        return jQuery.merge( [], elem.childNodes );
+		return jQuery.merge( [], elem.childNodes );
 	}
 }, function( name, fn ) {
 	jQuery.fn[ name ] = function( until, selector ) {
@@ -22473,6 +22496,26 @@ var rcssNum = new RegExp( "^(?:([+-])=|)(" + pnum + ")([a-z%]*)$", "i" );
 
 var cssExpand = [ "Top", "Right", "Bottom", "Left" ];
 
+var documentElement = document.documentElement;
+
+
+
+	var isAttached = function( elem ) {
+			return jQuery.contains( elem.ownerDocument, elem );
+		},
+		composed = { composed: true };
+
+	// Support: IE 9 - 11+, Edge 12 - 18+, iOS 10.0 - 10.2 only
+	// Check attachment across shadow DOM boundaries when possible (gh-3504)
+	// Support: iOS 10.0-10.2 only
+	// Early iOS 10 versions support `attachShadow` but not `getRootNode`,
+	// leading to errors. We need to check for `getRootNode`.
+	if ( documentElement.getRootNode ) {
+		isAttached = function( elem ) {
+			return jQuery.contains( elem.ownerDocument, elem ) ||
+				elem.getRootNode( composed ) === elem.ownerDocument;
+		};
+	}
 var isHiddenWithinTree = function( elem, el ) {
 
 		// isHiddenWithinTree might be called from jQuery#filter function;
@@ -22487,7 +22530,7 @@ var isHiddenWithinTree = function( elem, el ) {
 			// Support: Firefox <=43 - 45
 			// Disconnected elements can have computed display: none, so first confirm that elem is
 			// in the document.
-			jQuery.contains( elem.ownerDocument, elem ) &&
+			isAttached( elem ) &&
 
 			jQuery.css( elem, "display" ) === "none";
 	};
@@ -22529,7 +22572,8 @@ function adjustCSS( elem, prop, valueParts, tween ) {
 		unit = valueParts && valueParts[ 3 ] || ( jQuery.cssNumber[ prop ] ? "" : "px" ),
 
 		// Starting value computation is required for potential unit mismatches
-		initialInUnit = ( jQuery.cssNumber[ prop ] || unit !== "px" && +initial ) &&
+		initialInUnit = elem.nodeType &&
+			( jQuery.cssNumber[ prop ] || unit !== "px" && +initial ) &&
 			rcssNum.exec( jQuery.css( elem, prop ) );
 
 	if ( initialInUnit && initialInUnit[ 3 ] !== unit ) {
@@ -22676,7 +22720,7 @@ jQuery.fn.extend( {
 } );
 var rcheckableType = ( /^(?:checkbox|radio)$/i );
 
-var rtagName = ( /<([a-z][^\/\0>\x20\t\r\n\f]+)/i );
+var rtagName = ( /<([a-z][^\/\0>\x20\t\r\n\f]*)/i );
 
 var rscriptType = ( /^$|^module$|\/(?:java|ecma)script/i );
 
@@ -22748,7 +22792,7 @@ function setGlobalEval( elems, refElements ) {
 var rhtml = /<|&#?\w+;/;
 
 function buildFragment( elems, context, scripts, selection, ignored ) {
-	var elem, tmp, tag, wrap, contains, j,
+	var elem, tmp, tag, wrap, attached, j,
 		fragment = context.createDocumentFragment(),
 		nodes = [],
 		i = 0,
@@ -22812,13 +22856,13 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 			continue;
 		}
 
-		contains = jQuery.contains( elem.ownerDocument, elem );
+		attached = isAttached( elem );
 
 		// Append to fragment
 		tmp = getAll( fragment.appendChild( elem ), "script" );
 
 		// Preserve script evaluation history
-		if ( contains ) {
+		if ( attached ) {
 			setGlobalEval( tmp );
 		}
 
@@ -22861,8 +22905,6 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 	div.innerHTML = "<textarea>x</textarea>";
 	support.noCloneChecked = !!div.cloneNode( true ).lastChild.defaultValue;
 } )();
-var documentElement = document.documentElement;
-
 
 
 var
@@ -22878,8 +22920,19 @@ function returnFalse() {
 	return false;
 }
 
+// Support: IE <=9 - 11+
+// focus() and blur() are asynchronous, except when they are no-op.
+// So expect focus to be synchronous when the element is already active,
+// and blur to be synchronous when the element is not already active.
+// (focus and blur are always synchronous in other supported browsers,
+// this just defines when we can count on it).
+function expectSync( elem, type ) {
+	return ( elem === safeActiveElement() ) === ( type === "focus" );
+}
+
 // Support: IE <=9 only
-// See #13393 for more info
+// Accessing document.activeElement can throw unexpectedly
+// https://bugs.jquery.com/ticket/13393
 function safeActiveElement() {
 	try {
 		return document.activeElement;
@@ -23179,9 +23232,10 @@ jQuery.event = {
 			while ( ( handleObj = matched.handlers[ j++ ] ) &&
 				!event.isImmediatePropagationStopped() ) {
 
-				// Triggered event must either 1) have no namespace, or 2) have namespace(s)
-				// a subset or equal to those in the bound event (both can have no namespace).
-				if ( !event.rnamespace || event.rnamespace.test( handleObj.namespace ) ) {
+				// If the event is namespaced, then each handler is only invoked if it is
+				// specially universal or its namespaces are a superset of the event's.
+				if ( !event.rnamespace || handleObj.namespace === false ||
+					event.rnamespace.test( handleObj.namespace ) ) {
 
 					event.handleObj = handleObj;
 					event.data = handleObj.data;
@@ -23305,39 +23359,51 @@ jQuery.event = {
 			// Prevent triggered image.load events from bubbling to window.load
 			noBubble: true
 		},
-		focus: {
-
-			// Fire native event if possible so blur/focus sequence is correct
-			trigger: function() {
-				if ( this !== safeActiveElement() && this.focus ) {
-					this.focus();
-					return false;
-				}
-			},
-			delegateType: "focusin"
-		},
-		blur: {
-			trigger: function() {
-				if ( this === safeActiveElement() && this.blur ) {
-					this.blur();
-					return false;
-				}
-			},
-			delegateType: "focusout"
-		},
 		click: {
 
-			// For checkbox, fire native event so checked state will be right
-			trigger: function() {
-				if ( this.type === "checkbox" && this.click && nodeName( this, "input" ) ) {
-					this.click();
-					return false;
+			// Utilize native event to ensure correct state for checkable inputs
+			setup: function( data ) {
+
+				// For mutual compressibility with _default, replace `this` access with a local var.
+				// `|| data` is dead code meant only to preserve the variable through minification.
+				var el = this || data;
+
+				// Claim the first handler
+				if ( rcheckableType.test( el.type ) &&
+					el.click && nodeName( el, "input" ) ) {
+
+					// dataPriv.set( el, "click", ... )
+					leverageNative( el, "click", returnTrue );
 				}
+
+				// Return false to allow normal processing in the caller
+				return false;
+			},
+			trigger: function( data ) {
+
+				// For mutual compressibility with _default, replace `this` access with a local var.
+				// `|| data` is dead code meant only to preserve the variable through minification.
+				var el = this || data;
+
+				// Force setup before triggering a click
+				if ( rcheckableType.test( el.type ) &&
+					el.click && nodeName( el, "input" ) ) {
+
+					leverageNative( el, "click" );
+				}
+
+				// Return non-false to allow normal event-path propagation
+				return true;
 			},
 
-			// For cross-browser consistency, don't fire native .click() on links
+			// For cross-browser consistency, suppress native .click() on links
+			// Also prevent it if we're currently inside a leveraged native-event stack
 			_default: function( event ) {
-				return nodeName( event.target, "a" );
+				var target = event.target;
+				return rcheckableType.test( target.type ) &&
+					target.click && nodeName( target, "input" ) &&
+					dataPriv.get( target, "click" ) ||
+					nodeName( target, "a" );
 			}
 		},
 
@@ -23353,6 +23419,93 @@ jQuery.event = {
 		}
 	}
 };
+
+// Ensure the presence of an event listener that handles manually-triggered
+// synthetic events by interrupting progress until reinvoked in response to
+// *native* events that it fires directly, ensuring that state changes have
+// already occurred before other listeners are invoked.
+function leverageNative( el, type, expectSync ) {
+
+	// Missing expectSync indicates a trigger call, which must force setup through jQuery.event.add
+	if ( !expectSync ) {
+		if ( dataPriv.get( el, type ) === undefined ) {
+			jQuery.event.add( el, type, returnTrue );
+		}
+		return;
+	}
+
+	// Register the controller as a special universal handler for all event namespaces
+	dataPriv.set( el, type, false );
+	jQuery.event.add( el, type, {
+		namespace: false,
+		handler: function( event ) {
+			var notAsync, result,
+				saved = dataPriv.get( this, type );
+
+			if ( ( event.isTrigger & 1 ) && this[ type ] ) {
+
+				// Interrupt processing of the outer synthetic .trigger()ed event
+				// Saved data should be false in such cases, but might be a leftover capture object
+				// from an async native handler (gh-4350)
+				if ( !saved.length ) {
+
+					// Store arguments for use when handling the inner native event
+					// There will always be at least one argument (an event object), so this array
+					// will not be confused with a leftover capture object.
+					saved = slice.call( arguments );
+					dataPriv.set( this, type, saved );
+
+					// Trigger the native event and capture its result
+					// Support: IE <=9 - 11+
+					// focus() and blur() are asynchronous
+					notAsync = expectSync( this, type );
+					this[ type ]();
+					result = dataPriv.get( this, type );
+					if ( saved !== result || notAsync ) {
+						dataPriv.set( this, type, false );
+					} else {
+						result = {};
+					}
+					if ( saved !== result ) {
+
+						// Cancel the outer synthetic event
+						event.stopImmediatePropagation();
+						event.preventDefault();
+						return result.value;
+					}
+
+				// If this is an inner synthetic event for an event with a bubbling surrogate
+				// (focus or blur), assume that the surrogate already propagated from triggering the
+				// native event and prevent that from happening again here.
+				// This technically gets the ordering wrong w.r.t. to `.trigger()` (in which the
+				// bubbling surrogate propagates *after* the non-bubbling base), but that seems
+				// less bad than duplication.
+				} else if ( ( jQuery.event.special[ type ] || {} ).delegateType ) {
+					event.stopPropagation();
+				}
+
+			// If this is a native event triggered above, everything is now in order
+			// Fire an inner synthetic event with the original arguments
+			} else if ( saved.length ) {
+
+				// ...and capture the result
+				dataPriv.set( this, type, {
+					value: jQuery.event.trigger(
+
+						// Support: IE <=9 - 11+
+						// Extend with the prototype to reset the above stopImmediatePropagation()
+						jQuery.extend( saved[ 0 ], jQuery.Event.prototype ),
+						saved.slice( 1 ),
+						this
+					)
+				} );
+
+				// Abort handling of the native event
+				event.stopImmediatePropagation();
+			}
+		}
+	} );
+}
 
 jQuery.removeEvent = function( elem, type, handle ) {
 
@@ -23466,6 +23619,7 @@ jQuery.each( {
 	shiftKey: true,
 	view: true,
 	"char": true,
+	code: true,
 	charCode: true,
 	key: true,
 	keyCode: true,
@@ -23511,6 +23665,33 @@ jQuery.each( {
 		return event.which;
 	}
 }, jQuery.event.addProp );
+
+jQuery.each( { focus: "focusin", blur: "focusout" }, function( type, delegateType ) {
+	jQuery.event.special[ type ] = {
+
+		// Utilize native event if possible so blur/focus sequence is correct
+		setup: function() {
+
+			// Claim the first handler
+			// dataPriv.set( this, "focus", ... )
+			// dataPriv.set( this, "blur", ... )
+			leverageNative( this, type, expectSync );
+
+			// Return false to allow normal processing in the caller
+			return false;
+		},
+		trigger: function() {
+
+			// Force setup before trigger
+			leverageNative( this, type );
+
+			// Return non-false to allow normal event-path propagation
+			return true;
+		},
+
+		delegateType: delegateType
+	};
+} );
 
 // Create mouseenter/leave events using mouseover/out and event-time checks
 // so that event delegation works in jQuery.
@@ -23762,11 +23943,13 @@ function domManip( collection, args, callback, ignored ) {
 						if ( node.src && ( node.type || "" ).toLowerCase()  !== "module" ) {
 
 							// Optional AJAX dependency, but won't run scripts if not present
-							if ( jQuery._evalUrl ) {
-								jQuery._evalUrl( node.src );
+							if ( jQuery._evalUrl && !node.noModule ) {
+								jQuery._evalUrl( node.src, {
+									nonce: node.nonce || node.getAttribute( "nonce" )
+								} );
 							}
 						} else {
-							DOMEval( node.textContent.replace( rcleanScript, "" ), doc, node );
+							DOMEval( node.textContent.replace( rcleanScript, "" ), node, doc );
 						}
 					}
 				}
@@ -23788,7 +23971,7 @@ function remove( elem, selector, keepData ) {
 		}
 
 		if ( node.parentNode ) {
-			if ( keepData && jQuery.contains( node.ownerDocument, node ) ) {
+			if ( keepData && isAttached( node ) ) {
 				setGlobalEval( getAll( node, "script" ) );
 			}
 			node.parentNode.removeChild( node );
@@ -23806,7 +23989,7 @@ jQuery.extend( {
 	clone: function( elem, dataAndEvents, deepDataAndEvents ) {
 		var i, l, srcElements, destElements,
 			clone = elem.cloneNode( true ),
-			inPage = jQuery.contains( elem.ownerDocument, elem );
+			inPage = isAttached( elem );
 
 		// Fix IE cloning issues
 		if ( !support.noCloneChecked && ( elem.nodeType === 1 || elem.nodeType === 11 ) &&
@@ -24102,8 +24285,10 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 
 		// Support: IE 9 only
 		// Detect overflow:scroll screwiness (gh-3699)
+		// Support: Chrome <=64
+		// Don't get tricked when zoom affects offsetWidth (gh-4029)
 		div.style.position = "absolute";
-		scrollboxSizeVal = div.offsetWidth === 36 || "absolute";
+		scrollboxSizeVal = roundPixelMeasures( div.offsetWidth / 3 ) === 12;
 
 		documentElement.removeChild( container );
 
@@ -24174,7 +24359,7 @@ function curCSS( elem, name, computed ) {
 	if ( computed ) {
 		ret = computed.getPropertyValue( name ) || computed[ name ];
 
-		if ( ret === "" && !jQuery.contains( elem.ownerDocument, elem ) ) {
+		if ( ret === "" && !isAttached( elem ) ) {
 			ret = jQuery.style( elem, name );
 		}
 
@@ -24230,29 +24415,12 @@ function addGetHookIf( conditionFn, hookFn ) {
 }
 
 
-var
+var cssPrefixes = [ "Webkit", "Moz", "ms" ],
+	emptyStyle = document.createElement( "div" ).style,
+	vendorProps = {};
 
-	// Swappable if display is none or starts with table
-	// except "table", "table-cell", or "table-caption"
-	// See here for display values: https://developer.mozilla.org/en-US/docs/CSS/display
-	rdisplayswap = /^(none|table(?!-c[ea]).+)/,
-	rcustomProp = /^--/,
-	cssShow = { position: "absolute", visibility: "hidden", display: "block" },
-	cssNormalTransform = {
-		letterSpacing: "0",
-		fontWeight: "400"
-	},
-
-	cssPrefixes = [ "Webkit", "Moz", "ms" ],
-	emptyStyle = document.createElement( "div" ).style;
-
-// Return a css property mapped to a potentially vendor prefixed property
+// Return a vendor-prefixed property or undefined
 function vendorPropName( name ) {
-
-	// Shortcut for names that are not vendor prefixed
-	if ( name in emptyStyle ) {
-		return name;
-	}
 
 	// Check for vendor prefixed names
 	var capName = name[ 0 ].toUpperCase() + name.slice( 1 ),
@@ -24266,15 +24434,32 @@ function vendorPropName( name ) {
 	}
 }
 
-// Return a property mapped along what jQuery.cssProps suggests or to
-// a vendor prefixed property.
+// Return a potentially-mapped jQuery.cssProps or vendor prefixed property
 function finalPropName( name ) {
-	var ret = jQuery.cssProps[ name ];
-	if ( !ret ) {
-		ret = jQuery.cssProps[ name ] = vendorPropName( name ) || name;
+	var final = jQuery.cssProps[ name ] || vendorProps[ name ];
+
+	if ( final ) {
+		return final;
 	}
-	return ret;
+	if ( name in emptyStyle ) {
+		return name;
+	}
+	return vendorProps[ name ] = vendorPropName( name ) || name;
 }
+
+
+var
+
+	// Swappable if display is none or starts with table
+	// except "table", "table-cell", or "table-caption"
+	// See here for display values: https://developer.mozilla.org/en-US/docs/CSS/display
+	rdisplayswap = /^(none|table(?!-c[ea]).+)/,
+	rcustomProp = /^--/,
+	cssShow = { position: "absolute", visibility: "hidden", display: "block" },
+	cssNormalTransform = {
+		letterSpacing: "0",
+		fontWeight: "400"
+	};
 
 function setPositiveNumber( elem, value, subtract ) {
 
@@ -24347,7 +24532,10 @@ function boxModelAdjustment( elem, dimension, box, isBorderBox, styles, computed
 			delta -
 			extra -
 			0.5
-		) );
+
+		// If offsetWidth/offsetHeight is unknown, then we can't determine content-box scroll gutter
+		// Use an explicit zero to avoid NaN (gh-3964)
+		) ) || 0;
 	}
 
 	return delta;
@@ -24357,9 +24545,16 @@ function getWidthOrHeight( elem, dimension, extra ) {
 
 	// Start with computed style
 	var styles = getStyles( elem ),
+
+		// To avoid forcing a reflow, only fetch boxSizing if we need it (gh-4322).
+		// Fake content-box until we know it's needed to know the true value.
+		boxSizingNeeded = !support.boxSizingReliable() || extra,
+		isBorderBox = boxSizingNeeded &&
+			jQuery.css( elem, "boxSizing", false, styles ) === "border-box",
+		valueIsBorderBox = isBorderBox,
+
 		val = curCSS( elem, dimension, styles ),
-		isBorderBox = jQuery.css( elem, "boxSizing", false, styles ) === "border-box",
-		valueIsBorderBox = isBorderBox;
+		offsetProp = "offset" + dimension[ 0 ].toUpperCase() + dimension.slice( 1 );
 
 	// Support: Firefox <=54
 	// Return a confounding non-pixel value or feign ignorance, as appropriate.
@@ -24370,22 +24565,29 @@ function getWidthOrHeight( elem, dimension, extra ) {
 		val = "auto";
 	}
 
-	// Check for style in case a browser which returns unreliable values
-	// for getComputedStyle silently falls back to the reliable elem.style
-	valueIsBorderBox = valueIsBorderBox &&
-		( support.boxSizingReliable() || val === elem.style[ dimension ] );
 
 	// Fall back to offsetWidth/offsetHeight when value is "auto"
 	// This happens for inline elements with no explicit setting (gh-3571)
 	// Support: Android <=4.1 - 4.3 only
 	// Also use offsetWidth/offsetHeight for misreported inline dimensions (gh-3602)
-	if ( val === "auto" ||
-		!parseFloat( val ) && jQuery.css( elem, "display", false, styles ) === "inline" ) {
+	// Support: IE 9-11 only
+	// Also use offsetWidth/offsetHeight for when box sizing is unreliable
+	// We use getClientRects() to check for hidden/disconnected.
+	// In those cases, the computed value can be trusted to be border-box
+	if ( ( !support.boxSizingReliable() && isBorderBox ||
+		val === "auto" ||
+		!parseFloat( val ) && jQuery.css( elem, "display", false, styles ) === "inline" ) &&
+		elem.getClientRects().length ) {
 
-		val = elem[ "offset" + dimension[ 0 ].toUpperCase() + dimension.slice( 1 ) ];
+		isBorderBox = jQuery.css( elem, "boxSizing", false, styles ) === "border-box";
 
-		// offsetWidth/offsetHeight provide border-box values
-		valueIsBorderBox = true;
+		// Where available, offsetWidth/offsetHeight approximate border box dimensions.
+		// Where not available (e.g., SVG), assume unreliable box-sizing and interpret the
+		// retrieved value as a content box dimension.
+		valueIsBorderBox = offsetProp in elem;
+		if ( valueIsBorderBox ) {
+			val = elem[ offsetProp ];
+		}
 	}
 
 	// Normalize "" and auto
@@ -24431,6 +24633,13 @@ jQuery.extend( {
 		"flexGrow": true,
 		"flexShrink": true,
 		"fontWeight": true,
+		"gridArea": true,
+		"gridColumn": true,
+		"gridColumnEnd": true,
+		"gridColumnStart": true,
+		"gridRow": true,
+		"gridRowEnd": true,
+		"gridRowStart": true,
 		"lineHeight": true,
 		"opacity": true,
 		"order": true,
@@ -24486,7 +24695,9 @@ jQuery.extend( {
 			}
 
 			// If a number was passed in, add the unit (except for certain CSS properties)
-			if ( type === "number" ) {
+			// The isCustomProp check can be removed in jQuery 4.0 when we only auto-append
+			// "px" to a few hardcoded values.
+			if ( type === "number" && !isCustomProp ) {
 				value += ret && ret[ 3 ] || ( jQuery.cssNumber[ origName ] ? "" : "px" );
 			}
 
@@ -24586,18 +24797,29 @@ jQuery.each( [ "height", "width" ], function( i, dimension ) {
 		set: function( elem, value, extra ) {
 			var matches,
 				styles = getStyles( elem ),
-				isBorderBox = jQuery.css( elem, "boxSizing", false, styles ) === "border-box",
-				subtract = extra && boxModelAdjustment(
-					elem,
-					dimension,
-					extra,
-					isBorderBox,
-					styles
-				);
+
+				// Only read styles.position if the test has a chance to fail
+				// to avoid forcing a reflow.
+				scrollboxSizeBuggy = !support.scrollboxSize() &&
+					styles.position === "absolute",
+
+				// To avoid forcing a reflow, only fetch boxSizing if we need it (gh-3991)
+				boxSizingNeeded = scrollboxSizeBuggy || extra,
+				isBorderBox = boxSizingNeeded &&
+					jQuery.css( elem, "boxSizing", false, styles ) === "border-box",
+				subtract = extra ?
+					boxModelAdjustment(
+						elem,
+						dimension,
+						extra,
+						isBorderBox,
+						styles
+					) :
+					0;
 
 			// Account for unreliable border-box dimensions by comparing offset* to computed and
 			// faking a content-box to get border and padding (gh-3699)
-			if ( isBorderBox && support.scrollboxSize() === styles.position ) {
+			if ( isBorderBox && scrollboxSizeBuggy ) {
 				subtract -= Math.ceil(
 					elem[ "offset" + dimension[ 0 ].toUpperCase() + dimension.slice( 1 ) ] -
 					parseFloat( styles[ dimension ] ) -
@@ -24765,9 +24987,9 @@ Tween.propHooks = {
 			// Use .style if available and use plain properties where available.
 			if ( jQuery.fx.step[ tween.prop ] ) {
 				jQuery.fx.step[ tween.prop ]( tween );
-			} else if ( tween.elem.nodeType === 1 &&
-				( tween.elem.style[ jQuery.cssProps[ tween.prop ] ] != null ||
-					jQuery.cssHooks[ tween.prop ] ) ) {
+			} else if ( tween.elem.nodeType === 1 && (
+					jQuery.cssHooks[ tween.prop ] ||
+					tween.elem.style[ finalPropName( tween.prop ) ] != null ) ) {
 				jQuery.style( tween.elem, tween.prop, tween.now + tween.unit );
 			} else {
 				tween.elem[ tween.prop ] = tween.now;
@@ -26474,6 +26696,10 @@ jQuery.param = function( a, traditional ) {
 				encodeURIComponent( value == null ? "" : value );
 		};
 
+	if ( a == null ) {
+		return "";
+	}
+
 	// If an array was passed in, assume that it is an array of form elements.
 	if ( Array.isArray( a ) || ( a.jquery && !jQuery.isPlainObject( a ) ) ) {
 
@@ -26976,12 +27202,14 @@ jQuery.extend( {
 						if ( !responseHeaders ) {
 							responseHeaders = {};
 							while ( ( match = rheaders.exec( responseHeadersString ) ) ) {
-								responseHeaders[ match[ 1 ].toLowerCase() ] = match[ 2 ];
+								responseHeaders[ match[ 1 ].toLowerCase() + " " ] =
+									( responseHeaders[ match[ 1 ].toLowerCase() + " " ] || [] )
+										.concat( match[ 2 ] );
 							}
 						}
-						match = responseHeaders[ key.toLowerCase() ];
+						match = responseHeaders[ key.toLowerCase() + " " ];
 					}
-					return match == null ? null : match;
+					return match == null ? null : match.join( ", " );
 				},
 
 				// Raw string
@@ -27370,7 +27598,7 @@ jQuery.each( [ "get", "post" ], function( i, method ) {
 } );
 
 
-jQuery._evalUrl = function( url ) {
+jQuery._evalUrl = function( url, options ) {
 	return jQuery.ajax( {
 		url: url,
 
@@ -27380,7 +27608,16 @@ jQuery._evalUrl = function( url ) {
 		cache: true,
 		async: false,
 		global: false,
-		"throws": true
+
+		// Only evaluate the response if it is successful (gh-4126)
+		// dataFilter is not invoked for failure responses, so using it instead
+		// of the default converter is kludgy but it works.
+		converters: {
+			"text script": function() {}
+		},
+		dataFilter: function( response ) {
+			jQuery.globalEval( response, options );
+		}
 	} );
 };
 
@@ -27663,24 +27900,21 @@ jQuery.ajaxPrefilter( "script", function( s ) {
 // Bind script tag hack transport
 jQuery.ajaxTransport( "script", function( s ) {
 
-	// This transport only deals with cross domain requests
-	if ( s.crossDomain ) {
+	// This transport only deals with cross domain or forced-by-attrs requests
+	if ( s.crossDomain || s.scriptAttrs ) {
 		var script, callback;
 		return {
 			send: function( _, complete ) {
-				script = jQuery( "<script>" ).prop( {
-					charset: s.scriptCharset,
-					src: s.url
-				} ).on(
-					"load error",
-					callback = function( evt ) {
+				script = jQuery( "<script>" )
+					.attr( s.scriptAttrs || {} )
+					.prop( { charset: s.scriptCharset, src: s.url } )
+					.on( "load error", callback = function( evt ) {
 						script.remove();
 						callback = null;
 						if ( evt ) {
 							complete( evt.type === "error" ? 404 : 200, evt.type );
 						}
-					}
-				);
+					} );
 
 				// Use native DOM manipulation to avoid our domManip AJAX trickery
 				document.head.appendChild( script[ 0 ] );
@@ -28381,7 +28615,13 @@ jQuery = $;
 var Ractive  = __webpack_require__(0);
 window.Ractive = Ractive;
 __webpack_require__(12);
+var Cropper = __webpack_require__(13);
+window.Cropper = Cropper
 
+var decoratorsSortable = __webpack_require__( 14 );
+console.log('decoratorsSortable', decoratorsSortable)
+
+window.GlobalIncrementer = 1;
 /*
 var CSSJS = require("jotform-css.js");
 var CSS = new CSSJS.cssjs();
@@ -28404,13 +28644,13 @@ ISMOBILE = (window.innerWidth <= 800);
 window.addEventListener('resize', function(event){
     ISMOBILE = (window.innerWidth <= 800);
 });
-var anime =  __webpack_require__(13);
+var anime =  __webpack_require__(15);
 window.anime = anime
-window.rt = __webpack_require__(14);
-var accounting = __webpack_require__(16)
+window.rt = __webpack_require__(16);
+var accounting = __webpack_require__(18)
 //var Instascan = require('instascan');
 //window.Instascan = Instascan;
-var izitoast = __webpack_require__(17);
+var izitoast = __webpack_require__(19);
 window.izitoast = izitoast;
 izitoast.settings({
     progressBar:false
@@ -28422,41 +28662,44 @@ izitoast.settings({
 
 window.fetch2 = function(url, obj){
 //    var body = JSON.stringify(obj);
-    //console.log('fetch', this)
-    // TODO: Zamijeni ovo sranje s necim boljim
-    var body = new FormData()
-    if (obj)
-        Object.keys(obj).forEach(function(key) {
-            body.append(key, obj[key]===null?'':obj[key])
-        });
-    var self =  (this instanceof Ractive)?this:null;
-    if (self) self.set('loading', true)
-	return new Promise(function(resolve, reject) {
-        var response = fetch(HOSTNAME+'api.php/'+url, {
-            method: 'post',
-            credentials:'same-origin',
+  //console.log('fetch', this)
+  // TODO: Zamijeni ovo sranje s necim boljim
+  var body = new FormData()
+  if (obj)
+      Object.keys(obj).forEach(function(key) {
+        var tmpObj = obj[key]===null?'':obj[key]
+        if (typeof tmpObj == 'object') tmpObj=JSON.stringify(tmpObj)
+        body.append(key, tmpObj)
+      });
+  var self =  (this instanceof Ractive)?this:null;
+  if (self) self.set('loading', true)
+  
+  return new Promise(function(resolve, reject) {
+    var response = fetch(HOSTNAME+'api.php/'+url, {
+        method: 'post',
+        credentials:'same-origin',
 //            headers: {
- //             'Accept': 'application/json',
-              'Content-Type': 'application/json',
+//             'Accept': 'application/json',
+          'Content-Type': 'application/json',
 //              "authorization":'Bearer '+ authorization
 //            },
-            body: body
-          }).then(function(response){ 
-                if (self) self.set('loading', false)
-                return response.json()
-            })
-          .then(function(j){ 
-              //console.log('j',j); 
-              if (j && j._message_action == "reload")  ractive.set('is_logedin',false)//document.location = document.location; // missing session
-              resolve([j,null]) 
-            })
-          .catch(function(err){
-              if (self) self.set('loading', false)
-              console.log('nework error!', err);
-              izitoast.error({ message: 'Network error!!!'});
-              resolve([null,err])
-          })
+        body: body
+      }).then(function(response){ 
+            if (self) self.set('loading', false)
+            return response.json()
         })
+      .then(function(j){ 
+          //console.log('j',j); 
+          if (j && j._message_action == "reload")  ractive.set('is_logedin',false)//document.location = document.location; // missing session
+          resolve([j,null]) 
+        })
+      .catch(function(err){
+          if (self) self.set('loading', false)
+          console.log('nework error!', err);
+          izitoast.error({ message: 'Network error!!!'});
+          resolve([null,err])
+      })
+    })
 }
 
 //Ractive.events.tap = require( 'ractive-events-tap' );
@@ -28641,9 +28884,9 @@ Ractive.components[ 'Select' ] = Ractive.extend( {
 });
 
 //Ractive.defaults.data.moment = moment;
-Ractive.components.Root                    =  __webpack_require__(18);
-Ractive.components.f2table                 =  __webpack_require__(19);
-Ractive.components.modal                 =  __webpack_require__(20);
+Ractive.components.Root                    =  __webpack_require__(20);
+Ractive.components.f2table                 =  __webpack_require__(21);
+Ractive.components.modal                 =  __webpack_require__(22);
 /*
 Ractive.components.stanje                  =  require('./stanje.html');
 Ractive.components.dospece                 =  require('./dospece.html');
@@ -28654,30 +28897,34 @@ Ractive.components.zalihe                  =  require('./zalihe.html');
 //Ractive.components.settings                =  require('./settings.html');
 //Ractive.components.Companies               =  require('./Companies.html');
 //Ractive.components.Company                 =  require('./Company.html');
-Ractive.components.Login                   =  __webpack_require__(21);
+Ractive.components.Login                   =  __webpack_require__(23);
 //Ractive.components.AddNewCompany           =  require('./AddNewCompany.html');
 //Ractive.components.FaqCategories           =  require('./FaqCategories.html');
 //Ractive.components.FaqCategory             =  require('./FaqCategory.html');
 //Ractive.components.FaqQuestions            =  require('./FaqQuestions.html');
 //Ractive.components.FaqQuestion             =  require('./FaqQuestion.html');
 //Ractive.components.Users                   =  require('./Users.html');
-Ractive.components.TGrid                   =  __webpack_require__(22);
-Ractive.components.TDetails                =  __webpack_require__(23);
-Ractive.components.TDetailsSingle          =  __webpack_require__(24);
-Ractive.components.ImageBrowser            =  __webpack_require__(25);
-Ractive.components.Schema                  =  __webpack_require__(26);
-Ractive.components.SchemaNew               =  __webpack_require__(27);
-Ractive.components.SchemaFiledAdd          =  __webpack_require__(28);
-Ractive.components.map                     =  __webpack_require__(29);
+Ractive.components.TGrid                   =  __webpack_require__(24);
+Ractive.components.TDetails                =  __webpack_require__(25);
+Ractive.components.TDetailsSingle          =  __webpack_require__(26);
+Ractive.components.ImageBrowser            =  __webpack_require__(27);
+Ractive.components.Schema                  =  __webpack_require__(28);
+Ractive.components.SchemaNew               =  __webpack_require__(29);
+Ractive.components.SchemaFiledAdd          =  __webpack_require__(30);
+Ractive.components.map                     =  __webpack_require__(31);
 //Ractive.components.HtmlEdit                =  require('./HtmlEdit.html');
-Ractive.components.HtmlEdit                =  __webpack_require__(30);
+Ractive.components.HtmlEdit                =  __webpack_require__(32);
 GLOBALHtmlEditCounter = 1;
-Ractive.components.Selectize               =  __webpack_require__(31);
-Ractive.components.ShowImage               =  __webpack_require__(32);
-Ractive.components.UserList                =  __webpack_require__(33);
-Ractive.components.UserDetail              =  __webpack_require__(34);
-Ractive.components.About                   =  __webpack_require__(35);
-Ractive.components.TGridNested             =  __webpack_require__(36);
+Ractive.components.Selectize               =  __webpack_require__(33);
+Ractive.components.ShowImage               =  __webpack_require__(34);
+Ractive.components.UserList                =  __webpack_require__(35);
+Ractive.components.UserDetail              =  __webpack_require__(36);
+Ractive.components.About                   =  __webpack_require__(37);
+Ractive.components.TGridNested             =  __webpack_require__(38);
+Ractive.components.Cropper                  =  __webpack_require__(39);
+//Ractive.components.Gallery                  =  require('./Gallery.html');
+Ractive.components.Gallery                  =  __webpack_require__(40);
+Ractive.components.Gallery2single           =  __webpack_require__(41);
 
 //document.addEventListener("deviceready", onDeviceReady, false);
 //if (!window.cordova) onDeviceReady()
@@ -33166,6 +33413,3776 @@ var __WEBPACK_LOCAL_MODULE_0__, __WEBPACK_LOCAL_MODULE_0__factory, __WEBPACK_LOC
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/*!
+ * Cropper.js v1.5.2
+ * https://fengyuanchen.github.io/cropperjs
+ *
+ * Copyright 2015-present Chen Fengyuan
+ * Released under the MIT license
+ *
+ * Date: 2019-06-30T06:01:05.296Z
+ */
+
+(function (global, factory) {
+   true ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = global || self, global.Cropper = factory());
+}(this, function () { 'use strict';
+
+  function _typeof(obj) {
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function (obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
+
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  }
+
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+      return arr2;
+    }
+  }
+
+  function _iterableToArray(iter) {
+    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  }
+
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance");
+  }
+
+  var IS_BROWSER = typeof window !== 'undefined';
+  var WINDOW = IS_BROWSER ? window : {};
+  var IS_TOUCH_DEVICE = IS_BROWSER ? 'ontouchstart' in WINDOW.document.documentElement : false;
+  var HAS_POINTER_EVENT = IS_BROWSER ? 'PointerEvent' in WINDOW : false;
+  var NAMESPACE = 'cropper'; // Actions
+
+  var ACTION_ALL = 'all';
+  var ACTION_CROP = 'crop';
+  var ACTION_MOVE = 'move';
+  var ACTION_ZOOM = 'zoom';
+  var ACTION_EAST = 'e';
+  var ACTION_WEST = 'w';
+  var ACTION_SOUTH = 's';
+  var ACTION_NORTH = 'n';
+  var ACTION_NORTH_EAST = 'ne';
+  var ACTION_NORTH_WEST = 'nw';
+  var ACTION_SOUTH_EAST = 'se';
+  var ACTION_SOUTH_WEST = 'sw'; // Classes
+
+  var CLASS_CROP = "".concat(NAMESPACE, "-crop");
+  var CLASS_DISABLED = "".concat(NAMESPACE, "-disabled");
+  var CLASS_HIDDEN = "".concat(NAMESPACE, "-hidden");
+  var CLASS_HIDE = "".concat(NAMESPACE, "-hide");
+  var CLASS_INVISIBLE = "".concat(NAMESPACE, "-invisible");
+  var CLASS_MODAL = "".concat(NAMESPACE, "-modal");
+  var CLASS_MOVE = "".concat(NAMESPACE, "-move"); // Data keys
+
+  var DATA_ACTION = "".concat(NAMESPACE, "Action");
+  var DATA_PREVIEW = "".concat(NAMESPACE, "Preview"); // Drag modes
+
+  var DRAG_MODE_CROP = 'crop';
+  var DRAG_MODE_MOVE = 'move';
+  var DRAG_MODE_NONE = 'none'; // Events
+
+  var EVENT_CROP = 'crop';
+  var EVENT_CROP_END = 'cropend';
+  var EVENT_CROP_MOVE = 'cropmove';
+  var EVENT_CROP_START = 'cropstart';
+  var EVENT_DBLCLICK = 'dblclick';
+  var EVENT_TOUCH_START = IS_TOUCH_DEVICE ? 'touchstart' : 'mousedown';
+  var EVENT_TOUCH_MOVE = IS_TOUCH_DEVICE ? 'touchmove' : 'mousemove';
+  var EVENT_TOUCH_END = IS_TOUCH_DEVICE ? 'touchend touchcancel' : 'mouseup';
+  var EVENT_POINTER_DOWN = HAS_POINTER_EVENT ? 'pointerdown' : EVENT_TOUCH_START;
+  var EVENT_POINTER_MOVE = HAS_POINTER_EVENT ? 'pointermove' : EVENT_TOUCH_MOVE;
+  var EVENT_POINTER_UP = HAS_POINTER_EVENT ? 'pointerup pointercancel' : EVENT_TOUCH_END;
+  var EVENT_READY = 'ready';
+  var EVENT_RESIZE = 'resize';
+  var EVENT_WHEEL = 'wheel';
+  var EVENT_ZOOM = 'zoom'; // Mime types
+
+  var MIME_TYPE_JPEG = 'image/jpeg'; // RegExps
+
+  var REGEXP_ACTIONS = /^e|w|s|n|se|sw|ne|nw|all|crop|move|zoom$/;
+  var REGEXP_DATA_URL_JPEG = /^data:image\/jpeg;base64,/;
+  var REGEXP_TAG_NAME = /^img|canvas$/i; // Misc
+  // Inspired by the default width and height of a canvas element.
+
+  var MIN_CONTAINER_WIDTH = 200;
+  var MIN_CONTAINER_HEIGHT = 100;
+
+  var DEFAULTS = {
+    // Define the view mode of the cropper
+    viewMode: 0,
+    // 0, 1, 2, 3
+    // Define the dragging mode of the cropper
+    dragMode: DRAG_MODE_CROP,
+    // 'crop', 'move' or 'none'
+    // Define the initial aspect ratio of the crop box
+    initialAspectRatio: NaN,
+    // Define the aspect ratio of the crop box
+    aspectRatio: NaN,
+    // An object with the previous cropping result data
+    data: null,
+    // A selector for adding extra containers to preview
+    preview: '',
+    // Re-render the cropper when resize the window
+    responsive: true,
+    // Restore the cropped area after resize the window
+    restore: true,
+    // Check if the current image is a cross-origin image
+    checkCrossOrigin: true,
+    // Check the current image's Exif Orientation information
+    checkOrientation: true,
+    // Show the black modal
+    modal: true,
+    // Show the dashed lines for guiding
+    guides: true,
+    // Show the center indicator for guiding
+    center: true,
+    // Show the white modal to highlight the crop box
+    highlight: true,
+    // Show the grid background
+    background: true,
+    // Enable to crop the image automatically when initialize
+    autoCrop: true,
+    // Define the percentage of automatic cropping area when initializes
+    autoCropArea: 0.8,
+    // Enable to move the image
+    movable: true,
+    // Enable to rotate the image
+    rotatable: true,
+    // Enable to scale the image
+    scalable: true,
+    // Enable to zoom the image
+    zoomable: true,
+    // Enable to zoom the image by dragging touch
+    zoomOnTouch: true,
+    // Enable to zoom the image by wheeling mouse
+    zoomOnWheel: true,
+    // Define zoom ratio when zoom the image by wheeling mouse
+    wheelZoomRatio: 0.1,
+    // Enable to move the crop box
+    cropBoxMovable: true,
+    // Enable to resize the crop box
+    cropBoxResizable: true,
+    // Toggle drag mode between "crop" and "move" when click twice on the cropper
+    toggleDragModeOnDblclick: true,
+    // Size limitation
+    minCanvasWidth: 0,
+    minCanvasHeight: 0,
+    minCropBoxWidth: 0,
+    minCropBoxHeight: 0,
+    minContainerWidth: 200,
+    minContainerHeight: 100,
+    // Shortcuts of events
+    ready: null,
+    cropstart: null,
+    cropmove: null,
+    cropend: null,
+    crop: null,
+    zoom: null
+  };
+
+  var TEMPLATE = '<div class="cropper-container" touch-action="none">' + '<div class="cropper-wrap-box">' + '<div class="cropper-canvas"></div>' + '</div>' + '<div class="cropper-drag-box"></div>' + '<div class="cropper-crop-box">' + '<span class="cropper-view-box"></span>' + '<span class="cropper-dashed dashed-h"></span>' + '<span class="cropper-dashed dashed-v"></span>' + '<span class="cropper-center"></span>' + '<span class="cropper-face"></span>' + '<span class="cropper-line line-e" data-cropper-action="e"></span>' + '<span class="cropper-line line-n" data-cropper-action="n"></span>' + '<span class="cropper-line line-w" data-cropper-action="w"></span>' + '<span class="cropper-line line-s" data-cropper-action="s"></span>' + '<span class="cropper-point point-e" data-cropper-action="e"></span>' + '<span class="cropper-point point-n" data-cropper-action="n"></span>' + '<span class="cropper-point point-w" data-cropper-action="w"></span>' + '<span class="cropper-point point-s" data-cropper-action="s"></span>' + '<span class="cropper-point point-ne" data-cropper-action="ne"></span>' + '<span class="cropper-point point-nw" data-cropper-action="nw"></span>' + '<span class="cropper-point point-sw" data-cropper-action="sw"></span>' + '<span class="cropper-point point-se" data-cropper-action="se"></span>' + '</div>' + '</div>';
+
+  /**
+   * Check if the given value is not a number.
+   */
+
+  var isNaN = Number.isNaN || WINDOW.isNaN;
+  /**
+   * Check if the given value is a number.
+   * @param {*} value - The value to check.
+   * @returns {boolean} Returns `true` if the given value is a number, else `false`.
+   */
+
+  function isNumber(value) {
+    return typeof value === 'number' && !isNaN(value);
+  }
+  /**
+   * Check if the given value is a positive number.
+   * @param {*} value - The value to check.
+   * @returns {boolean} Returns `true` if the given value is a positive number, else `false`.
+   */
+
+  var isPositiveNumber = function isPositiveNumber(value) {
+    return value > 0 && value < Infinity;
+  };
+  /**
+   * Check if the given value is undefined.
+   * @param {*} value - The value to check.
+   * @returns {boolean} Returns `true` if the given value is undefined, else `false`.
+   */
+
+  function isUndefined(value) {
+    return typeof value === 'undefined';
+  }
+  /**
+   * Check if the given value is an object.
+   * @param {*} value - The value to check.
+   * @returns {boolean} Returns `true` if the given value is an object, else `false`.
+   */
+
+  function isObject(value) {
+    return _typeof(value) === 'object' && value !== null;
+  }
+  var hasOwnProperty = Object.prototype.hasOwnProperty;
+  /**
+   * Check if the given value is a plain object.
+   * @param {*} value - The value to check.
+   * @returns {boolean} Returns `true` if the given value is a plain object, else `false`.
+   */
+
+  function isPlainObject(value) {
+    if (!isObject(value)) {
+      return false;
+    }
+
+    try {
+      var _constructor = value.constructor;
+      var prototype = _constructor.prototype;
+      return _constructor && prototype && hasOwnProperty.call(prototype, 'isPrototypeOf');
+    } catch (error) {
+      return false;
+    }
+  }
+  /**
+   * Check if the given value is a function.
+   * @param {*} value - The value to check.
+   * @returns {boolean} Returns `true` if the given value is a function, else `false`.
+   */
+
+  function isFunction(value) {
+    return typeof value === 'function';
+  }
+  var slice = Array.prototype.slice;
+  /**
+   * Convert array-like or iterable object to an array.
+   * @param {*} value - The value to convert.
+   * @returns {Array} Returns a new array.
+   */
+
+  function toArray(value) {
+    return Array.from ? Array.from(value) : slice.call(value);
+  }
+  /**
+   * Iterate the given data.
+   * @param {*} data - The data to iterate.
+   * @param {Function} callback - The process function for each element.
+   * @returns {*} The original data.
+   */
+
+  function forEach(data, callback) {
+    if (data && isFunction(callback)) {
+      if (Array.isArray(data) || isNumber(data.length)
+      /* array-like */
+      ) {
+          toArray(data).forEach(function (value, key) {
+            callback.call(data, value, key, data);
+          });
+        } else if (isObject(data)) {
+        Object.keys(data).forEach(function (key) {
+          callback.call(data, data[key], key, data);
+        });
+      }
+    }
+
+    return data;
+  }
+  /**
+   * Extend the given object.
+   * @param {*} target - The target object to extend.
+   * @param {*} args - The rest objects for merging to the target object.
+   * @returns {Object} The extended object.
+   */
+
+  var assign = Object.assign || function assign(target) {
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    if (isObject(target) && args.length > 0) {
+      args.forEach(function (arg) {
+        if (isObject(arg)) {
+          Object.keys(arg).forEach(function (key) {
+            target[key] = arg[key];
+          });
+        }
+      });
+    }
+
+    return target;
+  };
+  var REGEXP_DECIMALS = /\.\d*(?:0|9){12}\d*$/;
+  /**
+   * Normalize decimal number.
+   * Check out {@link http://0.30000000000000004.com/}
+   * @param {number} value - The value to normalize.
+   * @param {number} [times=100000000000] - The times for normalizing.
+   * @returns {number} Returns the normalized number.
+   */
+
+  function normalizeDecimalNumber(value) {
+    var times = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 100000000000;
+    return REGEXP_DECIMALS.test(value) ? Math.round(value * times) / times : value;
+  }
+  var REGEXP_SUFFIX = /^width|height|left|top|marginLeft|marginTop$/;
+  /**
+   * Apply styles to the given element.
+   * @param {Element} element - The target element.
+   * @param {Object} styles - The styles for applying.
+   */
+
+  function setStyle(element, styles) {
+    var style = element.style;
+    forEach(styles, function (value, property) {
+      if (REGEXP_SUFFIX.test(property) && isNumber(value)) {
+        value = "".concat(value, "px");
+      }
+
+      style[property] = value;
+    });
+  }
+  /**
+   * Check if the given element has a special class.
+   * @param {Element} element - The element to check.
+   * @param {string} value - The class to search.
+   * @returns {boolean} Returns `true` if the special class was found.
+   */
+
+  function hasClass(element, value) {
+    return element.classList ? element.classList.contains(value) : element.className.indexOf(value) > -1;
+  }
+  /**
+   * Add classes to the given element.
+   * @param {Element} element - The target element.
+   * @param {string} value - The classes to be added.
+   */
+
+  function addClass(element, value) {
+    if (!value) {
+      return;
+    }
+
+    if (isNumber(element.length)) {
+      forEach(element, function (elem) {
+        addClass(elem, value);
+      });
+      return;
+    }
+
+    if (element.classList) {
+      element.classList.add(value);
+      return;
+    }
+
+    var className = element.className.trim();
+
+    if (!className) {
+      element.className = value;
+    } else if (className.indexOf(value) < 0) {
+      element.className = "".concat(className, " ").concat(value);
+    }
+  }
+  /**
+   * Remove classes from the given element.
+   * @param {Element} element - The target element.
+   * @param {string} value - The classes to be removed.
+   */
+
+  function removeClass(element, value) {
+    if (!value) {
+      return;
+    }
+
+    if (isNumber(element.length)) {
+      forEach(element, function (elem) {
+        removeClass(elem, value);
+      });
+      return;
+    }
+
+    if (element.classList) {
+      element.classList.remove(value);
+      return;
+    }
+
+    if (element.className.indexOf(value) >= 0) {
+      element.className = element.className.replace(value, '');
+    }
+  }
+  /**
+   * Add or remove classes from the given element.
+   * @param {Element} element - The target element.
+   * @param {string} value - The classes to be toggled.
+   * @param {boolean} added - Add only.
+   */
+
+  function toggleClass(element, value, added) {
+    if (!value) {
+      return;
+    }
+
+    if (isNumber(element.length)) {
+      forEach(element, function (elem) {
+        toggleClass(elem, value, added);
+      });
+      return;
+    } // IE10-11 doesn't support the second parameter of `classList.toggle`
+
+
+    if (added) {
+      addClass(element, value);
+    } else {
+      removeClass(element, value);
+    }
+  }
+  var REGEXP_CAMEL_CASE = /([a-z\d])([A-Z])/g;
+  /**
+   * Transform the given string from camelCase to kebab-case
+   * @param {string} value - The value to transform.
+   * @returns {string} The transformed value.
+   */
+
+  function toParamCase(value) {
+    return value.replace(REGEXP_CAMEL_CASE, '$1-$2').toLowerCase();
+  }
+  /**
+   * Get data from the given element.
+   * @param {Element} element - The target element.
+   * @param {string} name - The data key to get.
+   * @returns {string} The data value.
+   */
+
+  function getData(element, name) {
+    if (isObject(element[name])) {
+      return element[name];
+    }
+
+    if (element.dataset) {
+      return element.dataset[name];
+    }
+
+    return element.getAttribute("data-".concat(toParamCase(name)));
+  }
+  /**
+   * Set data to the given element.
+   * @param {Element} element - The target element.
+   * @param {string} name - The data key to set.
+   * @param {string} data - The data value.
+   */
+
+  function setData(element, name, data) {
+    if (isObject(data)) {
+      element[name] = data;
+    } else if (element.dataset) {
+      element.dataset[name] = data;
+    } else {
+      element.setAttribute("data-".concat(toParamCase(name)), data);
+    }
+  }
+  /**
+   * Remove data from the given element.
+   * @param {Element} element - The target element.
+   * @param {string} name - The data key to remove.
+   */
+
+  function removeData(element, name) {
+    if (isObject(element[name])) {
+      try {
+        delete element[name];
+      } catch (error) {
+        element[name] = undefined;
+      }
+    } else if (element.dataset) {
+      // #128 Safari not allows to delete dataset property
+      try {
+        delete element.dataset[name];
+      } catch (error) {
+        element.dataset[name] = undefined;
+      }
+    } else {
+      element.removeAttribute("data-".concat(toParamCase(name)));
+    }
+  }
+  var REGEXP_SPACES = /\s\s*/;
+
+  var onceSupported = function () {
+    var supported = false;
+
+    if (IS_BROWSER) {
+      var once = false;
+
+      var listener = function listener() {};
+
+      var options = Object.defineProperty({}, 'once', {
+        get: function get() {
+          supported = true;
+          return once;
+        },
+
+        /**
+         * This setter can fix a `TypeError` in strict mode
+         * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Getter_only}
+         * @param {boolean} value - The value to set
+         */
+        set: function set(value) {
+          once = value;
+        }
+      });
+      WINDOW.addEventListener('test', listener, options);
+      WINDOW.removeEventListener('test', listener, options);
+    }
+
+    return supported;
+  }();
+  /**
+   * Remove event listener from the target element.
+   * @param {Element} element - The event target.
+   * @param {string} type - The event type(s).
+   * @param {Function} listener - The event listener.
+   * @param {Object} options - The event options.
+   */
+
+
+  function removeListener(element, type, listener) {
+    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    var handler = listener;
+    type.trim().split(REGEXP_SPACES).forEach(function (event) {
+      if (!onceSupported) {
+        var listeners = element.listeners;
+
+        if (listeners && listeners[event] && listeners[event][listener]) {
+          handler = listeners[event][listener];
+          delete listeners[event][listener];
+
+          if (Object.keys(listeners[event]).length === 0) {
+            delete listeners[event];
+          }
+
+          if (Object.keys(listeners).length === 0) {
+            delete element.listeners;
+          }
+        }
+      }
+
+      element.removeEventListener(event, handler, options);
+    });
+  }
+  /**
+   * Add event listener to the target element.
+   * @param {Element} element - The event target.
+   * @param {string} type - The event type(s).
+   * @param {Function} listener - The event listener.
+   * @param {Object} options - The event options.
+   */
+
+  function addListener(element, type, listener) {
+    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    var _handler = listener;
+    type.trim().split(REGEXP_SPACES).forEach(function (event) {
+      if (options.once && !onceSupported) {
+        var _element$listeners = element.listeners,
+            listeners = _element$listeners === void 0 ? {} : _element$listeners;
+
+        _handler = function handler() {
+          delete listeners[event][listener];
+          element.removeEventListener(event, _handler, options);
+
+          for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            args[_key2] = arguments[_key2];
+          }
+
+          listener.apply(element, args);
+        };
+
+        if (!listeners[event]) {
+          listeners[event] = {};
+        }
+
+        if (listeners[event][listener]) {
+          element.removeEventListener(event, listeners[event][listener], options);
+        }
+
+        listeners[event][listener] = _handler;
+        element.listeners = listeners;
+      }
+
+      element.addEventListener(event, _handler, options);
+    });
+  }
+  /**
+   * Dispatch event on the target element.
+   * @param {Element} element - The event target.
+   * @param {string} type - The event type(s).
+   * @param {Object} data - The additional event data.
+   * @returns {boolean} Indicate if the event is default prevented or not.
+   */
+
+  function dispatchEvent(element, type, data) {
+    var event; // Event and CustomEvent on IE9-11 are global objects, not constructors
+
+    if (isFunction(Event) && isFunction(CustomEvent)) {
+      event = new CustomEvent(type, {
+        detail: data,
+        bubbles: true,
+        cancelable: true
+      });
+    } else {
+      event = document.createEvent('CustomEvent');
+      event.initCustomEvent(type, true, true, data);
+    }
+
+    return element.dispatchEvent(event);
+  }
+  /**
+   * Get the offset base on the document.
+   * @param {Element} element - The target element.
+   * @returns {Object} The offset data.
+   */
+
+  function getOffset(element) {
+    var box = element.getBoundingClientRect();
+    return {
+      left: box.left + (window.pageXOffset - document.documentElement.clientLeft),
+      top: box.top + (window.pageYOffset - document.documentElement.clientTop)
+    };
+  }
+  var location = WINDOW.location;
+  var REGEXP_ORIGINS = /^(\w+:)\/\/([^:/?#]*):?(\d*)/i;
+  /**
+   * Check if the given URL is a cross origin URL.
+   * @param {string} url - The target URL.
+   * @returns {boolean} Returns `true` if the given URL is a cross origin URL, else `false`.
+   */
+
+  function isCrossOriginURL(url) {
+    var parts = url.match(REGEXP_ORIGINS);
+    return parts !== null && (parts[1] !== location.protocol || parts[2] !== location.hostname || parts[3] !== location.port);
+  }
+  /**
+   * Add timestamp to the given URL.
+   * @param {string} url - The target URL.
+   * @returns {string} The result URL.
+   */
+
+  function addTimestamp(url) {
+    var timestamp = "timestamp=".concat(new Date().getTime());
+    return url + (url.indexOf('?') === -1 ? '?' : '&') + timestamp;
+  }
+  /**
+   * Get transforms base on the given object.
+   * @param {Object} obj - The target object.
+   * @returns {string} A string contains transform values.
+   */
+
+  function getTransforms(_ref) {
+    var rotate = _ref.rotate,
+        scaleX = _ref.scaleX,
+        scaleY = _ref.scaleY,
+        translateX = _ref.translateX,
+        translateY = _ref.translateY;
+    var values = [];
+
+    if (isNumber(translateX) && translateX !== 0) {
+      values.push("translateX(".concat(translateX, "px)"));
+    }
+
+    if (isNumber(translateY) && translateY !== 0) {
+      values.push("translateY(".concat(translateY, "px)"));
+    } // Rotate should come first before scale to match orientation transform
+
+
+    if (isNumber(rotate) && rotate !== 0) {
+      values.push("rotate(".concat(rotate, "deg)"));
+    }
+
+    if (isNumber(scaleX) && scaleX !== 1) {
+      values.push("scaleX(".concat(scaleX, ")"));
+    }
+
+    if (isNumber(scaleY) && scaleY !== 1) {
+      values.push("scaleY(".concat(scaleY, ")"));
+    }
+
+    var transform = values.length ? values.join(' ') : 'none';
+    return {
+      WebkitTransform: transform,
+      msTransform: transform,
+      transform: transform
+    };
+  }
+  /**
+   * Get the max ratio of a group of pointers.
+   * @param {string} pointers - The target pointers.
+   * @returns {number} The result ratio.
+   */
+
+  function getMaxZoomRatio(pointers) {
+    var pointers2 = assign({}, pointers);
+    var ratios = [];
+    forEach(pointers, function (pointer, pointerId) {
+      delete pointers2[pointerId];
+      forEach(pointers2, function (pointer2) {
+        var x1 = Math.abs(pointer.startX - pointer2.startX);
+        var y1 = Math.abs(pointer.startY - pointer2.startY);
+        var x2 = Math.abs(pointer.endX - pointer2.endX);
+        var y2 = Math.abs(pointer.endY - pointer2.endY);
+        var z1 = Math.sqrt(x1 * x1 + y1 * y1);
+        var z2 = Math.sqrt(x2 * x2 + y2 * y2);
+        var ratio = (z2 - z1) / z1;
+        ratios.push(ratio);
+      });
+    });
+    ratios.sort(function (a, b) {
+      return Math.abs(a) < Math.abs(b);
+    });
+    return ratios[0];
+  }
+  /**
+   * Get a pointer from an event object.
+   * @param {Object} event - The target event object.
+   * @param {boolean} endOnly - Indicates if only returns the end point coordinate or not.
+   * @returns {Object} The result pointer contains start and/or end point coordinates.
+   */
+
+  function getPointer(_ref2, endOnly) {
+    var pageX = _ref2.pageX,
+        pageY = _ref2.pageY;
+    var end = {
+      endX: pageX,
+      endY: pageY
+    };
+    return endOnly ? end : assign({
+      startX: pageX,
+      startY: pageY
+    }, end);
+  }
+  /**
+   * Get the center point coordinate of a group of pointers.
+   * @param {Object} pointers - The target pointers.
+   * @returns {Object} The center point coordinate.
+   */
+
+  function getPointersCenter(pointers) {
+    var pageX = 0;
+    var pageY = 0;
+    var count = 0;
+    forEach(pointers, function (_ref3) {
+      var startX = _ref3.startX,
+          startY = _ref3.startY;
+      pageX += startX;
+      pageY += startY;
+      count += 1;
+    });
+    pageX /= count;
+    pageY /= count;
+    return {
+      pageX: pageX,
+      pageY: pageY
+    };
+  }
+  /**
+   * Get the max sizes in a rectangle under the given aspect ratio.
+   * @param {Object} data - The original sizes.
+   * @param {string} [type='contain'] - The adjust type.
+   * @returns {Object} The result sizes.
+   */
+
+  function getAdjustedSizes(_ref4) // or 'cover'
+  {
+    var aspectRatio = _ref4.aspectRatio,
+        height = _ref4.height,
+        width = _ref4.width;
+    var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'contain';
+    var isValidWidth = isPositiveNumber(width);
+    var isValidHeight = isPositiveNumber(height);
+
+    if (isValidWidth && isValidHeight) {
+      var adjustedWidth = height * aspectRatio;
+
+      if (type === 'contain' && adjustedWidth > width || type === 'cover' && adjustedWidth < width) {
+        height = width / aspectRatio;
+      } else {
+        width = height * aspectRatio;
+      }
+    } else if (isValidWidth) {
+      height = width / aspectRatio;
+    } else if (isValidHeight) {
+      width = height * aspectRatio;
+    }
+
+    return {
+      width: width,
+      height: height
+    };
+  }
+  /**
+   * Get the new sizes of a rectangle after rotated.
+   * @param {Object} data - The original sizes.
+   * @returns {Object} The result sizes.
+   */
+
+  function getRotatedSizes(_ref5) {
+    var width = _ref5.width,
+        height = _ref5.height,
+        degree = _ref5.degree;
+    degree = Math.abs(degree) % 180;
+
+    if (degree === 90) {
+      return {
+        width: height,
+        height: width
+      };
+    }
+
+    var arc = degree % 90 * Math.PI / 180;
+    var sinArc = Math.sin(arc);
+    var cosArc = Math.cos(arc);
+    var newWidth = width * cosArc + height * sinArc;
+    var newHeight = width * sinArc + height * cosArc;
+    return degree > 90 ? {
+      width: newHeight,
+      height: newWidth
+    } : {
+      width: newWidth,
+      height: newHeight
+    };
+  }
+  /**
+   * Get a canvas which drew the given image.
+   * @param {HTMLImageElement} image - The image for drawing.
+   * @param {Object} imageData - The image data.
+   * @param {Object} canvasData - The canvas data.
+   * @param {Object} options - The options.
+   * @returns {HTMLCanvasElement} The result canvas.
+   */
+
+  function getSourceCanvas(image, _ref6, _ref7, _ref8) {
+    var imageAspectRatio = _ref6.aspectRatio,
+        imageNaturalWidth = _ref6.naturalWidth,
+        imageNaturalHeight = _ref6.naturalHeight,
+        _ref6$rotate = _ref6.rotate,
+        rotate = _ref6$rotate === void 0 ? 0 : _ref6$rotate,
+        _ref6$scaleX = _ref6.scaleX,
+        scaleX = _ref6$scaleX === void 0 ? 1 : _ref6$scaleX,
+        _ref6$scaleY = _ref6.scaleY,
+        scaleY = _ref6$scaleY === void 0 ? 1 : _ref6$scaleY;
+    var aspectRatio = _ref7.aspectRatio,
+        naturalWidth = _ref7.naturalWidth,
+        naturalHeight = _ref7.naturalHeight;
+    var _ref8$fillColor = _ref8.fillColor,
+        fillColor = _ref8$fillColor === void 0 ? 'transparent' : _ref8$fillColor,
+        _ref8$imageSmoothingE = _ref8.imageSmoothingEnabled,
+        imageSmoothingEnabled = _ref8$imageSmoothingE === void 0 ? true : _ref8$imageSmoothingE,
+        _ref8$imageSmoothingQ = _ref8.imageSmoothingQuality,
+        imageSmoothingQuality = _ref8$imageSmoothingQ === void 0 ? 'low' : _ref8$imageSmoothingQ,
+        _ref8$maxWidth = _ref8.maxWidth,
+        maxWidth = _ref8$maxWidth === void 0 ? Infinity : _ref8$maxWidth,
+        _ref8$maxHeight = _ref8.maxHeight,
+        maxHeight = _ref8$maxHeight === void 0 ? Infinity : _ref8$maxHeight,
+        _ref8$minWidth = _ref8.minWidth,
+        minWidth = _ref8$minWidth === void 0 ? 0 : _ref8$minWidth,
+        _ref8$minHeight = _ref8.minHeight,
+        minHeight = _ref8$minHeight === void 0 ? 0 : _ref8$minHeight;
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    var maxSizes = getAdjustedSizes({
+      aspectRatio: aspectRatio,
+      width: maxWidth,
+      height: maxHeight
+    });
+    var minSizes = getAdjustedSizes({
+      aspectRatio: aspectRatio,
+      width: minWidth,
+      height: minHeight
+    }, 'cover');
+    var width = Math.min(maxSizes.width, Math.max(minSizes.width, naturalWidth));
+    var height = Math.min(maxSizes.height, Math.max(minSizes.height, naturalHeight)); // Note: should always use image's natural sizes for drawing as
+    // imageData.naturalWidth === canvasData.naturalHeight when rotate % 180 === 90
+
+    var destMaxSizes = getAdjustedSizes({
+      aspectRatio: imageAspectRatio,
+      width: maxWidth,
+      height: maxHeight
+    });
+    var destMinSizes = getAdjustedSizes({
+      aspectRatio: imageAspectRatio,
+      width: minWidth,
+      height: minHeight
+    }, 'cover');
+    var destWidth = Math.min(destMaxSizes.width, Math.max(destMinSizes.width, imageNaturalWidth));
+    var destHeight = Math.min(destMaxSizes.height, Math.max(destMinSizes.height, imageNaturalHeight));
+    var params = [-destWidth / 2, -destHeight / 2, destWidth, destHeight];
+    canvas.width = normalizeDecimalNumber(width);
+    canvas.height = normalizeDecimalNumber(height);
+    context.fillStyle = fillColor;
+    context.fillRect(0, 0, width, height);
+    context.save();
+    context.translate(width / 2, height / 2);
+    context.rotate(rotate * Math.PI / 180);
+    context.scale(scaleX, scaleY);
+    context.imageSmoothingEnabled = imageSmoothingEnabled;
+    context.imageSmoothingQuality = imageSmoothingQuality;
+    context.drawImage.apply(context, [image].concat(_toConsumableArray(params.map(function (param) {
+      return Math.floor(normalizeDecimalNumber(param));
+    }))));
+    context.restore();
+    return canvas;
+  }
+  var fromCharCode = String.fromCharCode;
+  /**
+   * Get string from char code in data view.
+   * @param {DataView} dataView - The data view for read.
+   * @param {number} start - The start index.
+   * @param {number} length - The read length.
+   * @returns {string} The read result.
+   */
+
+  function getStringFromCharCode(dataView, start, length) {
+    var str = '';
+    length += start;
+
+    for (var i = start; i < length; i += 1) {
+      str += fromCharCode(dataView.getUint8(i));
+    }
+
+    return str;
+  }
+  var REGEXP_DATA_URL_HEAD = /^data:.*,/;
+  /**
+   * Transform Data URL to array buffer.
+   * @param {string} dataURL - The Data URL to transform.
+   * @returns {ArrayBuffer} The result array buffer.
+   */
+
+  function dataURLToArrayBuffer(dataURL) {
+    var base64 = dataURL.replace(REGEXP_DATA_URL_HEAD, '');
+    var binary = atob(base64);
+    var arrayBuffer = new ArrayBuffer(binary.length);
+    var uint8 = new Uint8Array(arrayBuffer);
+    forEach(uint8, function (value, i) {
+      uint8[i] = binary.charCodeAt(i);
+    });
+    return arrayBuffer;
+  }
+  /**
+   * Transform array buffer to Data URL.
+   * @param {ArrayBuffer} arrayBuffer - The array buffer to transform.
+   * @param {string} mimeType - The mime type of the Data URL.
+   * @returns {string} The result Data URL.
+   */
+
+  function arrayBufferToDataURL(arrayBuffer, mimeType) {
+    var chunks = []; // Chunk Typed Array for better performance (#435)
+
+    var chunkSize = 8192;
+    var uint8 = new Uint8Array(arrayBuffer);
+
+    while (uint8.length > 0) {
+      // XXX: Babel's `toConsumableArray` helper will throw error in IE or Safari 9
+      // eslint-disable-next-line prefer-spread
+      chunks.push(fromCharCode.apply(null, toArray(uint8.subarray(0, chunkSize))));
+      uint8 = uint8.subarray(chunkSize);
+    }
+
+    return "data:".concat(mimeType, ";base64,").concat(btoa(chunks.join('')));
+  }
+  /**
+   * Get orientation value from given array buffer.
+   * @param {ArrayBuffer} arrayBuffer - The array buffer to read.
+   * @returns {number} The read orientation value.
+   */
+
+  function resetAndGetOrientation(arrayBuffer) {
+    var dataView = new DataView(arrayBuffer);
+    var orientation; // Ignores range error when the image does not have correct Exif information
+
+    try {
+      var littleEndian;
+      var app1Start;
+      var ifdStart; // Only handle JPEG image (start by 0xFFD8)
+
+      if (dataView.getUint8(0) === 0xFF && dataView.getUint8(1) === 0xD8) {
+        var length = dataView.byteLength;
+        var offset = 2;
+
+        while (offset + 1 < length) {
+          if (dataView.getUint8(offset) === 0xFF && dataView.getUint8(offset + 1) === 0xE1) {
+            app1Start = offset;
+            break;
+          }
+
+          offset += 1;
+        }
+      }
+
+      if (app1Start) {
+        var exifIDCode = app1Start + 4;
+        var tiffOffset = app1Start + 10;
+
+        if (getStringFromCharCode(dataView, exifIDCode, 4) === 'Exif') {
+          var endianness = dataView.getUint16(tiffOffset);
+          littleEndian = endianness === 0x4949;
+
+          if (littleEndian || endianness === 0x4D4D
+          /* bigEndian */
+          ) {
+              if (dataView.getUint16(tiffOffset + 2, littleEndian) === 0x002A) {
+                var firstIFDOffset = dataView.getUint32(tiffOffset + 4, littleEndian);
+
+                if (firstIFDOffset >= 0x00000008) {
+                  ifdStart = tiffOffset + firstIFDOffset;
+                }
+              }
+            }
+        }
+      }
+
+      if (ifdStart) {
+        var _length = dataView.getUint16(ifdStart, littleEndian);
+
+        var _offset;
+
+        var i;
+
+        for (i = 0; i < _length; i += 1) {
+          _offset = ifdStart + i * 12 + 2;
+
+          if (dataView.getUint16(_offset, littleEndian) === 0x0112
+          /* Orientation */
+          ) {
+              // 8 is the offset of the current tag's value
+              _offset += 8; // Get the original orientation value
+
+              orientation = dataView.getUint16(_offset, littleEndian); // Override the orientation with its default value
+
+              dataView.setUint16(_offset, 1, littleEndian);
+              break;
+            }
+        }
+      }
+    } catch (error) {
+      orientation = 1;
+    }
+
+    return orientation;
+  }
+  /**
+   * Parse Exif Orientation value.
+   * @param {number} orientation - The orientation to parse.
+   * @returns {Object} The parsed result.
+   */
+
+  function parseOrientation(orientation) {
+    var rotate = 0;
+    var scaleX = 1;
+    var scaleY = 1;
+
+    switch (orientation) {
+      // Flip horizontal
+      case 2:
+        scaleX = -1;
+        break;
+      // Rotate left 180°
+
+      case 3:
+        rotate = -180;
+        break;
+      // Flip vertical
+
+      case 4:
+        scaleY = -1;
+        break;
+      // Flip vertical and rotate right 90°
+
+      case 5:
+        rotate = 90;
+        scaleY = -1;
+        break;
+      // Rotate right 90°
+
+      case 6:
+        rotate = 90;
+        break;
+      // Flip horizontal and rotate right 90°
+
+      case 7:
+        rotate = 90;
+        scaleX = -1;
+        break;
+      // Rotate left 90°
+
+      case 8:
+        rotate = -90;
+        break;
+
+      default:
+    }
+
+    return {
+      rotate: rotate,
+      scaleX: scaleX,
+      scaleY: scaleY
+    };
+  }
+
+  var render = {
+    render: function render() {
+      this.initContainer();
+      this.initCanvas();
+      this.initCropBox();
+      this.renderCanvas();
+
+      if (this.cropped) {
+        this.renderCropBox();
+      }
+    },
+    initContainer: function initContainer() {
+      var element = this.element,
+          options = this.options,
+          container = this.container,
+          cropper = this.cropper;
+      addClass(cropper, CLASS_HIDDEN);
+      removeClass(element, CLASS_HIDDEN);
+      var containerData = {
+        width: Math.max(container.offsetWidth, Number(options.minContainerWidth) || 200),
+        height: Math.max(container.offsetHeight, Number(options.minContainerHeight) || 100)
+      };
+      this.containerData = containerData;
+      setStyle(cropper, {
+        width: containerData.width,
+        height: containerData.height
+      });
+      addClass(element, CLASS_HIDDEN);
+      removeClass(cropper, CLASS_HIDDEN);
+    },
+    // Canvas (image wrapper)
+    initCanvas: function initCanvas() {
+      var containerData = this.containerData,
+          imageData = this.imageData;
+      var viewMode = this.options.viewMode;
+      var rotated = Math.abs(imageData.rotate) % 180 === 90;
+      var naturalWidth = rotated ? imageData.naturalHeight : imageData.naturalWidth;
+      var naturalHeight = rotated ? imageData.naturalWidth : imageData.naturalHeight;
+      var aspectRatio = naturalWidth / naturalHeight;
+      var canvasWidth = containerData.width;
+      var canvasHeight = containerData.height;
+
+      if (containerData.height * aspectRatio > containerData.width) {
+        if (viewMode === 3) {
+          canvasWidth = containerData.height * aspectRatio;
+        } else {
+          canvasHeight = containerData.width / aspectRatio;
+        }
+      } else if (viewMode === 3) {
+        canvasHeight = containerData.width / aspectRatio;
+      } else {
+        canvasWidth = containerData.height * aspectRatio;
+      }
+
+      var canvasData = {
+        aspectRatio: aspectRatio,
+        naturalWidth: naturalWidth,
+        naturalHeight: naturalHeight,
+        width: canvasWidth,
+        height: canvasHeight
+      };
+      canvasData.left = (containerData.width - canvasWidth) / 2;
+      canvasData.top = (containerData.height - canvasHeight) / 2;
+      canvasData.oldLeft = canvasData.left;
+      canvasData.oldTop = canvasData.top;
+      this.canvasData = canvasData;
+      this.limited = viewMode === 1 || viewMode === 2;
+      this.limitCanvas(true, true);
+      this.initialImageData = assign({}, imageData);
+      this.initialCanvasData = assign({}, canvasData);
+    },
+    limitCanvas: function limitCanvas(sizeLimited, positionLimited) {
+      var options = this.options,
+          containerData = this.containerData,
+          canvasData = this.canvasData,
+          cropBoxData = this.cropBoxData;
+      var viewMode = options.viewMode;
+      var aspectRatio = canvasData.aspectRatio;
+      var cropped = this.cropped && cropBoxData;
+
+      if (sizeLimited) {
+        var minCanvasWidth = Number(options.minCanvasWidth) || 0;
+        var minCanvasHeight = Number(options.minCanvasHeight) || 0;
+
+        if (viewMode > 1) {
+          minCanvasWidth = Math.max(minCanvasWidth, containerData.width);
+          minCanvasHeight = Math.max(minCanvasHeight, containerData.height);
+
+          if (viewMode === 3) {
+            if (minCanvasHeight * aspectRatio > minCanvasWidth) {
+              minCanvasWidth = minCanvasHeight * aspectRatio;
+            } else {
+              minCanvasHeight = minCanvasWidth / aspectRatio;
+            }
+          }
+        } else if (viewMode > 0) {
+          if (minCanvasWidth) {
+            minCanvasWidth = Math.max(minCanvasWidth, cropped ? cropBoxData.width : 0);
+          } else if (minCanvasHeight) {
+            minCanvasHeight = Math.max(minCanvasHeight, cropped ? cropBoxData.height : 0);
+          } else if (cropped) {
+            minCanvasWidth = cropBoxData.width;
+            minCanvasHeight = cropBoxData.height;
+
+            if (minCanvasHeight * aspectRatio > minCanvasWidth) {
+              minCanvasWidth = minCanvasHeight * aspectRatio;
+            } else {
+              minCanvasHeight = minCanvasWidth / aspectRatio;
+            }
+          }
+        }
+
+        var _getAdjustedSizes = getAdjustedSizes({
+          aspectRatio: aspectRatio,
+          width: minCanvasWidth,
+          height: minCanvasHeight
+        });
+
+        minCanvasWidth = _getAdjustedSizes.width;
+        minCanvasHeight = _getAdjustedSizes.height;
+        canvasData.minWidth = minCanvasWidth;
+        canvasData.minHeight = minCanvasHeight;
+        canvasData.maxWidth = Infinity;
+        canvasData.maxHeight = Infinity;
+      }
+
+      if (positionLimited) {
+        if (viewMode > (cropped ? 0 : 1)) {
+          var newCanvasLeft = containerData.width - canvasData.width;
+          var newCanvasTop = containerData.height - canvasData.height;
+          canvasData.minLeft = Math.min(0, newCanvasLeft);
+          canvasData.minTop = Math.min(0, newCanvasTop);
+          canvasData.maxLeft = Math.max(0, newCanvasLeft);
+          canvasData.maxTop = Math.max(0, newCanvasTop);
+
+          if (cropped && this.limited) {
+            canvasData.minLeft = Math.min(cropBoxData.left, cropBoxData.left + (cropBoxData.width - canvasData.width));
+            canvasData.minTop = Math.min(cropBoxData.top, cropBoxData.top + (cropBoxData.height - canvasData.height));
+            canvasData.maxLeft = cropBoxData.left;
+            canvasData.maxTop = cropBoxData.top;
+
+            if (viewMode === 2) {
+              if (canvasData.width >= containerData.width) {
+                canvasData.minLeft = Math.min(0, newCanvasLeft);
+                canvasData.maxLeft = Math.max(0, newCanvasLeft);
+              }
+
+              if (canvasData.height >= containerData.height) {
+                canvasData.minTop = Math.min(0, newCanvasTop);
+                canvasData.maxTop = Math.max(0, newCanvasTop);
+              }
+            }
+          }
+        } else {
+          canvasData.minLeft = -canvasData.width;
+          canvasData.minTop = -canvasData.height;
+          canvasData.maxLeft = containerData.width;
+          canvasData.maxTop = containerData.height;
+        }
+      }
+    },
+    renderCanvas: function renderCanvas(changed, transformed) {
+      var canvasData = this.canvasData,
+          imageData = this.imageData;
+
+      if (transformed) {
+        var _getRotatedSizes = getRotatedSizes({
+          width: imageData.naturalWidth * Math.abs(imageData.scaleX || 1),
+          height: imageData.naturalHeight * Math.abs(imageData.scaleY || 1),
+          degree: imageData.rotate || 0
+        }),
+            naturalWidth = _getRotatedSizes.width,
+            naturalHeight = _getRotatedSizes.height;
+
+        var width = canvasData.width * (naturalWidth / canvasData.naturalWidth);
+        var height = canvasData.height * (naturalHeight / canvasData.naturalHeight);
+        canvasData.left -= (width - canvasData.width) / 2;
+        canvasData.top -= (height - canvasData.height) / 2;
+        canvasData.width = width;
+        canvasData.height = height;
+        canvasData.aspectRatio = naturalWidth / naturalHeight;
+        canvasData.naturalWidth = naturalWidth;
+        canvasData.naturalHeight = naturalHeight;
+        this.limitCanvas(true, false);
+      }
+
+      if (canvasData.width > canvasData.maxWidth || canvasData.width < canvasData.minWidth) {
+        canvasData.left = canvasData.oldLeft;
+      }
+
+      if (canvasData.height > canvasData.maxHeight || canvasData.height < canvasData.minHeight) {
+        canvasData.top = canvasData.oldTop;
+      }
+
+      canvasData.width = Math.min(Math.max(canvasData.width, canvasData.minWidth), canvasData.maxWidth);
+      canvasData.height = Math.min(Math.max(canvasData.height, canvasData.minHeight), canvasData.maxHeight);
+      this.limitCanvas(false, true);
+      canvasData.left = Math.min(Math.max(canvasData.left, canvasData.minLeft), canvasData.maxLeft);
+      canvasData.top = Math.min(Math.max(canvasData.top, canvasData.minTop), canvasData.maxTop);
+      canvasData.oldLeft = canvasData.left;
+      canvasData.oldTop = canvasData.top;
+      setStyle(this.canvas, assign({
+        width: canvasData.width,
+        height: canvasData.height
+      }, getTransforms({
+        translateX: canvasData.left,
+        translateY: canvasData.top
+      })));
+      this.renderImage(changed);
+
+      if (this.cropped && this.limited) {
+        this.limitCropBox(true, true);
+      }
+    },
+    renderImage: function renderImage(changed) {
+      var canvasData = this.canvasData,
+          imageData = this.imageData;
+      var width = imageData.naturalWidth * (canvasData.width / canvasData.naturalWidth);
+      var height = imageData.naturalHeight * (canvasData.height / canvasData.naturalHeight);
+      assign(imageData, {
+        width: width,
+        height: height,
+        left: (canvasData.width - width) / 2,
+        top: (canvasData.height - height) / 2
+      });
+      setStyle(this.image, assign({
+        width: imageData.width,
+        height: imageData.height
+      }, getTransforms(assign({
+        translateX: imageData.left,
+        translateY: imageData.top
+      }, imageData))));
+
+      if (changed) {
+        this.output();
+      }
+    },
+    initCropBox: function initCropBox() {
+      var options = this.options,
+          canvasData = this.canvasData;
+      var aspectRatio = options.aspectRatio || options.initialAspectRatio;
+      var autoCropArea = Number(options.autoCropArea) || 0.8;
+      var cropBoxData = {
+        width: canvasData.width,
+        height: canvasData.height
+      };
+
+      if (aspectRatio) {
+        if (canvasData.height * aspectRatio > canvasData.width) {
+          cropBoxData.height = cropBoxData.width / aspectRatio;
+        } else {
+          cropBoxData.width = cropBoxData.height * aspectRatio;
+        }
+      }
+
+      this.cropBoxData = cropBoxData;
+      this.limitCropBox(true, true); // Initialize auto crop area
+
+      cropBoxData.width = Math.min(Math.max(cropBoxData.width, cropBoxData.minWidth), cropBoxData.maxWidth);
+      cropBoxData.height = Math.min(Math.max(cropBoxData.height, cropBoxData.minHeight), cropBoxData.maxHeight); // The width/height of auto crop area must large than "minWidth/Height"
+
+      cropBoxData.width = Math.max(cropBoxData.minWidth, cropBoxData.width * autoCropArea);
+      cropBoxData.height = Math.max(cropBoxData.minHeight, cropBoxData.height * autoCropArea);
+      cropBoxData.left = canvasData.left + (canvasData.width - cropBoxData.width) / 2;
+      cropBoxData.top = canvasData.top + (canvasData.height - cropBoxData.height) / 2;
+      cropBoxData.oldLeft = cropBoxData.left;
+      cropBoxData.oldTop = cropBoxData.top;
+      this.initialCropBoxData = assign({}, cropBoxData);
+    },
+    limitCropBox: function limitCropBox(sizeLimited, positionLimited) {
+      var options = this.options,
+          containerData = this.containerData,
+          canvasData = this.canvasData,
+          cropBoxData = this.cropBoxData,
+          limited = this.limited;
+      var aspectRatio = options.aspectRatio;
+
+      if (sizeLimited) {
+        var minCropBoxWidth = Number(options.minCropBoxWidth) || 0;
+        var minCropBoxHeight = Number(options.minCropBoxHeight) || 0;
+        var maxCropBoxWidth = limited ? Math.min(containerData.width, canvasData.width, canvasData.width + canvasData.left, containerData.width - canvasData.left) : containerData.width;
+        var maxCropBoxHeight = limited ? Math.min(containerData.height, canvasData.height, canvasData.height + canvasData.top, containerData.height - canvasData.top) : containerData.height; // The min/maxCropBoxWidth/Height must be less than container's width/height
+
+        minCropBoxWidth = Math.min(minCropBoxWidth, containerData.width);
+        minCropBoxHeight = Math.min(minCropBoxHeight, containerData.height);
+
+        if (aspectRatio) {
+          if (minCropBoxWidth && minCropBoxHeight) {
+            if (minCropBoxHeight * aspectRatio > minCropBoxWidth) {
+              minCropBoxHeight = minCropBoxWidth / aspectRatio;
+            } else {
+              minCropBoxWidth = minCropBoxHeight * aspectRatio;
+            }
+          } else if (minCropBoxWidth) {
+            minCropBoxHeight = minCropBoxWidth / aspectRatio;
+          } else if (minCropBoxHeight) {
+            minCropBoxWidth = minCropBoxHeight * aspectRatio;
+          }
+
+          if (maxCropBoxHeight * aspectRatio > maxCropBoxWidth) {
+            maxCropBoxHeight = maxCropBoxWidth / aspectRatio;
+          } else {
+            maxCropBoxWidth = maxCropBoxHeight * aspectRatio;
+          }
+        } // The minWidth/Height must be less than maxWidth/Height
+
+
+        cropBoxData.minWidth = Math.min(minCropBoxWidth, maxCropBoxWidth);
+        cropBoxData.minHeight = Math.min(minCropBoxHeight, maxCropBoxHeight);
+        cropBoxData.maxWidth = maxCropBoxWidth;
+        cropBoxData.maxHeight = maxCropBoxHeight;
+      }
+
+      if (positionLimited) {
+        if (limited) {
+          cropBoxData.minLeft = Math.max(0, canvasData.left);
+          cropBoxData.minTop = Math.max(0, canvasData.top);
+          cropBoxData.maxLeft = Math.min(containerData.width, canvasData.left + canvasData.width) - cropBoxData.width;
+          cropBoxData.maxTop = Math.min(containerData.height, canvasData.top + canvasData.height) - cropBoxData.height;
+        } else {
+          cropBoxData.minLeft = 0;
+          cropBoxData.minTop = 0;
+          cropBoxData.maxLeft = containerData.width - cropBoxData.width;
+          cropBoxData.maxTop = containerData.height - cropBoxData.height;
+        }
+      }
+    },
+    renderCropBox: function renderCropBox() {
+      var options = this.options,
+          containerData = this.containerData,
+          cropBoxData = this.cropBoxData;
+
+      if (cropBoxData.width > cropBoxData.maxWidth || cropBoxData.width < cropBoxData.minWidth) {
+        cropBoxData.left = cropBoxData.oldLeft;
+      }
+
+      if (cropBoxData.height > cropBoxData.maxHeight || cropBoxData.height < cropBoxData.minHeight) {
+        cropBoxData.top = cropBoxData.oldTop;
+      }
+
+      cropBoxData.width = Math.min(Math.max(cropBoxData.width, cropBoxData.minWidth), cropBoxData.maxWidth);
+      cropBoxData.height = Math.min(Math.max(cropBoxData.height, cropBoxData.minHeight), cropBoxData.maxHeight);
+      this.limitCropBox(false, true);
+      cropBoxData.left = Math.min(Math.max(cropBoxData.left, cropBoxData.minLeft), cropBoxData.maxLeft);
+      cropBoxData.top = Math.min(Math.max(cropBoxData.top, cropBoxData.minTop), cropBoxData.maxTop);
+      cropBoxData.oldLeft = cropBoxData.left;
+      cropBoxData.oldTop = cropBoxData.top;
+
+      if (options.movable && options.cropBoxMovable) {
+        // Turn to move the canvas when the crop box is equal to the container
+        setData(this.face, DATA_ACTION, cropBoxData.width >= containerData.width && cropBoxData.height >= containerData.height ? ACTION_MOVE : ACTION_ALL);
+      }
+
+      setStyle(this.cropBox, assign({
+        width: cropBoxData.width,
+        height: cropBoxData.height
+      }, getTransforms({
+        translateX: cropBoxData.left,
+        translateY: cropBoxData.top
+      })));
+
+      if (this.cropped && this.limited) {
+        this.limitCanvas(true, true);
+      }
+
+      if (!this.disabled) {
+        this.output();
+      }
+    },
+    output: function output() {
+      this.preview();
+      dispatchEvent(this.element, EVENT_CROP, this.getData());
+    }
+  };
+
+  var preview = {
+    initPreview: function initPreview() {
+      var crossOrigin = this.crossOrigin;
+      var preview = this.options.preview;
+      var url = crossOrigin ? this.crossOriginUrl : this.url;
+      var image = document.createElement('img');
+
+      if (crossOrigin) {
+        image.crossOrigin = crossOrigin;
+      }
+
+      image.src = url;
+      this.viewBox.appendChild(image);
+      this.viewBoxImage = image;
+
+      if (!preview) {
+        return;
+      }
+
+      var previews = preview;
+
+      if (typeof preview === 'string') {
+        previews = this.element.ownerDocument.querySelectorAll(preview);
+      } else if (preview.querySelector) {
+        previews = [preview];
+      }
+
+      this.previews = previews;
+      forEach(previews, function (el) {
+        var img = document.createElement('img'); // Save the original size for recover
+
+        setData(el, DATA_PREVIEW, {
+          width: el.offsetWidth,
+          height: el.offsetHeight,
+          html: el.innerHTML
+        });
+
+        if (crossOrigin) {
+          img.crossOrigin = crossOrigin;
+        }
+
+        img.src = url;
+        /**
+         * Override img element styles
+         * Add `display:block` to avoid margin top issue
+         * Add `height:auto` to override `height` attribute on IE8
+         * (Occur only when margin-top <= -height)
+         */
+
+        img.style.cssText = 'display:block;' + 'width:100%;' + 'height:auto;' + 'min-width:0!important;' + 'min-height:0!important;' + 'max-width:none!important;' + 'max-height:none!important;' + 'image-orientation:0deg!important;"';
+        el.innerHTML = '';
+        el.appendChild(img);
+      });
+    },
+    resetPreview: function resetPreview() {
+      forEach(this.previews, function (element) {
+        var data = getData(element, DATA_PREVIEW);
+        setStyle(element, {
+          width: data.width,
+          height: data.height
+        });
+        element.innerHTML = data.html;
+        removeData(element, DATA_PREVIEW);
+      });
+    },
+    preview: function preview() {
+      var imageData = this.imageData,
+          canvasData = this.canvasData,
+          cropBoxData = this.cropBoxData;
+      var cropBoxWidth = cropBoxData.width,
+          cropBoxHeight = cropBoxData.height;
+      var width = imageData.width,
+          height = imageData.height;
+      var left = cropBoxData.left - canvasData.left - imageData.left;
+      var top = cropBoxData.top - canvasData.top - imageData.top;
+
+      if (!this.cropped || this.disabled) {
+        return;
+      }
+
+      setStyle(this.viewBoxImage, assign({
+        width: width,
+        height: height
+      }, getTransforms(assign({
+        translateX: -left,
+        translateY: -top
+      }, imageData))));
+      forEach(this.previews, function (element) {
+        var data = getData(element, DATA_PREVIEW);
+        var originalWidth = data.width;
+        var originalHeight = data.height;
+        var newWidth = originalWidth;
+        var newHeight = originalHeight;
+        var ratio = 1;
+
+        if (cropBoxWidth) {
+          ratio = originalWidth / cropBoxWidth;
+          newHeight = cropBoxHeight * ratio;
+        }
+
+        if (cropBoxHeight && newHeight > originalHeight) {
+          ratio = originalHeight / cropBoxHeight;
+          newWidth = cropBoxWidth * ratio;
+          newHeight = originalHeight;
+        }
+
+        setStyle(element, {
+          width: newWidth,
+          height: newHeight
+        });
+        setStyle(element.getElementsByTagName('img')[0], assign({
+          width: width * ratio,
+          height: height * ratio
+        }, getTransforms(assign({
+          translateX: -left * ratio,
+          translateY: -top * ratio
+        }, imageData))));
+      });
+    }
+  };
+
+  var events = {
+    bind: function bind() {
+      var element = this.element,
+          options = this.options,
+          cropper = this.cropper;
+
+      if (isFunction(options.cropstart)) {
+        addListener(element, EVENT_CROP_START, options.cropstart);
+      }
+
+      if (isFunction(options.cropmove)) {
+        addListener(element, EVENT_CROP_MOVE, options.cropmove);
+      }
+
+      if (isFunction(options.cropend)) {
+        addListener(element, EVENT_CROP_END, options.cropend);
+      }
+
+      if (isFunction(options.crop)) {
+        addListener(element, EVENT_CROP, options.crop);
+      }
+
+      if (isFunction(options.zoom)) {
+        addListener(element, EVENT_ZOOM, options.zoom);
+      }
+
+      addListener(cropper, EVENT_POINTER_DOWN, this.onCropStart = this.cropStart.bind(this));
+
+      if (options.zoomable && options.zoomOnWheel) {
+        addListener(cropper, EVENT_WHEEL, this.onWheel = this.wheel.bind(this), {
+          passive: false,
+          capture: true
+        });
+      }
+
+      if (options.toggleDragModeOnDblclick) {
+        addListener(cropper, EVENT_DBLCLICK, this.onDblclick = this.dblclick.bind(this));
+      }
+
+      addListener(element.ownerDocument, EVENT_POINTER_MOVE, this.onCropMove = this.cropMove.bind(this));
+      addListener(element.ownerDocument, EVENT_POINTER_UP, this.onCropEnd = this.cropEnd.bind(this));
+
+      if (options.responsive) {
+        addListener(window, EVENT_RESIZE, this.onResize = this.resize.bind(this));
+      }
+    },
+    unbind: function unbind() {
+      var element = this.element,
+          options = this.options,
+          cropper = this.cropper;
+
+      if (isFunction(options.cropstart)) {
+        removeListener(element, EVENT_CROP_START, options.cropstart);
+      }
+
+      if (isFunction(options.cropmove)) {
+        removeListener(element, EVENT_CROP_MOVE, options.cropmove);
+      }
+
+      if (isFunction(options.cropend)) {
+        removeListener(element, EVENT_CROP_END, options.cropend);
+      }
+
+      if (isFunction(options.crop)) {
+        removeListener(element, EVENT_CROP, options.crop);
+      }
+
+      if (isFunction(options.zoom)) {
+        removeListener(element, EVENT_ZOOM, options.zoom);
+      }
+
+      removeListener(cropper, EVENT_POINTER_DOWN, this.onCropStart);
+
+      if (options.zoomable && options.zoomOnWheel) {
+        removeListener(cropper, EVENT_WHEEL, this.onWheel, {
+          passive: false,
+          capture: true
+        });
+      }
+
+      if (options.toggleDragModeOnDblclick) {
+        removeListener(cropper, EVENT_DBLCLICK, this.onDblclick);
+      }
+
+      removeListener(element.ownerDocument, EVENT_POINTER_MOVE, this.onCropMove);
+      removeListener(element.ownerDocument, EVENT_POINTER_UP, this.onCropEnd);
+
+      if (options.responsive) {
+        removeListener(window, EVENT_RESIZE, this.onResize);
+      }
+    }
+  };
+
+  var handlers = {
+    resize: function resize() {
+      var options = this.options,
+          container = this.container,
+          containerData = this.containerData;
+      var minContainerWidth = Number(options.minContainerWidth) || MIN_CONTAINER_WIDTH;
+      var minContainerHeight = Number(options.minContainerHeight) || MIN_CONTAINER_HEIGHT;
+
+      if (this.disabled || containerData.width <= minContainerWidth || containerData.height <= minContainerHeight) {
+        return;
+      }
+
+      var ratio = container.offsetWidth / containerData.width; // Resize when width changed or height changed
+
+      if (ratio !== 1 || container.offsetHeight !== containerData.height) {
+        var canvasData;
+        var cropBoxData;
+
+        if (options.restore) {
+          canvasData = this.getCanvasData();
+          cropBoxData = this.getCropBoxData();
+        }
+
+        this.render();
+
+        if (options.restore) {
+          this.setCanvasData(forEach(canvasData, function (n, i) {
+            canvasData[i] = n * ratio;
+          }));
+          this.setCropBoxData(forEach(cropBoxData, function (n, i) {
+            cropBoxData[i] = n * ratio;
+          }));
+        }
+      }
+    },
+    dblclick: function dblclick() {
+      if (this.disabled || this.options.dragMode === DRAG_MODE_NONE) {
+        return;
+      }
+
+      this.setDragMode(hasClass(this.dragBox, CLASS_CROP) ? DRAG_MODE_MOVE : DRAG_MODE_CROP);
+    },
+    wheel: function wheel(event) {
+      var _this = this;
+
+      var ratio = Number(this.options.wheelZoomRatio) || 0.1;
+      var delta = 1;
+
+      if (this.disabled) {
+        return;
+      }
+
+      event.preventDefault(); // Limit wheel speed to prevent zoom too fast (#21)
+
+      if (this.wheeling) {
+        return;
+      }
+
+      this.wheeling = true;
+      setTimeout(function () {
+        _this.wheeling = false;
+      }, 50);
+
+      if (event.deltaY) {
+        delta = event.deltaY > 0 ? 1 : -1;
+      } else if (event.wheelDelta) {
+        delta = -event.wheelDelta / 120;
+      } else if (event.detail) {
+        delta = event.detail > 0 ? 1 : -1;
+      }
+
+      this.zoom(-delta * ratio, event);
+    },
+    cropStart: function cropStart(event) {
+      var buttons = event.buttons,
+          button = event.button;
+
+      if (this.disabled // No primary button (Usually the left button)
+      // Note that touch events have no `buttons` or `button` property
+      || isNumber(buttons) && buttons !== 1 || isNumber(button) && button !== 0 // Open context menu
+      || event.ctrlKey) {
+        return;
+      }
+
+      var options = this.options,
+          pointers = this.pointers;
+      var action;
+
+      if (event.changedTouches) {
+        // Handle touch event
+        forEach(event.changedTouches, function (touch) {
+          pointers[touch.identifier] = getPointer(touch);
+        });
+      } else {
+        // Handle mouse event and pointer event
+        pointers[event.pointerId || 0] = getPointer(event);
+      }
+
+      if (Object.keys(pointers).length > 1 && options.zoomable && options.zoomOnTouch) {
+        action = ACTION_ZOOM;
+      } else {
+        action = getData(event.target, DATA_ACTION);
+      }
+
+      if (!REGEXP_ACTIONS.test(action)) {
+        return;
+      }
+
+      if (dispatchEvent(this.element, EVENT_CROP_START, {
+        originalEvent: event,
+        action: action
+      }) === false) {
+        return;
+      } // This line is required for preventing page zooming in iOS browsers
+
+
+      event.preventDefault();
+      this.action = action;
+      this.cropping = false;
+
+      if (action === ACTION_CROP) {
+        this.cropping = true;
+        addClass(this.dragBox, CLASS_MODAL);
+      }
+    },
+    cropMove: function cropMove(event) {
+      var action = this.action;
+
+      if (this.disabled || !action) {
+        return;
+      }
+
+      var pointers = this.pointers;
+      event.preventDefault();
+
+      if (dispatchEvent(this.element, EVENT_CROP_MOVE, {
+        originalEvent: event,
+        action: action
+      }) === false) {
+        return;
+      }
+
+      if (event.changedTouches) {
+        forEach(event.changedTouches, function (touch) {
+          // The first parameter should not be undefined (#432)
+          assign(pointers[touch.identifier] || {}, getPointer(touch, true));
+        });
+      } else {
+        assign(pointers[event.pointerId || 0] || {}, getPointer(event, true));
+      }
+
+      this.change(event);
+    },
+    cropEnd: function cropEnd(event) {
+      if (this.disabled) {
+        return;
+      }
+
+      var action = this.action,
+          pointers = this.pointers;
+
+      if (event.changedTouches) {
+        forEach(event.changedTouches, function (touch) {
+          delete pointers[touch.identifier];
+        });
+      } else {
+        delete pointers[event.pointerId || 0];
+      }
+
+      if (!action) {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (!Object.keys(pointers).length) {
+        this.action = '';
+      }
+
+      if (this.cropping) {
+        this.cropping = false;
+        toggleClass(this.dragBox, CLASS_MODAL, this.cropped && this.options.modal);
+      }
+
+      dispatchEvent(this.element, EVENT_CROP_END, {
+        originalEvent: event,
+        action: action
+      });
+    }
+  };
+
+  var change = {
+    change: function change(event) {
+      var options = this.options,
+          canvasData = this.canvasData,
+          containerData = this.containerData,
+          cropBoxData = this.cropBoxData,
+          pointers = this.pointers;
+      var action = this.action;
+      var aspectRatio = options.aspectRatio;
+      var left = cropBoxData.left,
+          top = cropBoxData.top,
+          width = cropBoxData.width,
+          height = cropBoxData.height;
+      var right = left + width;
+      var bottom = top + height;
+      var minLeft = 0;
+      var minTop = 0;
+      var maxWidth = containerData.width;
+      var maxHeight = containerData.height;
+      var renderable = true;
+      var offset; // Locking aspect ratio in "free mode" by holding shift key
+
+      if (!aspectRatio && event.shiftKey) {
+        aspectRatio = width && height ? width / height : 1;
+      }
+
+      if (this.limited) {
+        minLeft = cropBoxData.minLeft;
+        minTop = cropBoxData.minTop;
+        maxWidth = minLeft + Math.min(containerData.width, canvasData.width, canvasData.left + canvasData.width);
+        maxHeight = minTop + Math.min(containerData.height, canvasData.height, canvasData.top + canvasData.height);
+      }
+
+      var pointer = pointers[Object.keys(pointers)[0]];
+      var range = {
+        x: pointer.endX - pointer.startX,
+        y: pointer.endY - pointer.startY
+      };
+
+      var check = function check(side) {
+        switch (side) {
+          case ACTION_EAST:
+            if (right + range.x > maxWidth) {
+              range.x = maxWidth - right;
+            }
+
+            break;
+
+          case ACTION_WEST:
+            if (left + range.x < minLeft) {
+              range.x = minLeft - left;
+            }
+
+            break;
+
+          case ACTION_NORTH:
+            if (top + range.y < minTop) {
+              range.y = minTop - top;
+            }
+
+            break;
+
+          case ACTION_SOUTH:
+            if (bottom + range.y > maxHeight) {
+              range.y = maxHeight - bottom;
+            }
+
+            break;
+
+          default:
+        }
+      };
+
+      switch (action) {
+        // Move crop box
+        case ACTION_ALL:
+          left += range.x;
+          top += range.y;
+          break;
+        // Resize crop box
+
+        case ACTION_EAST:
+          if (range.x >= 0 && (right >= maxWidth || aspectRatio && (top <= minTop || bottom >= maxHeight))) {
+            renderable = false;
+            break;
+          }
+
+          check(ACTION_EAST);
+          width += range.x;
+
+          if (width < 0) {
+            action = ACTION_WEST;
+            width = -width;
+            left -= width;
+          }
+
+          if (aspectRatio) {
+            height = width / aspectRatio;
+            top += (cropBoxData.height - height) / 2;
+          }
+
+          break;
+
+        case ACTION_NORTH:
+          if (range.y <= 0 && (top <= minTop || aspectRatio && (left <= minLeft || right >= maxWidth))) {
+            renderable = false;
+            break;
+          }
+
+          check(ACTION_NORTH);
+          height -= range.y;
+          top += range.y;
+
+          if (height < 0) {
+            action = ACTION_SOUTH;
+            height = -height;
+            top -= height;
+          }
+
+          if (aspectRatio) {
+            width = height * aspectRatio;
+            left += (cropBoxData.width - width) / 2;
+          }
+
+          break;
+
+        case ACTION_WEST:
+          if (range.x <= 0 && (left <= minLeft || aspectRatio && (top <= minTop || bottom >= maxHeight))) {
+            renderable = false;
+            break;
+          }
+
+          check(ACTION_WEST);
+          width -= range.x;
+          left += range.x;
+
+          if (width < 0) {
+            action = ACTION_EAST;
+            width = -width;
+            left -= width;
+          }
+
+          if (aspectRatio) {
+            height = width / aspectRatio;
+            top += (cropBoxData.height - height) / 2;
+          }
+
+          break;
+
+        case ACTION_SOUTH:
+          if (range.y >= 0 && (bottom >= maxHeight || aspectRatio && (left <= minLeft || right >= maxWidth))) {
+            renderable = false;
+            break;
+          }
+
+          check(ACTION_SOUTH);
+          height += range.y;
+
+          if (height < 0) {
+            action = ACTION_NORTH;
+            height = -height;
+            top -= height;
+          }
+
+          if (aspectRatio) {
+            width = height * aspectRatio;
+            left += (cropBoxData.width - width) / 2;
+          }
+
+          break;
+
+        case ACTION_NORTH_EAST:
+          if (aspectRatio) {
+            if (range.y <= 0 && (top <= minTop || right >= maxWidth)) {
+              renderable = false;
+              break;
+            }
+
+            check(ACTION_NORTH);
+            height -= range.y;
+            top += range.y;
+            width = height * aspectRatio;
+          } else {
+            check(ACTION_NORTH);
+            check(ACTION_EAST);
+
+            if (range.x >= 0) {
+              if (right < maxWidth) {
+                width += range.x;
+              } else if (range.y <= 0 && top <= minTop) {
+                renderable = false;
+              }
+            } else {
+              width += range.x;
+            }
+
+            if (range.y <= 0) {
+              if (top > minTop) {
+                height -= range.y;
+                top += range.y;
+              }
+            } else {
+              height -= range.y;
+              top += range.y;
+            }
+          }
+
+          if (width < 0 && height < 0) {
+            action = ACTION_SOUTH_WEST;
+            height = -height;
+            width = -width;
+            top -= height;
+            left -= width;
+          } else if (width < 0) {
+            action = ACTION_NORTH_WEST;
+            width = -width;
+            left -= width;
+          } else if (height < 0) {
+            action = ACTION_SOUTH_EAST;
+            height = -height;
+            top -= height;
+          }
+
+          break;
+
+        case ACTION_NORTH_WEST:
+          if (aspectRatio) {
+            if (range.y <= 0 && (top <= minTop || left <= minLeft)) {
+              renderable = false;
+              break;
+            }
+
+            check(ACTION_NORTH);
+            height -= range.y;
+            top += range.y;
+            width = height * aspectRatio;
+            left += cropBoxData.width - width;
+          } else {
+            check(ACTION_NORTH);
+            check(ACTION_WEST);
+
+            if (range.x <= 0) {
+              if (left > minLeft) {
+                width -= range.x;
+                left += range.x;
+              } else if (range.y <= 0 && top <= minTop) {
+                renderable = false;
+              }
+            } else {
+              width -= range.x;
+              left += range.x;
+            }
+
+            if (range.y <= 0) {
+              if (top > minTop) {
+                height -= range.y;
+                top += range.y;
+              }
+            } else {
+              height -= range.y;
+              top += range.y;
+            }
+          }
+
+          if (width < 0 && height < 0) {
+            action = ACTION_SOUTH_EAST;
+            height = -height;
+            width = -width;
+            top -= height;
+            left -= width;
+          } else if (width < 0) {
+            action = ACTION_NORTH_EAST;
+            width = -width;
+            left -= width;
+          } else if (height < 0) {
+            action = ACTION_SOUTH_WEST;
+            height = -height;
+            top -= height;
+          }
+
+          break;
+
+        case ACTION_SOUTH_WEST:
+          if (aspectRatio) {
+            if (range.x <= 0 && (left <= minLeft || bottom >= maxHeight)) {
+              renderable = false;
+              break;
+            }
+
+            check(ACTION_WEST);
+            width -= range.x;
+            left += range.x;
+            height = width / aspectRatio;
+          } else {
+            check(ACTION_SOUTH);
+            check(ACTION_WEST);
+
+            if (range.x <= 0) {
+              if (left > minLeft) {
+                width -= range.x;
+                left += range.x;
+              } else if (range.y >= 0 && bottom >= maxHeight) {
+                renderable = false;
+              }
+            } else {
+              width -= range.x;
+              left += range.x;
+            }
+
+            if (range.y >= 0) {
+              if (bottom < maxHeight) {
+                height += range.y;
+              }
+            } else {
+              height += range.y;
+            }
+          }
+
+          if (width < 0 && height < 0) {
+            action = ACTION_NORTH_EAST;
+            height = -height;
+            width = -width;
+            top -= height;
+            left -= width;
+          } else if (width < 0) {
+            action = ACTION_SOUTH_EAST;
+            width = -width;
+            left -= width;
+          } else if (height < 0) {
+            action = ACTION_NORTH_WEST;
+            height = -height;
+            top -= height;
+          }
+
+          break;
+
+        case ACTION_SOUTH_EAST:
+          if (aspectRatio) {
+            if (range.x >= 0 && (right >= maxWidth || bottom >= maxHeight)) {
+              renderable = false;
+              break;
+            }
+
+            check(ACTION_EAST);
+            width += range.x;
+            height = width / aspectRatio;
+          } else {
+            check(ACTION_SOUTH);
+            check(ACTION_EAST);
+
+            if (range.x >= 0) {
+              if (right < maxWidth) {
+                width += range.x;
+              } else if (range.y >= 0 && bottom >= maxHeight) {
+                renderable = false;
+              }
+            } else {
+              width += range.x;
+            }
+
+            if (range.y >= 0) {
+              if (bottom < maxHeight) {
+                height += range.y;
+              }
+            } else {
+              height += range.y;
+            }
+          }
+
+          if (width < 0 && height < 0) {
+            action = ACTION_NORTH_WEST;
+            height = -height;
+            width = -width;
+            top -= height;
+            left -= width;
+          } else if (width < 0) {
+            action = ACTION_SOUTH_WEST;
+            width = -width;
+            left -= width;
+          } else if (height < 0) {
+            action = ACTION_NORTH_EAST;
+            height = -height;
+            top -= height;
+          }
+
+          break;
+        // Move canvas
+
+        case ACTION_MOVE:
+          this.move(range.x, range.y);
+          renderable = false;
+          break;
+        // Zoom canvas
+
+        case ACTION_ZOOM:
+          this.zoom(getMaxZoomRatio(pointers), event);
+          renderable = false;
+          break;
+        // Create crop box
+
+        case ACTION_CROP:
+          if (!range.x || !range.y) {
+            renderable = false;
+            break;
+          }
+
+          offset = getOffset(this.cropper);
+          left = pointer.startX - offset.left;
+          top = pointer.startY - offset.top;
+          width = cropBoxData.minWidth;
+          height = cropBoxData.minHeight;
+
+          if (range.x > 0) {
+            action = range.y > 0 ? ACTION_SOUTH_EAST : ACTION_NORTH_EAST;
+          } else if (range.x < 0) {
+            left -= width;
+            action = range.y > 0 ? ACTION_SOUTH_WEST : ACTION_NORTH_WEST;
+          }
+
+          if (range.y < 0) {
+            top -= height;
+          } // Show the crop box if is hidden
+
+
+          if (!this.cropped) {
+            removeClass(this.cropBox, CLASS_HIDDEN);
+            this.cropped = true;
+
+            if (this.limited) {
+              this.limitCropBox(true, true);
+            }
+          }
+
+          break;
+
+        default:
+      }
+
+      if (renderable) {
+        cropBoxData.width = width;
+        cropBoxData.height = height;
+        cropBoxData.left = left;
+        cropBoxData.top = top;
+        this.action = action;
+        this.renderCropBox();
+      } // Override
+
+
+      forEach(pointers, function (p) {
+        p.startX = p.endX;
+        p.startY = p.endY;
+      });
+    }
+  };
+
+  var methods = {
+    // Show the crop box manually
+    crop: function crop() {
+      if (this.ready && !this.cropped && !this.disabled) {
+        this.cropped = true;
+        this.limitCropBox(true, true);
+
+        if (this.options.modal) {
+          addClass(this.dragBox, CLASS_MODAL);
+        }
+
+        removeClass(this.cropBox, CLASS_HIDDEN);
+        this.setCropBoxData(this.initialCropBoxData);
+      }
+
+      return this;
+    },
+    // Reset the image and crop box to their initial states
+    reset: function reset() {
+      if (this.ready && !this.disabled) {
+        this.imageData = assign({}, this.initialImageData);
+        this.canvasData = assign({}, this.initialCanvasData);
+        this.cropBoxData = assign({}, this.initialCropBoxData);
+        this.renderCanvas();
+
+        if (this.cropped) {
+          this.renderCropBox();
+        }
+      }
+
+      return this;
+    },
+    // Clear the crop box
+    clear: function clear() {
+      if (this.cropped && !this.disabled) {
+        assign(this.cropBoxData, {
+          left: 0,
+          top: 0,
+          width: 0,
+          height: 0
+        });
+        this.cropped = false;
+        this.renderCropBox();
+        this.limitCanvas(true, true); // Render canvas after crop box rendered
+
+        this.renderCanvas();
+        removeClass(this.dragBox, CLASS_MODAL);
+        addClass(this.cropBox, CLASS_HIDDEN);
+      }
+
+      return this;
+    },
+
+    /**
+     * Replace the image's src and rebuild the cropper
+     * @param {string} url - The new URL.
+     * @param {boolean} [hasSameSize] - Indicate if the new image has the same size as the old one.
+     * @returns {Cropper} this
+     */
+    replace: function replace(url) {
+      var hasSameSize = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      if (!this.disabled && url) {
+        if (this.isImg) {
+          this.element.src = url;
+        }
+
+        if (hasSameSize) {
+          this.url = url;
+          this.image.src = url;
+
+          if (this.ready) {
+            this.viewBoxImage.src = url;
+            forEach(this.previews, function (element) {
+              element.getElementsByTagName('img')[0].src = url;
+            });
+          }
+        } else {
+          if (this.isImg) {
+            this.replaced = true;
+          }
+
+          this.options.data = null;
+          this.uncreate();
+          this.load(url);
+        }
+      }
+
+      return this;
+    },
+    // Enable (unfreeze) the cropper
+    enable: function enable() {
+      if (this.ready && this.disabled) {
+        this.disabled = false;
+        removeClass(this.cropper, CLASS_DISABLED);
+      }
+
+      return this;
+    },
+    // Disable (freeze) the cropper
+    disable: function disable() {
+      if (this.ready && !this.disabled) {
+        this.disabled = true;
+        addClass(this.cropper, CLASS_DISABLED);
+      }
+
+      return this;
+    },
+
+    /**
+     * Destroy the cropper and remove the instance from the image
+     * @returns {Cropper} this
+     */
+    destroy: function destroy() {
+      var element = this.element;
+
+      if (!element[NAMESPACE]) {
+        return this;
+      }
+
+      element[NAMESPACE] = undefined;
+
+      if (this.isImg && this.replaced) {
+        element.src = this.originalUrl;
+      }
+
+      this.uncreate();
+      return this;
+    },
+
+    /**
+     * Move the canvas with relative offsets
+     * @param {number} offsetX - The relative offset distance on the x-axis.
+     * @param {number} [offsetY=offsetX] - The relative offset distance on the y-axis.
+     * @returns {Cropper} this
+     */
+    move: function move(offsetX) {
+      var offsetY = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : offsetX;
+      var _this$canvasData = this.canvasData,
+          left = _this$canvasData.left,
+          top = _this$canvasData.top;
+      return this.moveTo(isUndefined(offsetX) ? offsetX : left + Number(offsetX), isUndefined(offsetY) ? offsetY : top + Number(offsetY));
+    },
+
+    /**
+     * Move the canvas to an absolute point
+     * @param {number} x - The x-axis coordinate.
+     * @param {number} [y=x] - The y-axis coordinate.
+     * @returns {Cropper} this
+     */
+    moveTo: function moveTo(x) {
+      var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : x;
+      var canvasData = this.canvasData;
+      var changed = false;
+      x = Number(x);
+      y = Number(y);
+
+      if (this.ready && !this.disabled && this.options.movable) {
+        if (isNumber(x)) {
+          canvasData.left = x;
+          changed = true;
+        }
+
+        if (isNumber(y)) {
+          canvasData.top = y;
+          changed = true;
+        }
+
+        if (changed) {
+          this.renderCanvas(true);
+        }
+      }
+
+      return this;
+    },
+
+    /**
+     * Zoom the canvas with a relative ratio
+     * @param {number} ratio - The target ratio.
+     * @param {Event} _originalEvent - The original event if any.
+     * @returns {Cropper} this
+     */
+    zoom: function zoom(ratio, _originalEvent) {
+      var canvasData = this.canvasData;
+      ratio = Number(ratio);
+
+      if (ratio < 0) {
+        ratio = 1 / (1 - ratio);
+      } else {
+        ratio = 1 + ratio;
+      }
+
+      return this.zoomTo(canvasData.width * ratio / canvasData.naturalWidth, null, _originalEvent);
+    },
+
+    /**
+     * Zoom the canvas to an absolute ratio
+     * @param {number} ratio - The target ratio.
+     * @param {Object} pivot - The zoom pivot point coordinate.
+     * @param {Event} _originalEvent - The original event if any.
+     * @returns {Cropper} this
+     */
+    zoomTo: function zoomTo(ratio, pivot, _originalEvent) {
+      var options = this.options,
+          canvasData = this.canvasData;
+      var width = canvasData.width,
+          height = canvasData.height,
+          naturalWidth = canvasData.naturalWidth,
+          naturalHeight = canvasData.naturalHeight;
+      ratio = Number(ratio);
+
+      if (ratio >= 0 && this.ready && !this.disabled && options.zoomable) {
+        var newWidth = naturalWidth * ratio;
+        var newHeight = naturalHeight * ratio;
+
+        if (dispatchEvent(this.element, EVENT_ZOOM, {
+          ratio: ratio,
+          oldRatio: width / naturalWidth,
+          originalEvent: _originalEvent
+        }) === false) {
+          return this;
+        }
+
+        if (_originalEvent) {
+          var pointers = this.pointers;
+          var offset = getOffset(this.cropper);
+          var center = pointers && Object.keys(pointers).length ? getPointersCenter(pointers) : {
+            pageX: _originalEvent.pageX,
+            pageY: _originalEvent.pageY
+          }; // Zoom from the triggering point of the event
+
+          canvasData.left -= (newWidth - width) * ((center.pageX - offset.left - canvasData.left) / width);
+          canvasData.top -= (newHeight - height) * ((center.pageY - offset.top - canvasData.top) / height);
+        } else if (isPlainObject(pivot) && isNumber(pivot.x) && isNumber(pivot.y)) {
+          canvasData.left -= (newWidth - width) * ((pivot.x - canvasData.left) / width);
+          canvasData.top -= (newHeight - height) * ((pivot.y - canvasData.top) / height);
+        } else {
+          // Zoom from the center of the canvas
+          canvasData.left -= (newWidth - width) / 2;
+          canvasData.top -= (newHeight - height) / 2;
+        }
+
+        canvasData.width = newWidth;
+        canvasData.height = newHeight;
+        this.renderCanvas(true);
+      }
+
+      return this;
+    },
+
+    /**
+     * Rotate the canvas with a relative degree
+     * @param {number} degree - The rotate degree.
+     * @returns {Cropper} this
+     */
+    rotate: function rotate(degree) {
+      return this.rotateTo((this.imageData.rotate || 0) + Number(degree));
+    },
+
+    /**
+     * Rotate the canvas to an absolute degree
+     * @param {number} degree - The rotate degree.
+     * @returns {Cropper} this
+     */
+    rotateTo: function rotateTo(degree) {
+      degree = Number(degree);
+
+      if (isNumber(degree) && this.ready && !this.disabled && this.options.rotatable) {
+        this.imageData.rotate = degree % 360;
+        this.renderCanvas(true, true);
+      }
+
+      return this;
+    },
+
+    /**
+     * Scale the image on the x-axis.
+     * @param {number} scaleX - The scale ratio on the x-axis.
+     * @returns {Cropper} this
+     */
+    scaleX: function scaleX(_scaleX) {
+      var scaleY = this.imageData.scaleY;
+      return this.scale(_scaleX, isNumber(scaleY) ? scaleY : 1);
+    },
+
+    /**
+     * Scale the image on the y-axis.
+     * @param {number} scaleY - The scale ratio on the y-axis.
+     * @returns {Cropper} this
+     */
+    scaleY: function scaleY(_scaleY) {
+      var scaleX = this.imageData.scaleX;
+      return this.scale(isNumber(scaleX) ? scaleX : 1, _scaleY);
+    },
+
+    /**
+     * Scale the image
+     * @param {number} scaleX - The scale ratio on the x-axis.
+     * @param {number} [scaleY=scaleX] - The scale ratio on the y-axis.
+     * @returns {Cropper} this
+     */
+    scale: function scale(scaleX) {
+      var scaleY = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : scaleX;
+      var imageData = this.imageData;
+      var transformed = false;
+      scaleX = Number(scaleX);
+      scaleY = Number(scaleY);
+
+      if (this.ready && !this.disabled && this.options.scalable) {
+        if (isNumber(scaleX)) {
+          imageData.scaleX = scaleX;
+          transformed = true;
+        }
+
+        if (isNumber(scaleY)) {
+          imageData.scaleY = scaleY;
+          transformed = true;
+        }
+
+        if (transformed) {
+          this.renderCanvas(true, true);
+        }
+      }
+
+      return this;
+    },
+
+    /**
+     * Get the cropped area position and size data (base on the original image)
+     * @param {boolean} [rounded=false] - Indicate if round the data values or not.
+     * @returns {Object} The result cropped data.
+     */
+    getData: function getData() {
+      var rounded = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      var options = this.options,
+          imageData = this.imageData,
+          canvasData = this.canvasData,
+          cropBoxData = this.cropBoxData;
+      var data;
+
+      if (this.ready && this.cropped) {
+        data = {
+          x: cropBoxData.left - canvasData.left,
+          y: cropBoxData.top - canvasData.top,
+          width: cropBoxData.width,
+          height: cropBoxData.height
+        };
+        var ratio = imageData.width / imageData.naturalWidth;
+        forEach(data, function (n, i) {
+          data[i] = n / ratio;
+        });
+
+        if (rounded) {
+          // In case rounding off leads to extra 1px in right or bottom border
+          // we should round the top-left corner and the dimension (#343).
+          var bottom = Math.round(data.y + data.height);
+          var right = Math.round(data.x + data.width);
+          data.x = Math.round(data.x);
+          data.y = Math.round(data.y);
+          data.width = right - data.x;
+          data.height = bottom - data.y;
+        }
+      } else {
+        data = {
+          x: 0,
+          y: 0,
+          width: 0,
+          height: 0
+        };
+      }
+
+      if (options.rotatable) {
+        data.rotate = imageData.rotate || 0;
+      }
+
+      if (options.scalable) {
+        data.scaleX = imageData.scaleX || 1;
+        data.scaleY = imageData.scaleY || 1;
+      }
+
+      return data;
+    },
+
+    /**
+     * Set the cropped area position and size with new data
+     * @param {Object} data - The new data.
+     * @returns {Cropper} this
+     */
+    setData: function setData(data) {
+      var options = this.options,
+          imageData = this.imageData,
+          canvasData = this.canvasData;
+      var cropBoxData = {};
+
+      if (this.ready && !this.disabled && isPlainObject(data)) {
+        var transformed = false;
+
+        if (options.rotatable) {
+          if (isNumber(data.rotate) && data.rotate !== imageData.rotate) {
+            imageData.rotate = data.rotate;
+            transformed = true;
+          }
+        }
+
+        if (options.scalable) {
+          if (isNumber(data.scaleX) && data.scaleX !== imageData.scaleX) {
+            imageData.scaleX = data.scaleX;
+            transformed = true;
+          }
+
+          if (isNumber(data.scaleY) && data.scaleY !== imageData.scaleY) {
+            imageData.scaleY = data.scaleY;
+            transformed = true;
+          }
+        }
+
+        if (transformed) {
+          this.renderCanvas(true, true);
+        }
+
+        var ratio = imageData.width / imageData.naturalWidth;
+
+        if (isNumber(data.x)) {
+          cropBoxData.left = data.x * ratio + canvasData.left;
+        }
+
+        if (isNumber(data.y)) {
+          cropBoxData.top = data.y * ratio + canvasData.top;
+        }
+
+        if (isNumber(data.width)) {
+          cropBoxData.width = data.width * ratio;
+        }
+
+        if (isNumber(data.height)) {
+          cropBoxData.height = data.height * ratio;
+        }
+
+        this.setCropBoxData(cropBoxData);
+      }
+
+      return this;
+    },
+
+    /**
+     * Get the container size data.
+     * @returns {Object} The result container data.
+     */
+    getContainerData: function getContainerData() {
+      return this.ready ? assign({}, this.containerData) : {};
+    },
+
+    /**
+     * Get the image position and size data.
+     * @returns {Object} The result image data.
+     */
+    getImageData: function getImageData() {
+      return this.sized ? assign({}, this.imageData) : {};
+    },
+
+    /**
+     * Get the canvas position and size data.
+     * @returns {Object} The result canvas data.
+     */
+    getCanvasData: function getCanvasData() {
+      var canvasData = this.canvasData;
+      var data = {};
+
+      if (this.ready) {
+        forEach(['left', 'top', 'width', 'height', 'naturalWidth', 'naturalHeight'], function (n) {
+          data[n] = canvasData[n];
+        });
+      }
+
+      return data;
+    },
+
+    /**
+     * Set the canvas position and size with new data.
+     * @param {Object} data - The new canvas data.
+     * @returns {Cropper} this
+     */
+    setCanvasData: function setCanvasData(data) {
+      var canvasData = this.canvasData;
+      var aspectRatio = canvasData.aspectRatio;
+
+      if (this.ready && !this.disabled && isPlainObject(data)) {
+        if (isNumber(data.left)) {
+          canvasData.left = data.left;
+        }
+
+        if (isNumber(data.top)) {
+          canvasData.top = data.top;
+        }
+
+        if (isNumber(data.width)) {
+          canvasData.width = data.width;
+          canvasData.height = data.width / aspectRatio;
+        } else if (isNumber(data.height)) {
+          canvasData.height = data.height;
+          canvasData.width = data.height * aspectRatio;
+        }
+
+        this.renderCanvas(true);
+      }
+
+      return this;
+    },
+
+    /**
+     * Get the crop box position and size data.
+     * @returns {Object} The result crop box data.
+     */
+    getCropBoxData: function getCropBoxData() {
+      var cropBoxData = this.cropBoxData;
+      var data;
+
+      if (this.ready && this.cropped) {
+        data = {
+          left: cropBoxData.left,
+          top: cropBoxData.top,
+          width: cropBoxData.width,
+          height: cropBoxData.height
+        };
+      }
+
+      return data || {};
+    },
+
+    /**
+     * Set the crop box position and size with new data.
+     * @param {Object} data - The new crop box data.
+     * @returns {Cropper} this
+     */
+    setCropBoxData: function setCropBoxData(data) {
+      var cropBoxData = this.cropBoxData;
+      var aspectRatio = this.options.aspectRatio;
+      var widthChanged;
+      var heightChanged;
+
+      if (this.ready && this.cropped && !this.disabled && isPlainObject(data)) {
+        if (isNumber(data.left)) {
+          cropBoxData.left = data.left;
+        }
+
+        if (isNumber(data.top)) {
+          cropBoxData.top = data.top;
+        }
+
+        if (isNumber(data.width) && data.width !== cropBoxData.width) {
+          widthChanged = true;
+          cropBoxData.width = data.width;
+        }
+
+        if (isNumber(data.height) && data.height !== cropBoxData.height) {
+          heightChanged = true;
+          cropBoxData.height = data.height;
+        }
+
+        if (aspectRatio) {
+          if (widthChanged) {
+            cropBoxData.height = cropBoxData.width / aspectRatio;
+          } else if (heightChanged) {
+            cropBoxData.width = cropBoxData.height * aspectRatio;
+          }
+        }
+
+        this.renderCropBox();
+      }
+
+      return this;
+    },
+
+    /**
+     * Get a canvas drawn the cropped image.
+     * @param {Object} [options={}] - The config options.
+     * @returns {HTMLCanvasElement} - The result canvas.
+     */
+    getCroppedCanvas: function getCroppedCanvas() {
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      if (!this.ready || !window.HTMLCanvasElement) {
+        return null;
+      }
+
+      var canvasData = this.canvasData;
+      var source = getSourceCanvas(this.image, this.imageData, canvasData, options); // Returns the source canvas if it is not cropped.
+
+      if (!this.cropped) {
+        return source;
+      }
+
+      var _this$getData = this.getData(),
+          initialX = _this$getData.x,
+          initialY = _this$getData.y,
+          initialWidth = _this$getData.width,
+          initialHeight = _this$getData.height;
+
+      var ratio = source.width / Math.floor(canvasData.naturalWidth);
+
+      if (ratio !== 1) {
+        initialX *= ratio;
+        initialY *= ratio;
+        initialWidth *= ratio;
+        initialHeight *= ratio;
+      }
+
+      var aspectRatio = initialWidth / initialHeight;
+      var maxSizes = getAdjustedSizes({
+        aspectRatio: aspectRatio,
+        width: options.maxWidth || Infinity,
+        height: options.maxHeight || Infinity
+      });
+      var minSizes = getAdjustedSizes({
+        aspectRatio: aspectRatio,
+        width: options.minWidth || 0,
+        height: options.minHeight || 0
+      }, 'cover');
+
+      var _getAdjustedSizes = getAdjustedSizes({
+        aspectRatio: aspectRatio,
+        width: options.width || (ratio !== 1 ? source.width : initialWidth),
+        height: options.height || (ratio !== 1 ? source.height : initialHeight)
+      }),
+          width = _getAdjustedSizes.width,
+          height = _getAdjustedSizes.height;
+
+      width = Math.min(maxSizes.width, Math.max(minSizes.width, width));
+      height = Math.min(maxSizes.height, Math.max(minSizes.height, height));
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      canvas.width = normalizeDecimalNumber(width);
+      canvas.height = normalizeDecimalNumber(height);
+      context.fillStyle = options.fillColor || 'transparent';
+      context.fillRect(0, 0, width, height);
+      var _options$imageSmoothi = options.imageSmoothingEnabled,
+          imageSmoothingEnabled = _options$imageSmoothi === void 0 ? true : _options$imageSmoothi,
+          imageSmoothingQuality = options.imageSmoothingQuality;
+      context.imageSmoothingEnabled = imageSmoothingEnabled;
+
+      if (imageSmoothingQuality) {
+        context.imageSmoothingQuality = imageSmoothingQuality;
+      } // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D.drawImage
+
+
+      var sourceWidth = source.width;
+      var sourceHeight = source.height; // Source canvas parameters
+
+      var srcX = initialX;
+      var srcY = initialY;
+      var srcWidth;
+      var srcHeight; // Destination canvas parameters
+
+      var dstX;
+      var dstY;
+      var dstWidth;
+      var dstHeight;
+
+      if (srcX <= -initialWidth || srcX > sourceWidth) {
+        srcX = 0;
+        srcWidth = 0;
+        dstX = 0;
+        dstWidth = 0;
+      } else if (srcX <= 0) {
+        dstX = -srcX;
+        srcX = 0;
+        srcWidth = Math.min(sourceWidth, initialWidth + srcX);
+        dstWidth = srcWidth;
+      } else if (srcX <= sourceWidth) {
+        dstX = 0;
+        srcWidth = Math.min(initialWidth, sourceWidth - srcX);
+        dstWidth = srcWidth;
+      }
+
+      if (srcWidth <= 0 || srcY <= -initialHeight || srcY > sourceHeight) {
+        srcY = 0;
+        srcHeight = 0;
+        dstY = 0;
+        dstHeight = 0;
+      } else if (srcY <= 0) {
+        dstY = -srcY;
+        srcY = 0;
+        srcHeight = Math.min(sourceHeight, initialHeight + srcY);
+        dstHeight = srcHeight;
+      } else if (srcY <= sourceHeight) {
+        dstY = 0;
+        srcHeight = Math.min(initialHeight, sourceHeight - srcY);
+        dstHeight = srcHeight;
+      }
+
+      var params = [srcX, srcY, srcWidth, srcHeight]; // Avoid "IndexSizeError"
+
+      if (dstWidth > 0 && dstHeight > 0) {
+        var scale = width / initialWidth;
+        params.push(dstX * scale, dstY * scale, dstWidth * scale, dstHeight * scale);
+      } // All the numerical parameters should be integer for `drawImage`
+      // https://github.com/fengyuanchen/cropper/issues/476
+
+
+      context.drawImage.apply(context, [source].concat(_toConsumableArray(params.map(function (param) {
+        return Math.floor(normalizeDecimalNumber(param));
+      }))));
+      return canvas;
+    },
+
+    /**
+     * Change the aspect ratio of the crop box.
+     * @param {number} aspectRatio - The new aspect ratio.
+     * @returns {Cropper} this
+     */
+    setAspectRatio: function setAspectRatio(aspectRatio) {
+      var options = this.options;
+
+      if (!this.disabled && !isUndefined(aspectRatio)) {
+        // 0 -> NaN
+        options.aspectRatio = Math.max(0, aspectRatio) || NaN;
+
+        if (this.ready) {
+          this.initCropBox();
+
+          if (this.cropped) {
+            this.renderCropBox();
+          }
+        }
+      }
+
+      return this;
+    },
+
+    /**
+     * Change the drag mode.
+     * @param {string} mode - The new drag mode.
+     * @returns {Cropper} this
+     */
+    setDragMode: function setDragMode(mode) {
+      var options = this.options,
+          dragBox = this.dragBox,
+          face = this.face;
+
+      if (this.ready && !this.disabled) {
+        var croppable = mode === DRAG_MODE_CROP;
+        var movable = options.movable && mode === DRAG_MODE_MOVE;
+        mode = croppable || movable ? mode : DRAG_MODE_NONE;
+        options.dragMode = mode;
+        setData(dragBox, DATA_ACTION, mode);
+        toggleClass(dragBox, CLASS_CROP, croppable);
+        toggleClass(dragBox, CLASS_MOVE, movable);
+
+        if (!options.cropBoxMovable) {
+          // Sync drag mode to crop box when it is not movable
+          setData(face, DATA_ACTION, mode);
+          toggleClass(face, CLASS_CROP, croppable);
+          toggleClass(face, CLASS_MOVE, movable);
+        }
+      }
+
+      return this;
+    }
+  };
+
+  var AnotherCropper = WINDOW.Cropper;
+
+  var Cropper =
+  /*#__PURE__*/
+  function () {
+    /**
+     * Create a new Cropper.
+     * @param {Element} element - The target element for cropping.
+     * @param {Object} [options={}] - The configuration options.
+     */
+    function Cropper(element) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      _classCallCheck(this, Cropper);
+
+      if (!element || !REGEXP_TAG_NAME.test(element.tagName)) {
+        throw new Error('The first argument is required and must be an <img> or <canvas> element.');
+      }
+
+      this.element = element;
+      this.options = assign({}, DEFAULTS, isPlainObject(options) && options);
+      this.cropped = false;
+      this.disabled = false;
+      this.pointers = {};
+      this.ready = false;
+      this.reloading = false;
+      this.replaced = false;
+      this.sized = false;
+      this.sizing = false;
+      this.init();
+    }
+
+    _createClass(Cropper, [{
+      key: "init",
+      value: function init() {
+        var element = this.element;
+        var tagName = element.tagName.toLowerCase();
+        var url;
+
+        if (element[NAMESPACE]) {
+          return;
+        }
+
+        element[NAMESPACE] = this;
+
+        if (tagName === 'img') {
+          this.isImg = true; // e.g.: "img/picture.jpg"
+
+          url = element.getAttribute('src') || '';
+          this.originalUrl = url; // Stop when it's a blank image
+
+          if (!url) {
+            return;
+          } // e.g.: "http://example.com/img/picture.jpg"
+
+
+          url = element.src;
+        } else if (tagName === 'canvas' && window.HTMLCanvasElement) {
+          url = element.toDataURL();
+        }
+
+        this.load(url);
+      }
+    }, {
+      key: "load",
+      value: function load(url) {
+        var _this = this;
+
+        if (!url) {
+          return;
+        }
+
+        this.url = url;
+        this.imageData = {};
+        var element = this.element,
+            options = this.options;
+
+        if (!options.rotatable && !options.scalable) {
+          options.checkOrientation = false;
+        } // Only IE10+ supports Typed Arrays
+
+
+        if (!options.checkOrientation || !window.ArrayBuffer) {
+          this.clone();
+          return;
+        } // Read ArrayBuffer from Data URL of JPEG images directly for better performance.
+
+
+        if (REGEXP_DATA_URL_JPEG.test(url)) {
+          this.read(dataURLToArrayBuffer(url));
+          return;
+        }
+
+        var xhr = new XMLHttpRequest();
+        var clone = this.clone.bind(this);
+        this.reloading = true;
+        this.xhr = xhr; // 1. Cross origin requests are only supported for protocol schemes:
+        // http, https, data, chrome, chrome-extension.
+        // 2. Access to XMLHttpRequest from a Data URL will be blocked by CORS policy
+        // in some browsers as IE11 and Safari.
+
+        xhr.onabort = clone;
+        xhr.onerror = clone;
+        xhr.ontimeout = clone;
+
+        xhr.onprogress = function () {
+          if (xhr.getResponseHeader('content-type') !== MIME_TYPE_JPEG) {
+            xhr.abort();
+          }
+        };
+
+        xhr.onload = function () {
+          _this.read(xhr.response);
+        };
+
+        xhr.onloadend = function () {
+          _this.reloading = false;
+          _this.xhr = null;
+        }; // Bust cache when there is a "crossOrigin" property to avoid browser cache error
+
+
+        if (options.checkCrossOrigin && isCrossOriginURL(url) && element.crossOrigin) {
+          url = addTimestamp(url);
+        }
+
+        xhr.open('GET', url);
+        xhr.responseType = 'arraybuffer';
+        xhr.withCredentials = element.crossOrigin === 'use-credentials';
+        xhr.send();
+      }
+    }, {
+      key: "read",
+      value: function read(arrayBuffer) {
+        var options = this.options,
+            imageData = this.imageData; // Reset the orientation value to its default value 1
+        // as some iOS browsers will render image with its orientation
+
+        var orientation = resetAndGetOrientation(arrayBuffer);
+        var rotate = 0;
+        var scaleX = 1;
+        var scaleY = 1;
+
+        if (orientation > 1) {
+          // Generate a new URL which has the default orientation value
+          this.url = arrayBufferToDataURL(arrayBuffer, MIME_TYPE_JPEG);
+
+          var _parseOrientation = parseOrientation(orientation);
+
+          rotate = _parseOrientation.rotate;
+          scaleX = _parseOrientation.scaleX;
+          scaleY = _parseOrientation.scaleY;
+        }
+
+        if (options.rotatable) {
+          imageData.rotate = rotate;
+        }
+
+        if (options.scalable) {
+          imageData.scaleX = scaleX;
+          imageData.scaleY = scaleY;
+        }
+
+        this.clone();
+      }
+    }, {
+      key: "clone",
+      value: function clone() {
+        var element = this.element,
+            url = this.url;
+        var crossOrigin;
+        var crossOriginUrl;
+
+        if (this.options.checkCrossOrigin && isCrossOriginURL(url)) {
+          crossOrigin = element.crossOrigin;
+
+          if (!crossOrigin) {
+            crossOrigin = 'anonymous';
+          } // Bust cache when there is not a "crossOrigin" property (#519)
+
+
+          crossOriginUrl = addTimestamp(url);
+        }
+
+        this.crossOrigin = crossOrigin;
+        this.crossOriginUrl = crossOriginUrl;
+        var image = document.createElement('img');
+
+        if (crossOrigin) {
+          image.crossOrigin = crossOrigin;
+        }
+
+        image.src = crossOriginUrl || url;
+        this.image = image;
+        image.onload = this.start.bind(this);
+        image.onerror = this.stop.bind(this);
+        addClass(image, CLASS_HIDE);
+        element.parentNode.insertBefore(image, element.nextSibling);
+      }
+    }, {
+      key: "start",
+      value: function start() {
+        var _this2 = this;
+
+        var image = this.isImg ? this.element : this.image;
+        image.onload = null;
+        image.onerror = null;
+        this.sizing = true;
+        var IS_SAFARI = WINDOW.navigator && /^(?:.(?!chrome|android))*safari/i.test(WINDOW.navigator.userAgent);
+
+        var done = function done(naturalWidth, naturalHeight) {
+          assign(_this2.imageData, {
+            naturalWidth: naturalWidth,
+            naturalHeight: naturalHeight,
+            aspectRatio: naturalWidth / naturalHeight
+          });
+          _this2.sizing = false;
+          _this2.sized = true;
+
+          _this2.build();
+        }; // Modern browsers (except Safari)
+
+
+        if (image.naturalWidth && !IS_SAFARI) {
+          done(image.naturalWidth, image.naturalHeight);
+          return;
+        }
+
+        var sizingImage = document.createElement('img');
+        var body = document.body || document.documentElement;
+        this.sizingImage = sizingImage;
+
+        sizingImage.onload = function () {
+          done(sizingImage.width, sizingImage.height);
+
+          if (!IS_SAFARI) {
+            body.removeChild(sizingImage);
+          }
+        };
+
+        sizingImage.src = image.src; // iOS Safari will convert the image automatically
+        // with its orientation once append it into DOM (#279)
+
+        if (!IS_SAFARI) {
+          sizingImage.style.cssText = 'left:0;' + 'max-height:none!important;' + 'max-width:none!important;' + 'min-height:0!important;' + 'min-width:0!important;' + 'opacity:0;' + 'position:absolute;' + 'top:0;' + 'z-index:-1;';
+          body.appendChild(sizingImage);
+        }
+      }
+    }, {
+      key: "stop",
+      value: function stop() {
+        var image = this.image;
+        image.onload = null;
+        image.onerror = null;
+        image.parentNode.removeChild(image);
+        this.image = null;
+      }
+    }, {
+      key: "build",
+      value: function build() {
+        if (!this.sized || this.ready) {
+          return;
+        }
+
+        var element = this.element,
+            options = this.options,
+            image = this.image; // Create cropper elements
+
+        var container = element.parentNode;
+        var template = document.createElement('div');
+        template.innerHTML = TEMPLATE;
+        var cropper = template.querySelector(".".concat(NAMESPACE, "-container"));
+        var canvas = cropper.querySelector(".".concat(NAMESPACE, "-canvas"));
+        var dragBox = cropper.querySelector(".".concat(NAMESPACE, "-drag-box"));
+        var cropBox = cropper.querySelector(".".concat(NAMESPACE, "-crop-box"));
+        var face = cropBox.querySelector(".".concat(NAMESPACE, "-face"));
+        this.container = container;
+        this.cropper = cropper;
+        this.canvas = canvas;
+        this.dragBox = dragBox;
+        this.cropBox = cropBox;
+        this.viewBox = cropper.querySelector(".".concat(NAMESPACE, "-view-box"));
+        this.face = face;
+        canvas.appendChild(image); // Hide the original image
+
+        addClass(element, CLASS_HIDDEN); // Inserts the cropper after to the current image
+
+        container.insertBefore(cropper, element.nextSibling); // Show the image if is hidden
+
+        if (!this.isImg) {
+          removeClass(image, CLASS_HIDE);
+        }
+
+        this.initPreview();
+        this.bind();
+        options.initialAspectRatio = Math.max(0, options.initialAspectRatio) || NaN;
+        options.aspectRatio = Math.max(0, options.aspectRatio) || NaN;
+        options.viewMode = Math.max(0, Math.min(3, Math.round(options.viewMode))) || 0;
+        addClass(cropBox, CLASS_HIDDEN);
+
+        if (!options.guides) {
+          addClass(cropBox.getElementsByClassName("".concat(NAMESPACE, "-dashed")), CLASS_HIDDEN);
+        }
+
+        if (!options.center) {
+          addClass(cropBox.getElementsByClassName("".concat(NAMESPACE, "-center")), CLASS_HIDDEN);
+        }
+
+        if (options.background) {
+          addClass(cropper, "".concat(NAMESPACE, "-bg"));
+        }
+
+        if (!options.highlight) {
+          addClass(face, CLASS_INVISIBLE);
+        }
+
+        if (options.cropBoxMovable) {
+          addClass(face, CLASS_MOVE);
+          setData(face, DATA_ACTION, ACTION_ALL);
+        }
+
+        if (!options.cropBoxResizable) {
+          addClass(cropBox.getElementsByClassName("".concat(NAMESPACE, "-line")), CLASS_HIDDEN);
+          addClass(cropBox.getElementsByClassName("".concat(NAMESPACE, "-point")), CLASS_HIDDEN);
+        }
+
+        this.render();
+        this.ready = true;
+        this.setDragMode(options.dragMode);
+
+        if (options.autoCrop) {
+          this.crop();
+        }
+
+        this.setData(options.data);
+
+        if (isFunction(options.ready)) {
+          addListener(element, EVENT_READY, options.ready, {
+            once: true
+          });
+        }
+
+        dispatchEvent(element, EVENT_READY);
+      }
+    }, {
+      key: "unbuild",
+      value: function unbuild() {
+        if (!this.ready) {
+          return;
+        }
+
+        this.ready = false;
+        this.unbind();
+        this.resetPreview();
+        this.cropper.parentNode.removeChild(this.cropper);
+        removeClass(this.element, CLASS_HIDDEN);
+      }
+    }, {
+      key: "uncreate",
+      value: function uncreate() {
+        if (this.ready) {
+          this.unbuild();
+          this.ready = false;
+          this.cropped = false;
+        } else if (this.sizing) {
+          this.sizingImage.onload = null;
+          this.sizing = false;
+          this.sized = false;
+        } else if (this.reloading) {
+          this.xhr.onabort = null;
+          this.xhr.abort();
+        } else if (this.image) {
+          this.stop();
+        }
+      }
+      /**
+       * Get the no conflict cropper class.
+       * @returns {Cropper} The cropper class.
+       */
+
+    }], [{
+      key: "noConflict",
+      value: function noConflict() {
+        window.Cropper = AnotherCropper;
+        return Cropper;
+      }
+      /**
+       * Change the default options.
+       * @param {Object} options - The new default options.
+       */
+
+    }, {
+      key: "setDefaults",
+      value: function setDefaults(options) {
+        assign(DEFAULTS, isPlainObject(options) && options);
+      }
+    }]);
+
+    return Cropper;
+  }();
+
+  assign(Cropper.prototype, render, preview, events, handlers, change, methods);
+
+  return Cropper;
+
+}));
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(console) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+
+	Ractive-decorators-sortable
+	===========================
+
+	Version 0.2.1.
+
+	This plugin adds a 'sortable' decorator to Ractive, which enables
+	elements that correspond to array members to be re-ordered using
+	the HTML5 drag and drop API. Doing so will update the order
+	of the array.
+
+	==========================
+
+	Troubleshooting: If you're using a module system in your app (AMD or
+	something more nodey) then you may need to change the paths below,
+	where it says `require( 'Ractive' )` or `define([ 'Ractive' ]...)`.
+
+	==========================
+
+	Usage: Include this file on your page below Ractive, e.g:
+
+	    <script src='lib/Ractive.js'></script>
+	    <script src='lib/Ractive-decorators-sortable.js'></script>
+
+	Or, if you're using a module loader, require this module:
+
+	    // requiring the plugin will 'activate' it - no need to use
+	    // the return value
+	    require( 'Ractive-decorators-sortable' );
+
+	Then use the decorator like so:
+
+	    <!-- template -->
+	    <ul>
+	      {{#list}}
+	        <li decorator='sortable'>{{.}}</li>
+	      {{/list}}
+	    </ul>
+
+	    var ractive = new Ractive({
+	      el: myContainer,
+	      template: myTemplate,
+	      data: { list: [ 'Firefox', 'Chrome', 'Internet Explorer', 'Opera', 'Safari', 'Maxthon' ] }
+	    });
+
+	When the user drags the source element over a target element, the
+	target element will have a class name added to it. This allows you
+	to render the target differently (e.g. hide the text, add a dashed
+	border, whatever). By default this class name is 'droptarget'.
+
+	You can configure the class name like so:
+
+	    Ractive.decorators.sortable.targetClass = 'aDifferentClassName';
+
+	PS for an entertaining rant about the drag and drop API, visit
+	http://www.quirksmode.org/blog/archives/2009/09/the_html5_drag.html
+
+*/
+
+var sortableDecorator = (function ( global, factory ) {
+
+	'use strict';
+
+  console.log('sortableDecorator')
+	// Common JS (i.e. browserify) environment
+	if ( typeof module !== 'undefined' && module.exports && "function" === 'function' ) {
+		factory( __webpack_require__( 0 ) );
+	}
+
+	// AMD?
+	else if ( true ) {
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(0) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	}
+
+	// browser global
+	else if ( global.Ractive ) {
+		factory( global.Ractive );
+	}
+
+	else {
+		throw new Error( 'Could not find Ractive! It must be loaded before the Ractive-decorators-sortable plugin' );
+	}
+
+}( typeof window !== 'undefined' ? window : this, function ( RactiveDUMMY ) {
+
+	'use strict';
+
+	var sortable,
+		ractive,
+		sourceKeypath,
+		sourceArray,
+		dragstartHandler,
+		dragenterHandler,
+		removeTargetClass,
+		preventDefault,
+		errorMessage;
+
+	sortable = function ( node ) {
+		node.draggable = true;
+
+		node.addEventListener( 'dragstart', dragstartHandler, false );
+		node.addEventListener( 'dragenter', dragenterHandler, false );
+		node.addEventListener( 'dragleave', removeTargetClass, false );
+		node.addEventListener( 'drop', removeTargetClass, false );
+
+		// necessary to prevent animation where ghost element returns
+		// to its (old) home
+		node.addEventListener( 'dragover', preventDefault, false );
+
+		return {
+			teardown: function () {
+				node.removeEventListener( 'dragstart', dragstartHandler, false );
+				node.removeEventListener( 'dragenter', dragenterHandler, false );
+				node.removeEventListener( 'dragleave', removeTargetClass, false );
+				node.removeEventListener( 'drop', removeTargetClass, false );
+				node.removeEventListener( 'dragover', preventDefault, false );
+			}
+		};
+	};
+
+	sortable.targetClass = 'droptarget';
+
+	errorMessage = 'The sortable decorator only works with elements that correspond to array members';
+
+	dragstartHandler = function ( event ) {
+    //var context = Ractive.getContext(this);
+    var context = Ractive.getNodeInfo(this);
+    
+
+		sourceKeypath = context.resolve();
+		sourceArray = context.resolve('../');
+
+		if ( !Array.isArray(context.get('../')) ) {
+			throw new Error( errorMessage );
+		}
+
+		event.dataTransfer.setData( 'foo', true ); // enables dragging in FF. go figure
+
+		// keep a reference to the Ractive instance that 'owns' this data and this element
+		ractive = context.ractive;
+	};
+
+	dragenterHandler = function () {
+		var targetKeypath, targetArray, array, source, context;
+
+//		context = Ractive.getContext(this);
+		context = Ractive.getNodeInfo(this);
+
+		// If we strayed into someone else's territory, abort
+		if ( context.ractive !== ractive ) {
+			return;
+		}
+
+		targetKeypath = context.resolve();
+		targetArray = context.resolve('../');
+
+		// if we're dealing with a different array, abort
+		if ( targetArray !== sourceArray ) {
+			return;
+		}
+
+		// if it's the same index, add droptarget class then abort
+		if ( targetKeypath === sourceKeypath ) {
+			this.classList.add( sortable.targetClass );
+			return;
+		}
+
+		// remove source from array
+		source = ractive.get(sourceKeypath);
+		array = Ractive.splitKeypath(sourceKeypath);
+
+//		ractive.splice( targetArray, array[ array.length - 1 ], 1 );
+    var tmpArray = [...(ractive.get(targetArray))];
+    tmpArray.splice(array[ array.length - 1 ], 1);
+    ractive.set(targetArray, tmpArray)
+  
+
+		// the target index is now the source index...
+		sourceKeypath = targetKeypath;
+
+		array = Ractive.splitKeypath(sourceKeypath);
+
+		// add source back to array in new location
+//		ractive.splice( targetArray, array[ array.length - 1 ], 0, source );
+    var tmpArray2 = [...(ractive.get(targetArray))];
+    tmpArray2.splice( array[ array.length - 1 ], 0, source);
+    ractive.set(targetArray, tmpArray2)
+	};
+
+	removeTargetClass = function () {
+		this.classList.remove( sortable.targetClass );
+	};
+
+	preventDefault = function ( event ) { event.preventDefault(); };
+
+	Ractive.decorators.sortable = sortable;
+
+	return sortable;
+}));
+
+// Common JS (i.e. browserify) environment
+if ( typeof module !== 'undefined' && module.exports) {
+	module.exports = sortableDecorator;
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(global) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
  2017 Julian Garnier
  Released under the MIT license
@@ -33205,13 +37222,13 @@ function(a){a=P(a);for(var c=v.length;c--;)for(var d=v[c],b=d.animations,f=b.len
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;;(function (root, factory) {
 
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0), __webpack_require__(15)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0), __webpack_require__(17)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -33496,7 +37513,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.7 - 2016-04-22
@@ -36146,7 +40163,7 @@ if (true) {
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -36565,7 +40582,7 @@ if (true) {
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, console) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -37866,7 +41883,7 @@ if (true) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(2)))
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -37960,13 +41977,13 @@ var component = module;
         }
   };
   
-component.exports.template = {v:4,t:[{p:[2,1,1],t:7,e:"nav",m:[{n:"style",f:"z-index: 1044;",t:13},{n:"id",f:"nav",t:13}],f:[{p:[3,9,47],t:7,e:"header",f:[" ",{p:[5,17,148],t:7,e:"a",m:[{n:"style",f:"left: 0; top: 0; bottom: 0; padding: 1rem 2rem;",t:13}],f:[{p:[6,21,229],t:7,e:"img",m:[{n:"src",f:"favicon.png",t:13}]}," ",{t:2,x:{r:["selectedModule","selected_tablename_obj.nice_name"],s:"_0?_0==\"ImageBrowser\"?\"Media\":_1:\"Admin Panel\""},p:[7,21,273]}]}]}," ",{p:[12,5,535],t:7,e:"label",f:[" ",{p:[14,9,607],t:7,e:"input",m:[{n:"type",f:"checkbox",t:13},{n:"id",f:"menuOpen",t:13},{n:"checked",f:[{t:2,r:"menuOpen",p:[14,54,652]}],t:13}]}," ",{p:[20,9,853],t:7,e:"ul",f:[{p:[22,13,879],t:7,e:"li",f:[{p:[23,17,900],t:7,e:"a",m:[{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"selectedModule\",null)]"}},t:70},{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"!_0?\"border-color: #679;\":\"\""},p:[23,72,955]}],t:13}],f:[{p:[23,119,1002],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-home",t:13}]}," Home"]}]}," ",{p:[26,13,1097],t:7,e:"li",f:[{p:[27,17,1118],t:7,e:"a",m:[{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"selectedModule\",\"ImageBrowser\")]"}},t:70},{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"ImageBrowser\"?\"border-color: #679;\":\"\""},p:[27,82,1183]}],t:13}],f:[{p:[27,144,1245],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-picture",t:13}]}," Media"]}]}," ",{t:4,f:[{p:[32,13,1438],t:7,e:"li",f:[{p:[33,17,1459],t:7,e:"a",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"Schema\"?\"border-color: #679;\":\"\""},p:[33,27,1469]}],t:13}],f:[{p:[33,82,1524],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-tasks",t:13}]}," Schema"]}," ",{p:[34,17,1615],t:7,e:"menu",f:[{p:[35,21,1642],t:7,e:"menuitem",f:[{p:[35,31,1652],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"showSchemaNew\",true)]"}},t:70},{n:"id",f:"newSchema",t:13}],f:[{p:[35,129,1750],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-plus",t:13}]}," Add New Schema"]}]}," ",{t:4,f:[{p:[37,21,1915],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule","selected_tablename",".name"],s:"(_0==\"Schema\"&&_1==_2)?\"border-color: #679;\":\"\""},p:[37,38,1932]}],t:13}],f:[{p:[37,124,2018],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"Schema\",_1)]"}},t:70}],f:[{t:2,r:".name",p:[37,232,2126]}," (",{t:2,r:".nice_name",p:[37,243,2137]},")"]}]}],n:52,r:"sqlite_schema",p:[36,21,1847]}]}]}],n:50,x:{r:["_session_user_role"],s:"_0==2"},p:[31,13,1394]}," ",{p:[57,13,3221],t:7,e:"li",f:[{p:[58,17,3242],t:7,e:"a",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"UserList\"?\"border-color: #679;\":\"\""},p:[58,27,3252]}],t:13}],f:[{p:[58,84,3309],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-cog",t:13}]}," Settings"]}," ",{p:[59,17,3400],t:7,e:"menu",f:[{t:4,f:[" ",{p:[61,21,3538],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"(_0==\"UserList\")?\"border-color: #679;\":\"\""},p:[61,38,3555]}],t:13}],f:[{p:[61,97,3614],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"UserList\",\"\")]"}},t:70}],f:[{p:[62,25,3746],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-user",t:13}],f:[{p:[63,29,3814],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-user",t:13},{n:"style",f:"position: absolute;left: 5px;top: 1px;color: #679;",t:13}]}]}," Users"]}]}],n:50,x:{r:["_session_user_role"],s:"(_0==2)||(_0==4)||true"},p:[60,21,3427]}," ",{p:[67,21,4046],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"(_0==\"Login\")?\"border-color: #679;\":\"\""},p:[67,38,4063]}],t:13}],f:[{p:[67,94,4119],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:"logout",t:70}],f:[{p:[67,152,4177],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-off",t:13}]}," Sign out"]}]}," ",{p:[68,21,4267],t:7,e:"menuitem",m:[{n:"id",f:"showAbout",t:13}],f:[{p:[68,47,4293],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.toggle(\"showAbout\")]"}},t:70}],f:[{p:[68,124,4370],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-info-sign",t:13}]}," About"]}]}]}]}," "]}]}]}," ",{t:4,f:[{p:[88,1,5113],t:7,e:"modal",m:[{n:"show",f:[{t:2,x:{r:[],s:"true"},p:[88,14,5126]}],t:13},{n:"title",f:"Login",t:13},{n:"zoomFrom",f:"nav",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[89,29,5179]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[89,51,5201]}],t:13},{n:"style",f:"\nheight: 20em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 10em);\nbottom: inherit;\n",t:13}],f:[{p:[97,5,5334],t:7,e:"Login",m:[{n:"G",f:[{t:2,r:".",p:[97,14,5343]}],t:13}]}]}],n:50,x:{r:["is_logedin"],s:"!_0"},p:[87,1,5093]},{t:4,f:[{p:[102,1,5414],t:7,e:"UserList",m:[{n:"G",f:[{t:2,r:".",p:[102,13,5426]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"UserList\""},p:[101,1,5377]},{t:4,f:[{p:[106,1,5487],t:7,e:"TGrid",m:[{n:"G",f:[{t:2,r:".",p:[106,10,5496]}],t:13},{n:"selected_tablename",f:[{t:2,r:"selected_tablename",p:[106,37,5523]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"TGrid\""},p:[105,1,5453]},{t:4,f:[{p:[110,1,5607],t:7,e:"TDetailsSingle",m:[{n:"G",f:[{t:2,r:".",p:[110,19,5625]}],t:13},{n:"selected_tablename",f:[{t:2,r:"selected_tablename",p:[110,46,5652]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"TDetailsSingle\""},p:[109,1,5564]},{t:4,f:[{p:[114,1,5743],t:7,e:"ImageBrowser",m:[{n:"G",f:[{t:2,r:".",p:[114,17,5759]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"ImageBrowser\""},p:[113,1,5702]},{t:4,f:[{p:[118,1,5825],t:7,e:"Schema",m:[{n:"G",f:[{t:2,r:".",p:[118,11,5835]}],t:13},{n:"schema_name",f:[{t:2,r:"selected_tablename",p:[118,31,5855]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"Schema\""},p:[117,1,5790]}," ",{p:[121,5,5901],t:7,e:"section",m:[{n:"style",f:["padding-bottom:0; padding-top:2rem; flex: 1;display: flex;flex-flow: column;overflow: auto; display:",{t:2,x:{r:["selectedModule"],s:"_0?\"none\":\"flex\""},p:[121,121,6017]}],t:13}],f:[{t:4,f:[{t:4,f:[{p:[124,9,6128],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"m-full",f:0,t:13},{n:"style",f:["background-color:",{t:2,x:{r:["selected_tablename",".name"],s:"(_0==_1)?\"#235\":\"#679\""},p:[124,56,6175]},"; font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem"],t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"TDetailsSingle\",_1)]"}},t:70}],f:[{t:2,r:".nice_name",p:[124,251,6370]}]}],n:50,x:{r:[".is_multiple"],s:"_0==\"false\""},p:[123,9,6088]},{t:4,n:51,f:[{p:[126,9,6419],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"m-full",f:0,t:13},{n:"style",f:["background-color:",{t:2,x:{r:["selected_tablename",".name"],s:"(_0==_1)?\"#235\":\"#679\""},p:[126,56,6466]},"; font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem"],t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"TGrid\",_1)]"}},t:70}],f:[{t:2,r:".nice_name",p:[126,242,6652]}]}],l:1}],n:52,r:"sqlite_tables",p:[122,5,6056]}]}," ",{t:4,f:[{p:[133,1,6769],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showSchemaNew",p:[133,14,6782]}],t:13},{n:"zoomFrom",f:"newSchema",t:13},{n:"title",f:"Create New Schema",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[134,43,6891]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[134,65,6913]}],t:13},{n:"style",f:"\nheight: 20em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 10em);\nbottom: inherit;\n",t:13}],f:[{p:[142,5,7046],t:7,e:"SchemaNew",m:[{n:"G",f:[{t:2,r:".",p:[142,18,7059]}],t:13},{n:"show",f:[{t:2,r:"showSchemaNew",p:[142,30,7071]}],t:13}]}]}],n:50,r:"showSchemaNew",p:[132,1,6746]},{t:4,f:[{p:[147,1,7140],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showAbout",p:[147,14,7153]}],t:13},{n:"zoomFrom",f:"showAbout",t:13},{n:"title",f:"About",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"false"},p:[148,43,7246]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[148,66,7269]}],t:13},{n:"style",f:"\nheight: 20em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 10em);\nbottom: inherit;\n",t:13}],f:[{p:[156,5,7402],t:7,e:"About",m:[{n:"show",f:[{t:2,r:"showAbout",p:[156,18,7415]}],t:13}]}]}],n:50,r:"showAbout",p:[146,1,7121]},{t:4,f:[{p:[162,1,7483],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showYesNoDialog",p:[162,14,7496]}],t:13},{n:"title",f:"Confirmation",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[163,43,7581]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[163,65,7603]}],t:13},{n:"style",f:"\nheight: 16em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 8em);\nbottom: inherit;\n",t:13}],f:[{p:[171,5,7735],t:7,e:"section",m:[{n:"style",f:"padding: 2rem; overflow: auto; text-align: center;height: 100%; display: flex; flex-flow: column;",t:13}],f:[{p:[172,9,7859],t:7,e:"h3",m:[{n:"style",f:"flex:1; overflow: auto; overflow-wrap: break-word;",t:13}],f:[{t:2,r:"YesNoDialogText",p:[172,72,7922]}]}," ",{p:[173,9,7955],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"style",f:"display:flex; justify-content: space-between; margin-top: 0;",t:13}],f:[{p:[174,13,8045],t:7,e:"button",m:[{n:"style",f:"margin: 0;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.fire(\"YesNoDialogAnswer\",false)]"}},t:70}],f:[{p:[175,17,8140],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-remove",t:13}]}," Cancel"]}," ",{p:[177,13,8234],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"style",f:"width: 14rem; margin: 0;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.fire(\"YesNoDialogAnswer\",true)]"}},t:70}],f:[{p:[178,17,8349],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-ok",t:13}]}," Yes"]}]}]}]}],n:50,r:"showYesNoDialog",p:[161,1,7458]}],e:{"_0?_0==\"ImageBrowser\"?\"Media\":_1:\"Admin Panel\"":function (_0,_1){return(_0?_0=="ImageBrowser"?"Media":_1:"Admin Panel");},"[_0.set(\"selectedModule\",null)]":function (_0){return([_0.set("selectedModule",null)]);},"!_0?\"border-color: #679;\":\"\"":function (_0){return(!_0?"border-color: #679;":"");},"[_0.set(\"selectedModule\",\"ImageBrowser\")]":function (_0){return([_0.set("selectedModule","ImageBrowser")]);},"_0==\"ImageBrowser\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="ImageBrowser"?"border-color: #679;":"");},"_0==\"Schema\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="Schema"?"border-color: #679;":"");},"[_0.set(\"showSchemaNew\",true)]":function (_0){return([_0.set("showSchemaNew",true)]);},"(_0==\"Schema\"&&_1==_2)?\"border-color: #679;\":\"\"":function (_0,_1,_2){return((_0=="Schema"&&_1==_2)?"border-color: #679;":"");},"[_0.fire(\"onModuleSelect\",_0.event,\"Schema\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"Schema",_1)]);},"_0==2":function (_0){return(_0==2);},"_0==\"UserList\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="UserList"?"border-color: #679;":"");},"(_0==\"UserList\")?\"border-color: #679;\":\"\"":function (_0){return((_0=="UserList")?"border-color: #679;":"");},"[_0.fire(\"onModuleSelect\",_0.event,\"UserList\",\"\")]":function (_0){return([_0.fire("onModuleSelect",_0.event,"UserList","")]);},"(_0==2)||(_0==4)||true":function (_0){return((_0==2)||(_0==4)||true);},"(_0==\"Login\")?\"border-color: #679;\":\"\"":function (_0){return((_0=="Login")?"border-color: #679;":"");},"[_0.toggle(\"showAbout\")]":function (_0){return([_0.toggle("showAbout")]);},"true":function (){return(true);},"!_0":function (_0){return(!_0);},"_0==\"UserList\"":function (_0){return(_0=="UserList");},"_0==\"TGrid\"":function (_0){return(_0=="TGrid");},"_0==\"TDetailsSingle\"":function (_0){return(_0=="TDetailsSingle");},"_0==\"ImageBrowser\"":function (_0){return(_0=="ImageBrowser");},"_0==\"Schema\"":function (_0){return(_0=="Schema");},"_0?\"none\":\"flex\"":function (_0){return(_0?"none":"flex");},"(_0==_1)?\"#235\":\"#679\"":function (_0,_1){return((_0==_1)?"#235":"#679");},"[_0.fire(\"onModuleSelect\",_0.event,\"TDetailsSingle\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"TDetailsSingle",_1)]);},"_0==\"false\"":function (_0){return(_0=="false");},"[_0.fire(\"onModuleSelect\",_0.event,\"TGrid\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"TGrid",_1)]);},"false":function (){return(false);},"[_0.fire(\"YesNoDialogAnswer\",false)]":function (_0){return([_0.fire("YesNoDialogAnswer",false)]);},"[_0.fire(\"YesNoDialogAnswer\",true)]":function (_0){return([_0.fire("YesNoDialogAnswer",true)]);}}};
+component.exports.template = {v:4,t:[{p:[2,1,1],t:7,e:"nav",m:[{n:"style",f:"z-index: 1044;",t:13},{n:"id",f:"nav",t:13}],f:[{p:[3,9,47],t:7,e:"header",f:[" ",{p:[5,17,148],t:7,e:"a",m:[{n:"style",f:"left: 0; top: 0; bottom: 0; padding: 1rem 2rem;",t:13}],f:[{p:[6,21,229],t:7,e:"img",m:[{n:"src",f:"favicon.png",t:13}]}," ",{t:2,x:{r:["selectedModule","selected_tablename_obj.nice_name"],s:"_0?_0==\"ImageBrowser\"?\"Media\":_1:\"Admin Panel\""},p:[7,21,273]}]}]}," ",{p:[12,5,535],t:7,e:"label",f:[" ",{p:[14,9,607],t:7,e:"input",m:[{n:"type",f:"checkbox",t:13},{n:"id",f:"menuOpen",t:13},{n:"checked",f:[{t:2,r:"menuOpen",p:[14,54,652]}],t:13}]}," ",{p:[20,9,853],t:7,e:"ul",f:[{p:[22,13,879],t:7,e:"li",f:[{p:[23,17,900],t:7,e:"a",m:[{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"selectedModule\",null)]"}},t:70},{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"!_0?\"border-color: #679;\":\"\""},p:[23,72,955]}],t:13}],f:[{p:[23,119,1002],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-home",t:13}]}," Home"]}]}," ",{t:4,f:[{p:[28,13,1185],t:7,e:"li",f:[{p:[29,17,1206],t:7,e:"a",m:[{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"selectedModule\",\"ImageBrowser\")]"}},t:70},{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"ImageBrowser\"?\"border-color: #679;\":\"\""},p:[29,82,1271]}],t:13}],f:[{p:[29,144,1333],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-picture",t:13}]}," Media"]}]}],n:50,x:{r:["_session_user_role"],s:"_0==2"},p:[27,13,1141]}," ",{t:4,f:[{p:[35,13,1546],t:7,e:"li",f:[{p:[36,17,1567],t:7,e:"a",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"Schema\"?\"border-color: #679;\":\"\""},p:[36,27,1577]}],t:13}],f:[{p:[36,82,1632],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-tasks",t:13}]}," Schema"]}," ",{p:[37,17,1723],t:7,e:"menu",f:[{p:[38,21,1750],t:7,e:"menuitem",f:[{p:[38,31,1760],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"showSchemaNew\",true)]"}},t:70},{n:"id",f:"newSchema",t:13}],f:[{p:[38,129,1858],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-plus",t:13}]}," Add New Schema"]}]}," ",{t:4,f:[{p:[40,21,2023],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule","selected_tablename",".name"],s:"(_0==\"Schema\"&&_1==_2)?\"border-color: #679;\":\"\""},p:[40,38,2040]}],t:13}],f:[{p:[40,124,2126],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"Schema\",_1)]"}},t:70}],f:[{t:2,r:".name",p:[40,232,2234]}," (",{t:2,r:".nice_name",p:[40,243,2245]},")"]}]}],n:52,r:"sqlite_schema",p:[39,21,1955]}]}]}],n:50,x:{r:["_session_user_role"],s:"_0==2"},p:[34,13,1502]}," ",{p:[60,13,3329],t:7,e:"li",f:[{p:[61,17,3350],t:7,e:"a",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"_0==\"UserList\"?\"border-color: #679;\":\"\""},p:[61,27,3360]}],t:13}],f:[{p:[61,84,3417],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-cog",t:13}]}," Settings"]}," ",{p:[62,17,3508],t:7,e:"menu",f:[{t:4,f:[" ",{p:[64,21,3646],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"(_0==\"UserList\")?\"border-color: #679;\":\"\""},p:[64,38,3663]}],t:13}],f:[{p:[64,97,3722],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"UserList\",\"\")]"}},t:70}],f:[{p:[65,25,3854],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-user",t:13}],f:[{p:[66,29,3922],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-user",t:13},{n:"style",f:"position: absolute;left: 5px;top: 1px;color: #679;",t:13}]}]}," Users"]}]}],n:50,x:{r:["_session_user_role"],s:"(_0==2)||(_0==4)||true"},p:[63,21,3535]}," ",{p:[70,21,4154],t:7,e:"menuitem",m:[{n:"style",f:[{t:2,x:{r:["selectedModule"],s:"(_0==\"Login\")?\"border-color: #679;\":\"\""},p:[70,38,4171]}],t:13}],f:[{p:[70,94,4227],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:"logout",t:70}],f:[{p:[70,152,4285],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-off",t:13}]}," Sign out"]}]}," ",{p:[71,21,4375],t:7,e:"menuitem",m:[{n:"id",f:"showAbout",t:13}],f:[{p:[71,47,4401],t:7,e:"a",m:[{n:"style",f:"text-transform: capitalize;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.toggle(\"showAbout\")]"}},t:70}],f:[{p:[71,124,4478],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-info-sign",t:13}]}," About"]}]}]}]}," "]}]}]}," ",{t:4,f:[{p:[91,1,5221],t:7,e:"modal",m:[{n:"show",f:[{t:2,x:{r:[],s:"true"},p:[91,14,5234]}],t:13},{n:"title",f:"Login",t:13},{n:"zoomFrom",f:"nav",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[92,29,5287]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[92,51,5309]}],t:13},{n:"style",f:"\nheight: 20em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 10em);\nbottom: inherit;\n",t:13}],f:[{p:[100,5,5442],t:7,e:"Login",m:[{n:"G",f:[{t:2,r:".",p:[100,14,5451]}],t:13}]}]}],n:50,x:{r:["is_logedin"],s:"!_0"},p:[90,1,5201]},{t:4,f:[{p:[105,1,5522],t:7,e:"UserList",m:[{n:"G",f:[{t:2,r:".",p:[105,13,5534]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"UserList\""},p:[104,1,5485]},{t:4,f:[{p:[109,1,5595],t:7,e:"TGrid",m:[{n:"G",f:[{t:2,r:".",p:[109,10,5604]}],t:13},{n:"selected_tablename",f:[{t:2,r:"selected_tablename",p:[109,37,5631]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"TGrid\""},p:[108,1,5561]},{t:4,f:[{p:[113,1,5715],t:7,e:"TDetailsSingle",m:[{n:"G",f:[{t:2,r:".",p:[113,19,5733]}],t:13},{n:"selected_tablename",f:[{t:2,r:"selected_tablename",p:[113,46,5760]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"TDetailsSingle\""},p:[112,1,5672]},{t:4,f:[{p:[117,1,5851],t:7,e:"ImageBrowser",m:[{n:"G",f:[{t:2,r:".",p:[117,17,5867]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"ImageBrowser\""},p:[116,1,5810]},{t:4,f:[{p:[121,1,5933],t:7,e:"Schema",m:[{n:"G",f:[{t:2,r:".",p:[121,11,5943]}],t:13},{n:"schema_name",f:[{t:2,r:"selected_tablename",p:[121,31,5963]}],t:13}]}],n:50,x:{r:["selectedModule"],s:"_0==\"Schema\""},p:[120,1,5898]}," ",{p:[124,5,6009],t:7,e:"section",m:[{n:"style",f:["padding-bottom:0; padding-top:2rem; flex: 1;display: flex;flex-flow: column;overflow: auto; display:",{t:2,x:{r:["selectedModule"],s:"_0?\"none\":\"flex\""},p:[124,121,6125]}],t:13}],f:[{t:4,f:[{t:4,f:[{p:[127,9,6236],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"m-full",f:0,t:13},{n:"style",f:["background-color:",{t:2,x:{r:["selected_tablename",".name"],s:"(_0==_1)?\"#235\":\"#679\""},p:[127,56,6283]},"; font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem"],t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"TDetailsSingle\",_1)]"}},t:70}],f:[{t:2,r:".nice_name",p:[127,251,6478]}]}],n:50,x:{r:[".is_multiple"],s:"_0==\"false\""},p:[126,9,6196]},{t:4,n:51,f:[{p:[129,9,6527],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"m-full",f:0,t:13},{n:"style",f:["background-color:",{t:2,x:{r:["selected_tablename",".name"],s:"(_0==_1)?\"#235\":\"#679\""},p:[129,56,6574]},"; font-size: 2.2rem;line-height: 3rem;margin-top:1rem; min-height:10rem"],t:13},{n:"click",f:{x:{r:["@this",".name"],s:"[_0.fire(\"onModuleSelect\",_0.event,\"TGrid\",_1)]"}},t:70}],f:[{t:2,r:".nice_name",p:[129,242,6760]}]}],l:1}],n:52,r:"sqlite_tables",p:[125,5,6164]}]}," ",{t:4,f:[{p:[136,1,6877],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showSchemaNew",p:[136,14,6890]}],t:13},{n:"zoomFrom",f:"newSchema",t:13},{n:"title",f:"Create New Schema",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[137,43,6999]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[137,65,7021]}],t:13},{n:"style",f:"\nheight: 20em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 10em);\nbottom: inherit;\n",t:13}],f:[{p:[145,5,7154],t:7,e:"SchemaNew",m:[{n:"G",f:[{t:2,r:".",p:[145,18,7167]}],t:13},{n:"show",f:[{t:2,r:"showSchemaNew",p:[145,30,7179]}],t:13}]}]}],n:50,r:"showSchemaNew",p:[135,1,6854]},{t:4,f:[{p:[150,1,7248],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showAbout",p:[150,14,7261]}],t:13},{n:"zoomFrom",f:"showAbout",t:13},{n:"title",f:"About",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"false"},p:[151,43,7354]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[151,66,7377]}],t:13},{n:"style",f:"\nheight: 20em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 10em);\nbottom: inherit;\n",t:13}],f:[{p:[159,5,7510],t:7,e:"About",m:[{n:"show",f:[{t:2,r:"showAbout",p:[159,18,7523]}],t:13}]}]}],n:50,r:"showAbout",p:[149,1,7229]},{t:4,f:[{p:[165,1,7591],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showYesNoDialog",p:[165,14,7604]}],t:13},{n:"title",f:"Confirmation",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[166,43,7689]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[166,65,7711]}],t:13},{n:"style",f:"\nheight: 16em;\nwidth: 30em;\nleft: calc(50% - 15em);\nright: inherit;\ntop: calc(50% - 8em);\nbottom: inherit;\n",t:13}],f:[{p:[174,5,7843],t:7,e:"section",m:[{n:"style",f:"padding: 2rem; overflow: auto; text-align: center;height: 100%; display: flex; flex-flow: column;",t:13}],f:[{p:[175,9,7967],t:7,e:"h3",m:[{n:"style",f:"flex:1; overflow: auto; overflow-wrap: break-word;",t:13}],f:[{t:2,r:"YesNoDialogText",p:[175,72,8030]}]}," ",{p:[176,9,8063],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"style",f:"display:flex; justify-content: space-between; margin-top: 0;",t:13}],f:[{p:[177,13,8153],t:7,e:"button",m:[{n:"style",f:"margin: 0;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.fire(\"YesNoDialogAnswer\",false)]"}},t:70}],f:[{p:[178,17,8248],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-remove",t:13}]}," Cancel"]}," ",{p:[180,13,8342],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"style",f:"width: 14rem; margin: 0;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.fire(\"YesNoDialogAnswer\",true)]"}},t:70}],f:[{p:[181,17,8457],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-ok",t:13}]}," Yes"]}]}]}]}],n:50,r:"showYesNoDialog",p:[164,1,7566]}],e:{"_0?_0==\"ImageBrowser\"?\"Media\":_1:\"Admin Panel\"":function (_0,_1){return(_0?_0=="ImageBrowser"?"Media":_1:"Admin Panel");},"[_0.set(\"selectedModule\",null)]":function (_0){return([_0.set("selectedModule",null)]);},"!_0?\"border-color: #679;\":\"\"":function (_0){return(!_0?"border-color: #679;":"");},"[_0.set(\"selectedModule\",\"ImageBrowser\")]":function (_0){return([_0.set("selectedModule","ImageBrowser")]);},"_0==\"ImageBrowser\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="ImageBrowser"?"border-color: #679;":"");},"_0==2":function (_0){return(_0==2);},"_0==\"Schema\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="Schema"?"border-color: #679;":"");},"[_0.set(\"showSchemaNew\",true)]":function (_0){return([_0.set("showSchemaNew",true)]);},"(_0==\"Schema\"&&_1==_2)?\"border-color: #679;\":\"\"":function (_0,_1,_2){return((_0=="Schema"&&_1==_2)?"border-color: #679;":"");},"[_0.fire(\"onModuleSelect\",_0.event,\"Schema\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"Schema",_1)]);},"_0==\"UserList\"?\"border-color: #679;\":\"\"":function (_0){return(_0=="UserList"?"border-color: #679;":"");},"(_0==\"UserList\")?\"border-color: #679;\":\"\"":function (_0){return((_0=="UserList")?"border-color: #679;":"");},"[_0.fire(\"onModuleSelect\",_0.event,\"UserList\",\"\")]":function (_0){return([_0.fire("onModuleSelect",_0.event,"UserList","")]);},"(_0==2)||(_0==4)||true":function (_0){return((_0==2)||(_0==4)||true);},"(_0==\"Login\")?\"border-color: #679;\":\"\"":function (_0){return((_0=="Login")?"border-color: #679;":"");},"[_0.toggle(\"showAbout\")]":function (_0){return([_0.toggle("showAbout")]);},"true":function (){return(true);},"!_0":function (_0){return(!_0);},"_0==\"UserList\"":function (_0){return(_0=="UserList");},"_0==\"TGrid\"":function (_0){return(_0=="TGrid");},"_0==\"TDetailsSingle\"":function (_0){return(_0=="TDetailsSingle");},"_0==\"ImageBrowser\"":function (_0){return(_0=="ImageBrowser");},"_0==\"Schema\"":function (_0){return(_0=="Schema");},"_0?\"none\":\"flex\"":function (_0){return(_0?"none":"flex");},"(_0==_1)?\"#235\":\"#679\"":function (_0,_1){return((_0==_1)?"#235":"#679");},"[_0.fire(\"onModuleSelect\",_0.event,\"TDetailsSingle\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"TDetailsSingle",_1)]);},"_0==\"false\"":function (_0){return(_0=="false");},"[_0.fire(\"onModuleSelect\",_0.event,\"TGrid\",_1)]":function (_0,_1){return([_0.fire("onModuleSelect",_0.event,"TGrid",_1)]);},"false":function (){return(false);},"[_0.fire(\"YesNoDialogAnswer\",false)]":function (_0){return([_0.fire("YesNoDialogAnswer",false)]);},"[_0.fire(\"YesNoDialogAnswer\",true)]":function (_0){return([_0.fire("YesNoDialogAnswer",true)]);}}};
 module.exports = Ractive.extend(component.exports);
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -38311,7 +42328,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -38591,7 +42608,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -38639,7 +42656,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -38737,7 +42754,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -38755,7 +42772,14 @@ var component = module;
             var cols = self.get('cols');
             var row = {};
             for(var i=0;i<cols.length;i++) {
-                row[ cols[i].compId ] = cols[i].default_value;
+                //row[ cols[i].compId ] = cols[i].default_value;
+                try{
+                  row[ cols[i].compId ] = eval( cols[i].default_value )
+                }
+                catch(e){
+                  row[ cols[i].compId ] = cols[i].default_value;
+                }
+
                 if (cols[i].default_value == 'now' && cols[i].compType == 'DATE')
                     row[ cols[i].compId ] = new Date().toISOString().substr(0, 10);
                 if (cols[i].compType == 'CHILD')
@@ -38843,11 +42867,13 @@ var component = module;
             self.set('showMap', true)
         })
 
-        this.on('showFileBrowse', function(id){
-            console.log(id);
+        this.on('showFileBrowse', function(id, aspect_ratio){
+            console.log(id, aspect_ratio);
             self.set('pathvarname', id)
+            self.set('aspect_ratio', aspect_ratio)
             self.set('showFileBrowse', true)
         })
+
         
     },        
     data:function() {
@@ -38884,14 +42910,14 @@ var component = module;
     }
     };
     
-component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13}],f:[{p:[2,5,42],t:7,e:"grid",m:[{n:"style",f:"flex:1; overflow:auto;",t:13}],f:[{t:4,f:[{t:4,f:[{p:[6,9,174],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[7,13,215],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[7,33,235]}]}," ",{p:[8,13,270],t:7,e:"input",m:[{t:4,f:[{n:"blur",f:{x:{r:["@this",".compId","row"],s:"[_0.fire(\"blur\",_2[_1])]"}},t:70}],n:50,x:{r:["slug_src",".compId"],s:"_0==_1"},p:[8,20,277]},{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[9,66,418]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[9,93,445]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[9,117,469]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"TEXT\"&&_1==\"true\""},p:[5,9,112]}," ",{t:4,f:[{p:[14,9,591],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[15,13,632],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[15,33,652]}]}," ",{p:[16,13,687],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[16,73,747]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[16,100,774]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[16,124,798]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"SLUG\"&&_1==\"true\""},p:[13,9,529]}," ",{t:4,f:[{p:[21,9,924],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[22,13,965],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[22,33,985]}]}," ",{p:[23,13,1020],t:7,e:"textarea",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"style",f:"min-height: 14rem;",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[23,91,1098]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[23,118,1125]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[23,142,1149]}],t:13}],f:["        </div>\n        "]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"LONGTEXT\"&&_1==\"true\""},p:[20,9,858]}," ",{t:4,f:[{p:[28,9,1309],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[29,13,1350],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[29,33,1370]}]}," ",{p:[30,13,1405],t:7,e:"input",m:[{n:"style",f:"width: 10rem",t:13},{n:"type",f:"number",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[30,62,1454]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[30,89,1481]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[30,113,1505]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"(_0==\"INTEGER\"||_0==\"NUMERIC\")&&_1==\"true\""},p:[27,9,1217]}," ",{t:4,f:[{p:[35,9,1626],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[36,13,1667],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[36,33,1687]}]}," ",{p:[37,13,1722],t:7,e:"input",m:[{n:"style",f:"width: 15rem",t:13},{n:"type",f:"date",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[37,60,1769]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[37,87,1796]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[37,111,1820]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"DATE\"&&_1==\"true\""},p:[34,9,1564]}," ",{t:4,f:[{p:[42,9,1943],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[43,13,1984],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[43,33,2004]}]}," ",{p:[44,13,2039],t:7,e:"input",m:[{n:"style",f:"width: 8rem",t:13},{n:"type",f:"text",t:13},{n:"style",f:"height:3.6rem",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[44,81,2107]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[44,108,2134]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[44,132,2158]}],t:13}]}," ",{p:[45,13,2190],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 23rem)",t:13},{n:"type",f:"color",t:13},{n:"style",f:"height:4rem",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[45,94,2271]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[45,121,2298]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[45,145,2322]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"COLOR\"&&_1==\"true\""},p:[41,9,1880]}," ",{t:4,f:[{p:[50,9,2451],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[51,13,2494],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[51,33,2514]}]}," ",{p:[52,13,2549],t:7,e:"Selectize",m:[{n:"url",f:["?query=",{t:2,r:".lookup_table",p:[52,36,2572]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[52,62,2598]}],t:13},{n:"labelf",f:[{t:2,r:".lookup_field",p:[52,88,2624]}],t:13},{n:"multiple",f:"multiple",t:13},{n:"style",f:"display: inline-block; width: calc(100% - 15rem)",t:13}],f:[]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"MULTISELECT\"&&_1==\"true\""},p:[49,9,2382]}," ",{t:4,f:[{p:[59,9,2877],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[60,13,2919],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[60,33,2939]}]}," ",{p:[61,13,2974],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 39rem); margin-right: 1rem;",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[61,94,3055]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[61,121,3082]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[61,145,3106]}],t:13}]}," ",{p:[62,13,3136],t:7,e:"button",m:[{n:"id",f:"browse",t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:{x:{r:["@this",".compId"],s:"[_0.fire(\"showFileBrowse\",_1)]"}},t:70}],f:["Browse"]}," ",{p:[64,13,3272],t:7,e:"img",m:[{n:"src",f:[{t:2,r:"HOSTNAME",p:[64,23,3282]},"image.php?id=",{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[64,48,3307]},"&forcethumb"],t:13},{n:"alt",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[64,82,3341]}],t:13},{n:"style",f:"max-width: 8rem; max-height: 6rem;",t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"IMAGE\"&&_1==\"true\""},p:[58,9,2814]}," ",{t:4,f:[{p:[69,9,3509],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[70,13,3550],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[70,33,3570]}]}," ",{p:[71,13,3605],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width: calc(100% - 15rem)",t:13},{n:"url",f:["?query=",{t:2,r:".lookup_table",p:[71,90,3682]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[71,115,3707]}],t:13},{n:"labelf",f:[{t:2,r:".lookup_field",p:[71,140,3732]}],t:13},{n:"valuef",f:"id",t:13}],f:[{p:[72,17,3781],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"DROPDOWN\"&&_1==\"true\""},p:[68,9,3443]}," ",{t:4,f:[{p:[78,9,3964],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[79,13,4005],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[79,33,4025]}]}," ",{p:[80,13,4060],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 23rem)",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[80,73,4120]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[80,100,4147]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[80,124,4171]}],t:13}]}," ",{p:[81,13,4203],t:7,e:"button",m:[{n:"style",f:"float:right",t:13},{n:"click",f:{x:{r:["@this",".compId"],s:"[_0.fire(\"showMap\",_1)]"}},t:70}],f:["Map"]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"GPS\"&&_1==\"true\""},p:[77,9,3903]}," ",{t:4,f:[{p:[86,9,4392],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[87,13,4433],t:7,e:"Checkbox",m:[{n:"id",f:[{t:2,r:"compId",p:[87,27,4447]}],t:13},{n:"checked",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[87,47,4467]}],t:13}]}," ",{p:[88,13,4508],t:7,e:"label",m:[{n:"for",f:[{t:2,r:"compId",p:[88,25,4520]}],t:13}],f:[{t:2,r:".nice_name",p:[88,37,4532]}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"CHECKBOX\"&&_1==\"true\""},p:[85,9,4326]}," ",{t:4,f:[{p:[93,9,4661],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[94,13,4702],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[94,33,4722]}]}," ",{p:[95,13,4757],t:7,e:"HtmlEdit",m:[{n:"style",f:"width: calc(100% - 15rem); height:30rem",t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[95,84,4828]}],t:13},{n:"code",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[95,107,4851]}],t:13}],f:[]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"HTMLEDIT\"&&_1==\"true\""},p:[92,9,4595]}," ",{t:4,f:[{p:[101,9,4997],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[102,13,5038],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[102,33,5058]}]}," ",{p:[103,13,5093],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"range",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[103,74,5154]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[103,101,5181]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[103,125,5205]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"RANGE\"&&_1==\"true\""},p:[100,9,4934]}," ",{t:4,f:[{p:[108,9,5328],t:7,e:"hr",m:[{n:"style",f:"margin: 0",t:13}]}," ",{p:[109,9,5359],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[110,11,5385],t:7,e:"TGridNested",m:[{n:"G",f:[{t:2,r:"G",p:[110,26,5400]}],t:13},{n:"parent_id",f:[{t:2,r:"row.id",p:[110,42,5416]}],t:13},{n:"selected_tablename",f:[{t:2,r:".lookup_table",p:[110,75,5449]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"CHILD\"&&_1==\"true\""},p:[107,9,5265]}," "],n:52,r:"cols",p:[3,9,88]}]}," ",{p:[147,5,6494],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13}],f:[{p:[148,9,6529],t:7,e:"button",m:[{n:"disabled",f:[{t:2,x:{r:["row.id","loading"],s:"!_0||_1"},p:[148,27,6547]}],t:13},{n:"click",f:"delete",t:70}],f:[{p:[149,13,6602],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-remove",t:13}]}," Delete"]}," ",{p:[151,9,6688],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"disabled",f:[{t:2,r:"loading",p:[151,34,6713]}],t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:"save",t:70}],f:[{p:[152,13,6776],t:7,e:"span",m:[{n:"class",f:["glyphicon ",{t:2,x:{r:["loading"],s:"_0?\"glyphicon-refresh glyphicon-refresh-animate\":\"glyphicon-ok\""},p:[152,36,6799]}],t:13}]}," Save"]}]}," "]}," ",{t:4,f:[{p:[164,1,7096],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showMap",p:[164,14,7109]}],t:13},{n:"title",f:"Click on map to set position",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[165,43,7202]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[165,65,7224]}],t:13},{n:"style",f:"\nheight: 40em;\nwidth: 60em;\nleft: calc(50% - 30em);\nright: inherit;\ntop: calc(50% - 20em);\nbottom: inherit;\n",t:13}],f:[{p:[173,5,7357],t:7,e:"map",m:[{n:"G",f:[{t:2,r:"G",p:[173,12,7364]}],t:13},{n:"gps",f:[{t:2,rx:{r:"row",m:[{t:30,n:"mapvarname"}]},p:[173,23,7375]}],t:13},{n:"show",f:[{t:2,r:"showMap",p:[173,50,7402]}],t:13}]}]}],n:50,r:"showMap",p:[163,1,7080]},{t:4,f:[{p:[179,1,7469],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFileBrowse",p:[179,14,7482]}],t:13},{n:"zoomFrom",f:"browse",t:13},{n:"cw",f:[{t:2,r:"cw",p:[179,56,7524]}],t:13},{n:"title",f:"Browse",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[180,43,7590]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[187,5,7722],t:7,e:"ImageBrowser",m:[{n:"G",f:[{t:2,r:"G",p:[187,21,7738]}],t:13},{n:"path",f:[{t:2,rx:{r:"row",m:[{t:30,n:"pathvarname"}]},p:[187,33,7750]}],t:13},{n:"show",f:[{t:2,r:"showFileBrowse",p:[187,61,7778]}],t:13}]}]}],n:50,r:"showFileBrowse",p:[178,1,7446]}],e:{"[_0.fire(\"blur\",_2[_1])]":function (_0,_1,_2){return([_0.fire("blur",_2[_1])]);},"_0==_1":function (_0,_1){return(_0==_1);},"_0==\"TEXT\"&&_1==\"true\"":function (_0,_1){return(_0=="TEXT"&&_1=="true");},"_0==\"SLUG\"&&_1==\"true\"":function (_0,_1){return(_0=="SLUG"&&_1=="true");},"_0==\"LONGTEXT\"&&_1==\"true\"":function (_0,_1){return(_0=="LONGTEXT"&&_1=="true");},"(_0==\"INTEGER\"||_0==\"NUMERIC\")&&_1==\"true\"":function (_0,_1){return((_0=="INTEGER"||_0=="NUMERIC")&&_1=="true");},"_0==\"DATE\"&&_1==\"true\"":function (_0,_1){return(_0=="DATE"&&_1=="true");},"_0==\"COLOR\"&&_1==\"true\"":function (_0,_1){return(_0=="COLOR"&&_1=="true");},"_0==\"MULTISELECT\"&&_1==\"true\"":function (_0,_1){return(_0=="MULTISELECT"&&_1=="true");},"[_0.fire(\"showFileBrowse\",_1)]":function (_0,_1){return([_0.fire("showFileBrowse",_1)]);},"_0==\"IMAGE\"&&_1==\"true\"":function (_0,_1){return(_0=="IMAGE"&&_1=="true");},"_0==\"DROPDOWN\"&&_1==\"true\"":function (_0,_1){return(_0=="DROPDOWN"&&_1=="true");},"[_0.fire(\"showMap\",_1)]":function (_0,_1){return([_0.fire("showMap",_1)]);},"_0==\"GPS\"&&_1==\"true\"":function (_0,_1){return(_0=="GPS"&&_1=="true");},"_0==\"CHECKBOX\"&&_1==\"true\"":function (_0,_1){return(_0=="CHECKBOX"&&_1=="true");},"_0==\"HTMLEDIT\"&&_1==\"true\"":function (_0,_1){return(_0=="HTMLEDIT"&&_1=="true");},"_0==\"RANGE\"&&_1==\"true\"":function (_0,_1){return(_0=="RANGE"&&_1=="true");},"_0==\"CHILD\"&&_1==\"true\"":function (_0,_1){return(_0=="CHILD"&&_1=="true");},"!_0||_1":function (_0,_1){return(!_0||_1);},"_0?\"glyphicon-refresh glyphicon-refresh-animate\":\"glyphicon-ok\"":function (_0){return(_0?"glyphicon-refresh glyphicon-refresh-animate":"glyphicon-ok");},"true":function (){return(true);}}};
+component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13}],f:[{p:[2,5,42],t:7,e:"grid",m:[{n:"style",f:"flex:1; overflow:auto;",t:13}],f:[{t:4,f:[{t:4,f:[{p:[6,9,174],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[7,13,215],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[7,33,235]}]}," ",{p:[8,13,270],t:7,e:"input",m:[{t:4,f:[{n:"blur",f:{x:{r:["@this",".compId","row"],s:"[_0.fire(\"blur\",_2[_1])]"}},t:70}],n:50,x:{r:["slug_src",".compId"],s:"_0==_1"},p:[8,20,277]},{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[9,66,418]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[9,93,445]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[9,117,469]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"TEXT\"&&_1==\"true\""},p:[5,9,112]}," ",{t:4,f:[{p:[14,9,591],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[15,13,632],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[15,33,652]}]}," ",{p:[16,13,687],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[16,73,747]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[16,100,774]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[16,124,798]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"SLUG\"&&_1==\"true\""},p:[13,9,529]}," ",{t:4,f:[{p:[21,9,924],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[22,13,965],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[22,33,985]}]}," ",{p:[23,13,1020],t:7,e:"textarea",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"style",f:"min-height: 14rem;",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[23,91,1098]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[23,118,1125]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[23,142,1149]}],t:13}],f:["        </div>\n        "]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"LONGTEXT\"&&_1==\"true\""},p:[20,9,858]}," ",{t:4,f:[{p:[28,9,1309],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[29,13,1350],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[29,33,1370]}]}," ",{p:[30,13,1405],t:7,e:"input",m:[{n:"style",f:"width: 10rem",t:13},{n:"type",f:"number",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[30,62,1454]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[30,89,1481]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[30,113,1505]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"(_0==\"INTEGER\"||_0==\"NUMERIC\")&&_1==\"true\""},p:[27,9,1217]}," ",{t:4,f:[{p:[35,9,1626],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[36,13,1667],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[36,33,1687]}]}," ",{p:[37,13,1722],t:7,e:"input",m:[{n:"style",f:"width: 15rem",t:13},{n:"type",f:"date",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[37,60,1769]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[37,87,1796]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[37,111,1820]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"DATE\"&&_1==\"true\""},p:[34,9,1564]}," ",{t:4,f:[{p:[42,9,1943],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[43,13,1984],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[43,33,2004]}]}," ",{p:[44,13,2039],t:7,e:"input",m:[{n:"style",f:"width: 8rem",t:13},{n:"type",f:"text",t:13},{n:"style",f:"height:3.6rem",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[44,81,2107]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[44,108,2134]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[44,132,2158]}],t:13}]}," ",{p:[45,13,2190],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 23rem)",t:13},{n:"type",f:"color",t:13},{n:"style",f:"height:4rem",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[45,94,2271]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[45,121,2298]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[45,145,2322]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"COLOR\"&&_1==\"true\""},p:[41,9,1880]}," ",{t:4,f:[{p:[50,9,2451],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[51,13,2494],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[51,33,2514]}]}," ",{p:[52,13,2549],t:7,e:"Selectize",m:[{n:"url",f:["?query=",{t:2,r:".lookup_table",p:[52,36,2572]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[52,62,2598]}],t:13},{n:"labelf",f:[{t:2,r:".lookup_field",p:[52,88,2624]}],t:13},{n:"multiple",f:"multiple",t:13},{n:"style",f:"display: inline-block; width: calc(100% - 15rem)",t:13}],f:[]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"MULTISELECT\"&&_1==\"true\""},p:[49,9,2382]}," ",{t:4,f:[" ",{p:[68,9,3481],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[69,11,3520],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[69,31,3540]}]}," ",{p:[70,11,3573],t:7,e:"Gallery2single",m:[{n:"slug",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[70,32,3594]}],t:13},{n:"aspect_ratio",f:[{t:2,r:".aspect_ratio",p:[70,62,3624]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details",".compId"],s:"_0==\"IMAGE\"&&_1==\"true\"&&!((_2).endsWith(\"_\"))"},p:[58,9,2814]}," ",{t:4,f:[{p:[75,9,3776],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[76,11,3815],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[76,31,3835]}]}," ",{p:[77,11,3868],t:7,e:"Gallery",m:[{n:"rows",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[77,25,3882]}],t:13},{n:"aspect_ratio",f:[{t:2,r:".aspect_ratio",p:[77,55,3912]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details",".compId"],s:"_0==\"IMAGE\"&&_1==\"true\"&&(_2).endsWith(\"_\")"},p:[74,9,3685]}," ",{t:4,f:[{p:[83,9,4040],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[84,13,4081],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[84,33,4101]}]}," ",{p:[85,13,4136],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width: calc(100% - 15rem)",t:13},{n:"url",f:["?query=",{t:2,r:".lookup_table",p:[85,90,4213]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[85,115,4238]}],t:13},{n:"labelf",f:[{t:2,r:".lookup_field",p:[85,140,4263]}],t:13},{n:"valuef",f:"id",t:13}],f:[{p:[86,17,4312],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"DROPDOWN\"&&_1==\"true\""},p:[82,9,3974]}," ",{t:4,f:[{p:[92,9,4495],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[93,13,4536],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[93,33,4556]}]}," ",{p:[94,13,4591],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 23rem)",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[94,73,4651]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[94,100,4678]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[94,124,4702]}],t:13}]}," ",{p:[95,13,4734],t:7,e:"button",m:[{n:"style",f:"float:right",t:13},{n:"click",f:{x:{r:["@this",".compId"],s:"[_0.fire(\"showMap\",_1)]"}},t:70}],f:["Map"]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"GPS\"&&_1==\"true\""},p:[91,9,4434]}," ",{t:4,f:[{p:[100,9,4923],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[101,13,4964],t:7,e:"Checkbox",m:[{n:"id",f:[{t:2,r:"compId",p:[101,27,4978]}],t:13},{n:"checked",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[101,47,4998]}],t:13}]}," ",{p:[102,13,5039],t:7,e:"label",m:[{n:"for",f:[{t:2,r:"compId",p:[102,25,5051]}],t:13}],f:[{t:2,r:".nice_name",p:[102,37,5063]}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"CHECKBOX\"&&_1==\"true\""},p:[99,9,4857]}," ",{t:4,f:[{p:[107,9,5192],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[108,13,5233],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[108,33,5253]}]}," ",{p:[109,13,5288],t:7,e:"HtmlEdit",m:[{n:"style",f:"width: calc(100% - 15rem); height:30rem",t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[109,84,5359]}],t:13},{n:"code",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[109,107,5382]}],t:13}],f:[]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"HTMLEDIT\"&&_1==\"true\""},p:[106,9,5126]}," ",{t:4,f:[{p:[115,9,5528],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[116,13,5569],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[116,33,5589]}]}," ",{p:[117,13,5624],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"range",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[117,74,5685]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[117,101,5712]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[117,125,5736]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"RANGE\"&&_1==\"true\""},p:[114,9,5465]}," ",{t:4,f:[{p:[122,9,5859],t:7,e:"hr",m:[{n:"style",f:"margin: 0",t:13}]}," ",{p:[123,9,5890],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[124,11,5916],t:7,e:"TGridNested",m:[{n:"G",f:[{t:2,r:"G",p:[124,26,5931]}],t:13},{n:"parent_id",f:[{t:2,r:"row.id",p:[124,42,5947]}],t:13},{n:"selected_tablename",f:[{t:2,r:".lookup_table",p:[124,75,5980]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"CHILD\"&&_1==\"true\""},p:[121,9,5796]}," "],n:52,r:"cols",p:[3,9,88]}]}," ",{p:[161,5,7025],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13}],f:[{p:[162,9,7060],t:7,e:"button",m:[{n:"disabled",f:[{t:2,x:{r:["row.id","loading"],s:"!_0||_1"},p:[162,27,7078]}],t:13},{n:"click",f:"delete",t:70}],f:[{p:[163,13,7133],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-remove",t:13}]}," Delete"]}," ",{p:[165,9,7219],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"disabled",f:[{t:2,r:"loading",p:[165,34,7244]}],t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:"save",t:70}],f:[{p:[166,13,7307],t:7,e:"span",m:[{n:"class",f:["glyphicon ",{t:2,x:{r:["loading"],s:"_0?\"glyphicon-refresh glyphicon-refresh-animate\":\"glyphicon-ok\""},p:[166,36,7330]}],t:13}]}," Save"]}]}," "]}," ",{t:4,f:[{p:[178,1,7627],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showMap",p:[178,14,7640]}],t:13},{n:"title",f:"Click on map to set position",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[179,43,7733]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[179,65,7755]}],t:13},{n:"style",f:"\nheight: 40em;\nwidth: 60em;\nleft: calc(50% - 30em);\nright: inherit;\ntop: calc(50% - 20em);\nbottom: inherit;\n",t:13}],f:[{p:[187,5,7888],t:7,e:"map",m:[{n:"G",f:[{t:2,r:"G",p:[187,12,7895]}],t:13},{n:"gps",f:[{t:2,rx:{r:"row",m:[{t:30,n:"mapvarname"}]},p:[187,23,7906]}],t:13},{n:"show",f:[{t:2,r:"showMap",p:[187,50,7933]}],t:13}]}]}],n:50,r:"showMap",p:[177,1,7611]},{t:4,f:[{p:[193,1,8000],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFileBrowse",p:[193,14,8013]}],t:13},{n:"zoomFrom",f:"browse",t:13},{n:"cw",f:[{t:2,r:"cw",p:[193,56,8055]}],t:13},{n:"title",f:"Browse",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[194,43,8121]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[201,5,8253],t:7,e:"ImageBrowser",m:[{n:"G",f:[{t:2,r:"G",p:[201,21,8269]}],t:13},{n:"path",f:[{t:2,rx:{r:"row",m:[{t:30,n:"pathvarname"}]},p:[201,33,8281]}],t:13},{n:"show",f:[{t:2,r:"showFileBrowse",p:[201,61,8309]}],t:13},{n:"aspect_ratio",f:[{t:2,r:"aspect_ratio",p:[201,94,8342]}],t:13}]}]}],n:50,r:"showFileBrowse",p:[192,1,7977]}],e:{"[_0.fire(\"blur\",_2[_1])]":function (_0,_1,_2){return([_0.fire("blur",_2[_1])]);},"_0==_1":function (_0,_1){return(_0==_1);},"_0==\"TEXT\"&&_1==\"true\"":function (_0,_1){return(_0=="TEXT"&&_1=="true");},"_0==\"SLUG\"&&_1==\"true\"":function (_0,_1){return(_0=="SLUG"&&_1=="true");},"_0==\"LONGTEXT\"&&_1==\"true\"":function (_0,_1){return(_0=="LONGTEXT"&&_1=="true");},"(_0==\"INTEGER\"||_0==\"NUMERIC\")&&_1==\"true\"":function (_0,_1){return((_0=="INTEGER"||_0=="NUMERIC")&&_1=="true");},"_0==\"DATE\"&&_1==\"true\"":function (_0,_1){return(_0=="DATE"&&_1=="true");},"_0==\"COLOR\"&&_1==\"true\"":function (_0,_1){return(_0=="COLOR"&&_1=="true");},"_0==\"MULTISELECT\"&&_1==\"true\"":function (_0,_1){return(_0=="MULTISELECT"&&_1=="true");},"_0==\"IMAGE\"&&_1==\"true\"&&!((_2).endsWith(\"_\"))":function (_0,_1,_2){return(_0=="IMAGE"&&_1=="true"&&!((_2).endsWith("_")));},"_0==\"IMAGE\"&&_1==\"true\"&&(_2).endsWith(\"_\")":function (_0,_1,_2){return(_0=="IMAGE"&&_1=="true"&&(_2).endsWith("_"));},"_0==\"DROPDOWN\"&&_1==\"true\"":function (_0,_1){return(_0=="DROPDOWN"&&_1=="true");},"[_0.fire(\"showMap\",_1)]":function (_0,_1){return([_0.fire("showMap",_1)]);},"_0==\"GPS\"&&_1==\"true\"":function (_0,_1){return(_0=="GPS"&&_1=="true");},"_0==\"CHECKBOX\"&&_1==\"true\"":function (_0,_1){return(_0=="CHECKBOX"&&_1=="true");},"_0==\"HTMLEDIT\"&&_1==\"true\"":function (_0,_1){return(_0=="HTMLEDIT"&&_1=="true");},"_0==\"RANGE\"&&_1==\"true\"":function (_0,_1){return(_0=="RANGE"&&_1=="true");},"_0==\"CHILD\"&&_1==\"true\"":function (_0,_1){return(_0=="CHILD"&&_1=="true");},"!_0||_1":function (_0,_1){return(!_0||_1);},"_0?\"glyphicon-refresh glyphicon-refresh-animate\":\"glyphicon-ok\"":function (_0){return(_0?"glyphicon-refresh glyphicon-refresh-animate":"glyphicon-ok");},"true":function (){return(true);}}};
 component.exports.css = ".l{width:14rem}.f{display:flex;align-items:center}.componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%}.buttonBar{display:flex;justify-content:space-between;margin-top:2rem}";
 module.exports = Ractive.extend(component.exports);
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -38923,7 +42949,14 @@ var component = module;
             var cols = self.get('cols');
             var row = {};
             for(var i=0;i<cols.length;i++) {
-                row[ cols[i].compId ] = cols[i].default_value;
+                //row[ cols[i].compId ] = cols[i].default_value;
+                try{
+                  row[ cols[i].compId ] = eval( cols[i].default_value )
+                }
+                catch(e){
+                  row[ cols[i].compId ] = cols[i].default_value;
+                }
+
                 if (cols[i].default_value == 'now' && cols[i].compType == 'DATE')
                     row[ cols[i].compId ] = new Date().toISOString().substr(0, 10);
             }
@@ -38966,14 +42999,14 @@ var component = module;
         }
     };
 
-component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13}],f:[{p:[2,9,46],t:7,e:"grid",m:[{n:"style",f:"flex:1; overflow:auto;",t:13}],f:[{t:4,f:[{t:4,f:[{p:[6,13,194],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[7,17,239],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[7,37,259]}]}," ",{p:[8,17,298],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[8,77,358]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[8,104,385]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[8,128,409]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"TEXT\"&&_1==\"true\""},p:[5,13,128]}," ",{t:4,f:[{p:[13,13,555],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[14,17,600],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[14,37,620]}]}," ",{p:[15,17,659],t:7,e:"textarea",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"style",f:"min-height: 14rem;",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[15,95,737]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[15,122,764]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[15,146,788]}],t:13}],f:["            </div>\n            "]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"LONGTEXT\"&&_1==\"true\""},p:[12,13,485]}," ",{t:4,f:[{p:[20,13,968],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[21,17,1013],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[21,37,1033]}]}," ",{p:[22,17,1072],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"number",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[22,79,1134]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[22,106,1161]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[22,130,1185]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"(_0==\"INTEGER\"||_0==\"NUMERIC\")&&_1==\"true\""},p:[19,13,872]}," ",{t:4,f:[{p:[27,13,1326],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[28,17,1371],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[28,37,1391]}]}," ",{p:[29,17,1430],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"date",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[29,77,1490]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[29,104,1517]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[29,128,1541]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"DATE\"&&_1==\"true\""},p:[26,13,1260]}," ",{t:4,f:[{p:[34,13,1684],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[35,17,1729],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[35,37,1749]}]}," ",{p:[36,17,1788],t:7,e:"input",m:[{n:"style",f:"width: 8rem",t:13},{n:"type",f:"text",t:13},{n:"style",f:"height:3.6rem",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[36,85,1856]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[36,112,1883]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[36,136,1907]}],t:13}]}," ",{p:[37,17,1943],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 23rem)",t:13},{n:"type",f:"color",t:13},{n:"style",f:"height:4rem",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[37,98,2024]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[37,125,2051]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[37,149,2075]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"COLOR\"&&_1==\"true\""},p:[33,13,1617]}," ",{t:4,f:[{p:[42,13,2224],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[43,17,2271],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[43,37,2291]}]}," ",{p:[44,17,2330],t:7,e:"Selectize",m:[{n:"url",f:["?query=",{t:2,r:".lookup_table",p:[44,40,2353]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[44,66,2379]}],t:13},{n:"labelf",f:[{t:2,r:".lookup_field",p:[44,92,2405]}],t:13},{n:"multiple",f:"multiple",t:13},{n:"style",f:"display: inline-block; width: calc(100% - 15rem)",t:13}],f:[]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"MULTISELECT\"&&_1==\"true\""},p:[41,13,2151]}," ",{t:4,f:[{p:[51,13,2686],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[52,17,2732],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[52,37,2752]}]}," ",{p:[53,17,2791],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 39rem); margin-right: 1rem;",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[53,98,2872]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[53,125,2899]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[53,149,2923]}],t:13}]}," ",{p:[54,17,2957],t:7,e:"button",m:[{n:"id",f:"browse",t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:{x:{r:["@this",".compId"],s:"[_0.fire(\"showFileBrowse\",_1)]"}},t:70}],f:["Browse"]}," ",{p:[56,17,3101],t:7,e:"img",m:[{n:"src",f:[{t:2,r:"HOSTNAME",p:[56,27,3111]},"image.php?id=",{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[56,52,3136]},"&forcethumb"],t:13},{n:"alt",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[56,86,3170]}],t:13},{n:"style",f:"max-width: 8rem; max-height: 6rem;",t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"IMAGE\"&&_1==\"true\""},p:[50,13,2619]}," ",{t:4,f:[{p:[61,13,3358],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[62,17,3403],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[62,37,3423]}]}," ",{p:[63,17,3462],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width: calc(100% - 15rem)",t:13},{n:"url",f:["?query=",{t:2,r:".lookup_table",p:[63,94,3539]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[63,119,3564]}],t:13},{n:"labelf",f:[{t:2,r:".lookup_field",p:[63,144,3589]}],t:13},{n:"valuef",f:"id",t:13}],f:[{p:[64,21,3642],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"DROPDOWN\"&&_1==\"true\""},p:[60,13,3288]}," ",{t:4,f:[{p:[70,13,3849],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[71,17,3894],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[71,37,3914]}]}," ",{p:[72,17,3953],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 23rem)",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[72,77,4013]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[72,104,4040]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[72,128,4064]}],t:13}]}," ",{p:[73,17,4100],t:7,e:"button",m:[{n:"style",f:"float:right",t:13},{n:"click",f:{x:{r:["@this",".compId"],s:"[_0.fire(\"showMap\",_1)]"}},t:70}],f:["Map"]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"GPS\"&&_1==\"true\""},p:[69,13,3784]}," ",{t:4,f:[{p:[78,13,4309],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[79,17,4354],t:7,e:"Checkbox",m:[{n:"id",f:[{t:2,r:"compId",p:[79,31,4368]}],t:13},{n:"checked",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[79,51,4388]}],t:13}]}," ",{p:[80,17,4433],t:7,e:"label",m:[{n:"for",f:[{t:2,r:"compId",p:[80,29,4445]}],t:13}],f:[{t:2,r:".nice_name",p:[80,41,4457]}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"CHECKBOX\"&&_1==\"true\""},p:[77,13,4239]}," ",{t:4,f:[{p:[85,13,4606],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[86,17,4651],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[86,37,4671]}]}," ",{p:[87,17,4710],t:7,e:"HtmlEdit",m:[{n:"style",f:"width: calc(100% - 15rem) height:30rem",t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[87,87,4780]}],t:13},{n:"code",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[87,110,4803]}],t:13}],f:[]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"HTMLEDIT\"&&_1==\"true\""},p:[84,13,4536]}," ",{t:4,f:[{p:[93,13,4973],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[94,17,5018],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[94,37,5038]}]}," ",{p:[95,17,5077],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"range",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[95,78,5138]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[95,105,5165]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[95,129,5189]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"RANGE\"&&_1==\"true\""},p:[92,13,4906]}," "],n:52,r:"cols",p:[3,13,96]}]}," ",{p:[132,9,6366],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13}],f:[{p:[133,13,6405],t:7,e:"button",m:[{n:"style",f:"visibility: hidden;",t:13},{n:"disabled",f:[{t:2,x:{r:["row.id","loading"],s:"!_0||_1"},p:[133,59,6451]}],t:13},{n:"click",f:"delete",t:70}],f:[{p:[134,17,6510],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-remove",t:13}]}," Delete"]}," ",{p:[136,13,6604],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"disabled",f:[{t:2,r:"loading",p:[136,38,6629]}],t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:"save",t:70}],f:[{p:[137,17,6696],t:7,e:"span",m:[{n:"class",f:["glyphicon ",{t:2,x:{r:["loading"],s:"_0?\"glyphicon-refresh glyphicon-refresh-animate\":\"glyphicon-ok\""},p:[137,40,6719]}],t:13}]}," Save"]}]}," "]}," ",{t:4,f:[{p:[149,1,7052],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showMap",p:[149,14,7065]}],t:13},{n:"title",f:"Click on map to set position",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[150,43,7158]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[150,65,7180]}],t:13},{n:"style",f:"\nheight: 40em;\nwidth: 60em;\nleft: calc(50% - 30em);\nright: inherit;\ntop: calc(50% - 20em);\nbottom: inherit;\n",t:13}],f:[{p:[158,5,7313],t:7,e:"map",m:[{n:"G",f:[{t:2,r:".",p:[158,12,7320]}],t:13},{n:"gps",f:[{t:2,rx:{r:"row",m:[{t:30,n:"mapvarname"}]},p:[158,23,7331]}],t:13},{n:"show",f:[{t:2,r:"showMap",p:[158,50,7358]}],t:13}]}]}],n:50,r:"showMap",p:[148,1,7036]},{t:4,f:[{p:[164,1,7425],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFileBrowse",p:[164,14,7438]}],t:13},{n:"zoomFrom",f:"browse",t:13},{n:"cw",f:[{t:2,r:"cw",p:[164,56,7480]}],t:13},{n:"title",f:"Browse",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[165,43,7546]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[172,5,7678],t:7,e:"ImageBrowser",m:[{n:"path",f:[{t:2,rx:{r:"row",m:[{t:30,n:"pathvarname"}]},p:[172,25,7698]}],t:13},{n:"show",f:[{t:2,r:"showFileBrowse",p:[172,53,7726]}],t:13}]}]}],n:50,r:"showFileBrowse",p:[163,1,7402]}],e:{"_0==\"TEXT\"&&_1==\"true\"":function (_0,_1){return(_0=="TEXT"&&_1=="true");},"_0==\"LONGTEXT\"&&_1==\"true\"":function (_0,_1){return(_0=="LONGTEXT"&&_1=="true");},"(_0==\"INTEGER\"||_0==\"NUMERIC\")&&_1==\"true\"":function (_0,_1){return((_0=="INTEGER"||_0=="NUMERIC")&&_1=="true");},"_0==\"DATE\"&&_1==\"true\"":function (_0,_1){return(_0=="DATE"&&_1=="true");},"_0==\"COLOR\"&&_1==\"true\"":function (_0,_1){return(_0=="COLOR"&&_1=="true");},"_0==\"MULTISELECT\"&&_1==\"true\"":function (_0,_1){return(_0=="MULTISELECT"&&_1=="true");},"[_0.fire(\"showFileBrowse\",_1)]":function (_0,_1){return([_0.fire("showFileBrowse",_1)]);},"_0==\"IMAGE\"&&_1==\"true\"":function (_0,_1){return(_0=="IMAGE"&&_1=="true");},"_0==\"DROPDOWN\"&&_1==\"true\"":function (_0,_1){return(_0=="DROPDOWN"&&_1=="true");},"[_0.fire(\"showMap\",_1)]":function (_0,_1){return([_0.fire("showMap",_1)]);},"_0==\"GPS\"&&_1==\"true\"":function (_0,_1){return(_0=="GPS"&&_1=="true");},"_0==\"CHECKBOX\"&&_1==\"true\"":function (_0,_1){return(_0=="CHECKBOX"&&_1=="true");},"_0==\"HTMLEDIT\"&&_1==\"true\"":function (_0,_1){return(_0=="HTMLEDIT"&&_1=="true");},"_0==\"RANGE\"&&_1==\"true\"":function (_0,_1){return(_0=="RANGE"&&_1=="true");},"!_0||_1":function (_0,_1){return(!_0||_1);},"_0?\"glyphicon-refresh glyphicon-refresh-animate\":\"glyphicon-ok\"":function (_0){return(_0?"glyphicon-refresh glyphicon-refresh-animate":"glyphicon-ok");},"true":function (){return(true);}}};
+component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13}],f:[{p:[2,9,46],t:7,e:"grid",m:[{n:"style",f:"flex:1; overflow:auto;",t:13}],f:[{t:4,f:[{t:4,f:[{p:[6,13,194],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[7,17,239],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[7,37,259]}]}," ",{p:[8,17,298],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[8,77,358]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[8,104,385]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[8,128,409]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"TEXT\"&&_1==\"true\""},p:[5,13,128]}," ",{t:4,f:[{p:[13,13,555],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[14,17,600],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[14,37,620]}]}," ",{p:[15,17,659],t:7,e:"textarea",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"style",f:"min-height: 14rem;",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[15,95,737]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[15,122,764]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[15,146,788]}],t:13}],f:["            </div>\n            "]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"LONGTEXT\"&&_1==\"true\""},p:[12,13,485]}," ",{t:4,f:[{p:[20,13,968],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[21,17,1013],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[21,37,1033]}]}," ",{p:[22,17,1072],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"number",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[22,79,1134]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[22,106,1161]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[22,130,1185]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"(_0==\"INTEGER\"||_0==\"NUMERIC\")&&_1==\"true\""},p:[19,13,872]}," ",{t:4,f:[{p:[27,13,1326],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[28,17,1371],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[28,37,1391]}]}," ",{p:[29,17,1430],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"date",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[29,77,1490]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[29,104,1517]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[29,128,1541]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"DATE\"&&_1==\"true\""},p:[26,13,1260]}," ",{t:4,f:[{p:[34,13,1684],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[35,17,1729],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[35,37,1749]}]}," ",{p:[36,17,1788],t:7,e:"input",m:[{n:"style",f:"width: 8rem",t:13},{n:"type",f:"text",t:13},{n:"style",f:"height:3.6rem",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[36,85,1856]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[36,112,1883]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[36,136,1907]}],t:13}]}," ",{p:[37,17,1943],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 23rem)",t:13},{n:"type",f:"color",t:13},{n:"style",f:"height:4rem",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[37,98,2024]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[37,125,2051]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[37,149,2075]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"COLOR\"&&_1==\"true\""},p:[33,13,1617]}," ",{t:4,f:[{p:[42,13,2224],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[43,17,2271],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[43,37,2291]}]}," ",{p:[44,17,2330],t:7,e:"Selectize",m:[{n:"url",f:["?query=",{t:2,r:".lookup_table",p:[44,40,2353]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[44,66,2379]}],t:13},{n:"labelf",f:[{t:2,r:".lookup_field",p:[44,92,2405]}],t:13},{n:"multiple",f:"multiple",t:13},{n:"style",f:"display: inline-block; width: calc(100% - 15rem)",t:13}],f:[]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"MULTISELECT\"&&_1==\"true\""},p:[41,13,2151]}," ",{t:4,f:[" ",{p:[60,13,3290],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[61,15,3333],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[61,35,3353]}]}," ",{p:[62,15,3390],t:7,e:"Gallery2single",m:[{n:"slug",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[62,36,3411]}],t:13},{n:"aspect_ratio",f:[{t:2,r:".aspect_ratio",p:[62,66,3441]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details",".compId"],s:"_0==\"IMAGE\"&&_1==\"true\"&&!((_2).endsWith(\"_\"))"},p:[50,13,2619]}," ",{t:4,f:[{p:[67,13,3609],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[68,15,3652],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[68,35,3672]}]}," ",{p:[69,15,3709],t:7,e:"Gallery",m:[{n:"rows",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[69,29,3723]}],t:13},{n:"aspect_ratio",f:[{t:2,r:".aspect_ratio",p:[69,59,3753]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details",".compId"],s:"_0==\"IMAGE\"&&_1==\"true\"&&(_2).endsWith(\"_\")"},p:[66,13,3514]}," ",{t:4,f:[{p:[75,13,3909],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[76,17,3954],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[76,37,3974]}]}," ",{p:[77,17,4013],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width: calc(100% - 15rem)",t:13},{n:"url",f:["?query=",{t:2,r:".lookup_table",p:[77,94,4090]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[77,119,4115]}],t:13},{n:"labelf",f:[{t:2,r:".lookup_field",p:[77,144,4140]}],t:13},{n:"valuef",f:"id",t:13}],f:[{p:[78,21,4193],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"DROPDOWN\"&&_1==\"true\""},p:[74,13,3839]}," ",{t:4,f:[{p:[84,13,4400],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[85,17,4445],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[85,37,4465]}]}," ",{p:[86,17,4504],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 23rem)",t:13},{n:"type",f:"text",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[86,77,4564]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[86,104,4591]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[86,128,4615]}],t:13}]}," ",{p:[87,17,4651],t:7,e:"button",m:[{n:"style",f:"float:right",t:13},{n:"click",f:{x:{r:["@this",".compId"],s:"[_0.fire(\"showMap\",_1)]"}},t:70}],f:["Map"]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"GPS\"&&_1==\"true\""},p:[83,13,4335]}," ",{t:4,f:[{p:[92,13,4860],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[93,17,4905],t:7,e:"Checkbox",m:[{n:"id",f:[{t:2,r:"compId",p:[93,31,4919]}],t:13},{n:"checked",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[93,51,4939]}],t:13}]}," ",{p:[94,17,4984],t:7,e:"label",m:[{n:"for",f:[{t:2,r:"compId",p:[94,29,4996]}],t:13}],f:[{t:2,r:".nice_name",p:[94,41,5008]}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"CHECKBOX\"&&_1==\"true\""},p:[91,13,4790]}," ",{t:4,f:[{p:[99,13,5157],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[100,17,5202],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[100,37,5222]}]}," ",{p:[101,17,5261],t:7,e:"HtmlEdit",m:[{n:"style",f:"width: calc(100% - 15rem) height:30rem",t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[101,87,5331]}],t:13},{n:"code",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[101,110,5354]}],t:13}],f:[]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"HTMLEDIT\"&&_1==\"true\""},p:[98,13,5087]}," ",{t:4,f:[{p:[107,13,5524],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"class",f:"f",t:13},{n:"xx",f:0,t:13}],f:[{p:[108,17,5569],t:7,e:"label",m:[{n:"class",f:"l",t:13},{n:"xx",f:0,t:13}],f:[{t:2,r:".nice_name",p:[108,37,5589]}]}," ",{p:[109,17,5628],t:7,e:"input",m:[{n:"style",f:"width: calc(100% - 15rem)",t:13},{n:"type",f:"range",t:13},{n:"title",f:[{t:2,r:".tooltip",p:[109,78,5689]}],t:13},{n:"placeholder",f:[{t:2,r:".placeholder",p:[109,105,5716]}],t:13},{n:"value",f:[{t:2,rx:{r:"row",m:[{t:30,n:".compId"}]},p:[109,129,5740]}],t:13}]}]}],n:50,x:{r:[".compType",".visible_details"],s:"_0==\"RANGE\"&&_1==\"true\""},p:[106,13,5457]}," "],n:52,r:"cols",p:[3,13,96]}]}," ",{p:[146,9,6917],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13}],f:[{p:[147,13,6956],t:7,e:"button",m:[{n:"style",f:"visibility: hidden;",t:13},{n:"disabled",f:[{t:2,x:{r:["row.id","loading"],s:"!_0||_1"},p:[147,59,7002]}],t:13},{n:"click",f:"delete",t:70}],f:[{p:[148,17,7061],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-remove",t:13}]}," Delete"]}," ",{p:[150,13,7155],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"disabled",f:[{t:2,r:"loading",p:[150,38,7180]}],t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:"save",t:70}],f:[{p:[151,17,7247],t:7,e:"span",m:[{n:"class",f:["glyphicon ",{t:2,x:{r:["loading"],s:"_0?\"glyphicon-refresh glyphicon-refresh-animate\":\"glyphicon-ok\""},p:[151,40,7270]}],t:13}]}," Save"]}]}," "]}," ",{t:4,f:[{p:[163,1,7603],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showMap",p:[163,14,7616]}],t:13},{n:"title",f:"Click on map to set position",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[164,43,7709]}],t:13},{n:"showHeader",f:[{t:2,x:{r:[],s:"true"},p:[164,65,7731]}],t:13},{n:"style",f:"\nheight: 40em;\nwidth: 60em;\nleft: calc(50% - 30em);\nright: inherit;\ntop: calc(50% - 20em);\nbottom: inherit;\n",t:13}],f:[{p:[172,5,7864],t:7,e:"map",m:[{n:"G",f:[{t:2,r:".",p:[172,12,7871]}],t:13},{n:"gps",f:[{t:2,rx:{r:"row",m:[{t:30,n:"mapvarname"}]},p:[172,23,7882]}],t:13},{n:"show",f:[{t:2,r:"showMap",p:[172,50,7909]}],t:13}]}]}],n:50,r:"showMap",p:[162,1,7587]},{t:4,f:[{p:[178,1,7976],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFileBrowse",p:[178,14,7989]}],t:13},{n:"zoomFrom",f:"browse",t:13},{n:"cw",f:[{t:2,r:"cw",p:[178,56,8031]}],t:13},{n:"title",f:"Browse",t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[179,43,8097]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[186,5,8229],t:7,e:"ImageBrowser",m:[{n:"path",f:[{t:2,rx:{r:"row",m:[{t:30,n:"pathvarname"}]},p:[186,25,8249]}],t:13},{n:"show",f:[{t:2,r:"showFileBrowse",p:[186,53,8277]}],t:13}]}]}],n:50,r:"showFileBrowse",p:[177,1,7953]}],e:{"_0==\"TEXT\"&&_1==\"true\"":function (_0,_1){return(_0=="TEXT"&&_1=="true");},"_0==\"LONGTEXT\"&&_1==\"true\"":function (_0,_1){return(_0=="LONGTEXT"&&_1=="true");},"(_0==\"INTEGER\"||_0==\"NUMERIC\")&&_1==\"true\"":function (_0,_1){return((_0=="INTEGER"||_0=="NUMERIC")&&_1=="true");},"_0==\"DATE\"&&_1==\"true\"":function (_0,_1){return(_0=="DATE"&&_1=="true");},"_0==\"COLOR\"&&_1==\"true\"":function (_0,_1){return(_0=="COLOR"&&_1=="true");},"_0==\"MULTISELECT\"&&_1==\"true\"":function (_0,_1){return(_0=="MULTISELECT"&&_1=="true");},"_0==\"IMAGE\"&&_1==\"true\"&&!((_2).endsWith(\"_\"))":function (_0,_1,_2){return(_0=="IMAGE"&&_1=="true"&&!((_2).endsWith("_")));},"_0==\"IMAGE\"&&_1==\"true\"&&(_2).endsWith(\"_\")":function (_0,_1,_2){return(_0=="IMAGE"&&_1=="true"&&(_2).endsWith("_"));},"_0==\"DROPDOWN\"&&_1==\"true\"":function (_0,_1){return(_0=="DROPDOWN"&&_1=="true");},"[_0.fire(\"showMap\",_1)]":function (_0,_1){return([_0.fire("showMap",_1)]);},"_0==\"GPS\"&&_1==\"true\"":function (_0,_1){return(_0=="GPS"&&_1=="true");},"_0==\"CHECKBOX\"&&_1==\"true\"":function (_0,_1){return(_0=="CHECKBOX"&&_1=="true");},"_0==\"HTMLEDIT\"&&_1==\"true\"":function (_0,_1){return(_0=="HTMLEDIT"&&_1=="true");},"_0==\"RANGE\"&&_1==\"true\"":function (_0,_1){return(_0=="RANGE"&&_1=="true");},"!_0||_1":function (_0,_1){return(!_0||_1);},"_0?\"glyphicon-refresh glyphicon-refresh-animate\":\"glyphicon-ok\"":function (_0){return(_0?"glyphicon-refresh glyphicon-refresh-animate":"glyphicon-ok");},"true":function (){return(true);}}};
 component.exports.css = ".l{width:14rem}.f{display:flex;align-items:center}.componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%}.buttonBar{display:flex;justify-content:space-between;margin-top:2rem}";
 module.exports = Ractive.extend(component.exports);
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -38989,6 +43022,7 @@ component.exports = {
   }
   ,onrender: function () {
       var self = this;
+      var cropper;
       self.set('HOSTNAME', HOSTNAME);
       self.set('show_confirm_btn', !(self.root == self.parent) );
       self.set('imgSelect', self.get('path'))
@@ -39064,6 +43098,39 @@ component.exports = {
           self.fire('upload')
       };        
       //this.singleUpload = function(file){}
+
+
+      this.on('uploadFromCropper', async function(){
+        cropper.getCroppedCanvas().toBlob(async (blob) => {
+          var data = new FormData()
+          data.append('file', blob, self.get('lastFileName'));
+          data.append('selectedfolder', self.get('selectedfolder'))
+
+          resp = await fetch(HOSTNAME+'uploadfile.php', {
+              method: 'POST',
+              credentials:'same-origin',
+              //'Content-Type': 'application/json',
+              body: data
+          })
+          //.then(function(resp){
+              //console.log('up resp',resp)
+          izitoast.success({ message: 'File uploaded.'});
+              //self.fire('refresh')
+              
+          if (resp) resp.text().then(function(id){
+              //console.log('iidd uploada',id)
+              self.set('imgSelect', id)
+              self.set('showCropperModal', false)
+
+              self.set('path', id)
+              //console.log('imgSelect',r)
+              if (self.parent) self.parent.fire('path', id);
+              self.set('show', false)          
+            })
+          //self.fire('refresh')
+        }, 'image/jpeg', 0.75)
+      })
+
       this.on('upload', async function(files){
           //console.log(e)
           if (!files){
@@ -39071,6 +43138,41 @@ component.exports = {
               var input = self.nodes.inputfile;
               files = input.files;
               //data.append('file', input.files[0])
+          }
+          var aspect_ratio = self.get('aspect_ratio')
+          if (aspect_ratio){
+            self.set('showCropperModal',true).then(function(){
+              const image = self.nodes.cropperImage;
+              var FR= new FileReader();
+              FR.onload = function(e) {
+                //var img = new Image();
+                //img.addEventListener("load", function() {
+                //  context.drawImage(img, 0, 0);
+                //});
+                image.src = e.target.result;
+                cropper = new window.Cropper(image, {
+                  aspectRatio: aspect_ratio,
+                  viewMode:1, //restrict the crop box to not exceed the size of the canvas.
+                  dragMode:'move',
+                  autoCropArea:1,
+                  /*
+                  crop(event) {
+                    console.log(event.detail.x);
+                    console.log(event.detail.y);
+                    console.log(event.detail.width);
+                    console.log(event.detail.height);
+                    console.log(event.detail.rotate);
+                    console.log(event.detail.scaleX);
+                    console.log(event.detail.scaleY);
+                  },
+                  */
+                });                     
+              };       
+              FR.readAsDataURL( files[0] );
+              self.set('lastFileName', files[0].name)
+                  
+            })
+            return
           }
           izitoast.info({ message: 'Uploading to server, please wait...'});
           var resp;
@@ -39148,6 +43250,7 @@ component.exports = {
               G:null,
               rows:[],
               path:null,
+              aspect_ratio:null,
               imgSelect:null,
               drag:false,
               showFullScreen:false,
@@ -39155,19 +43258,21 @@ component.exports = {
               show_confirm_btn:true,
               selectedfolder:0,
               showFoldersModal:false,
-              folders:[]
+              folders:[],
+              showCropperModal:false,
+              lastFileName:''
           }
       }
   };
   
-component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13},{n:"style",f:["transition: border 2s; border: dashed ",{t:2,x:{r:["drag"],s:"_0?\"8px #689\":\"8px #fff\""},p:[1,84,83]}],t:13}],f:[{p:[2,3,118],t:7,e:"div",m:[{n:"id",f:"dropArea",t:13},{n:"style",f:"display: flex;align-items: center;padding-bottom: 0; padding-top: 2rem;padding-bottom: 1rem; text-align: center;justify-content: center;",t:13}],f:[{p:[3,7,289],t:7,e:"input",m:[{n:"type",f:"file",t:13},{n:"multiple",f:0,t:13},{n:"name",f:"file",t:13},{n:"id",f:"inputfile",t:13},{n:"class",f:"inputfile",t:13}]}," ",{p:[4,7,369],t:7,e:"label",m:[{n:"class",f:"upload",t:13},{n:"for",f:"inputfile",t:13}],f:["Upload file here"]}," ",{p:[5,8,440],t:7,e:"span",m:[{n:"style",f:"padding: 1rem;",t:13}],f:["OR"]}," ",{p:[6,7,492],t:7,e:"div",m:[{n:"class",f:"upload",t:13},{n:"style",f:"border:dashed 1px #679",t:13},{n:"xx",f:0,t:13}],f:["Drag & Drop files here"]}]}," ",{p:[9,3,588],t:7,e:"div",m:[{n:"style",f:"display: flex; align-items: center; padding-top: 1rem; justify-content: center;margin-bottom: 0.5rem;",t:13}],f:[{p:[10,7,710],t:7,e:"span",m:[{n:"class",f:"hr",t:13}]}," ",{p:[11,7,741],t:7,e:"span",m:[{n:"class",f:"subheader",t:13},{n:"xx",f:"",t:13}],f:["or Select existing image"]}," ",{p:[12,7,809],t:7,e:"span",m:[{n:"class",f:"hr",t:13}]}]}," ",{p:[19,1,1020],t:7,e:"div",m:[{n:"style",f:"max-height: 6rem; overflow: auto;",t:13}],f:[{p:[20,1,1068],t:7,e:"tag",m:[{n:"dragndrop",f:"DROP",t:70},{n:"data-folder_id",f:"0",t:13},{n:"xx",f:0,t:13},{n:"class",f:["tag ",{t:2,x:{r:["selectedfolder"],s:"(_0==0)?\"selectedfolder\":\"\""},p:[20,60,1127]}],t:13},{n:"tap",f:{x:{r:["@this"],s:"[_0.set(\"selectedfolder\",0)]"}},t:70}],f:["All"]}," ",{t:4,f:[{p:[22,3,1244],t:7,e:"tag",m:[{n:"dragndrop",f:"DROP",t:70},{n:"data-folder_id",f:[{t:2,r:".id",p:[22,45,1286]}],t:13},{n:"xx",f:0,t:13},{n:"class",f:["tag ",{t:2,x:{r:["selectedfolder",".id"],s:"(_0==_1)?\"selectedfolder\":\"\""},p:[22,68,1309]}],t:13},{n:"tap",f:{x:{r:["@this",".id"],s:"[_0.set(\"selectedfolder\",_1)]"}},t:70}],f:[{t:2,r:".Name",p:[22,157,1398]}]}],n:52,r:"folders",p:[21,1,1224]},{p:[24,1,1424],t:7,e:"tag",m:[{n:"id",f:"showFoldersModal",t:13},{n:"xx",f:0,t:13},{n:"class",f:"tag",t:13},{n:"tap",f:{x:{r:["@this"],s:"[_0.set(\"showFoldersModal\",true)]"}},t:70}],f:[{p:[24,88,1511],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-folder-open",t:13}]}," Manage Folders"]}]}," ",{p:[26,7,1594],t:7,e:"div",m:[{n:"style",f:"flex:1; overflow:auto; display: flex; justify-content: space-around; flex-flow: row wrap;",t:13}],f:[{t:4,f:[{p:[28,7,1725],t:7,e:"div",m:[{n:"class",f:"cardholder",t:13},{n:"dblclick",f:"confirm",t:70},{n:"click",f:{x:{r:["@this","."],s:"[_0.fire(\"imgSelect\",_1)]"}},t:70},{n:"dragndrop",f:"DRAG",t:70},{n:"draggable",f:"true",t:13},{n:"data-id",f:[{t:2,r:".id",p:[28,137,1855]}],t:13}],f:[{p:[29,11,1875],t:7,e:"card",m:[{n:"style",f:[{t:2,x:{r:["imgSelect",".slug"],s:"_0==_1?\"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)\":\"\""},p:[29,24,1888]},"; position:relative"],t:13},{n:"id",f:["ib",{t:2,r:".id",p:[29,116,1980]}],t:13}],f:[{p:[30,15,2004],t:7,e:"div",m:[{n:"style",f:"text-align: center; height:3rem",t:13}],f:[{t:4,f:[{p:[31,38,2087],t:7,e:"tag",m:[{n:"style",f:"margin: 0",t:13}],f:[{t:2,r:".folder_name",p:[31,61,2110]}]}],n:50,r:".folder_name",p:[31,17,2066]}]}," ",{p:[33,15,2175],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"img",t:13},{n:"style",f:["background-image:url('",{t:2,r:"HOSTNAME",p:[33,64,2224]},"image.php?id=",{t:2,r:".slug",p:[33,89,2249]},"&forcethumb')"],t:13}],f:[]}," ",{p:[35,15,2309],t:7,e:"p",m:[{n:"xx",f:0,t:13},{n:"class",f:"carddesc",t:13}],f:[{t:2,r:".name",p:[35,38,2332]}]}," ",{p:[36,15,2360],t:7,e:"button",m:[{n:"type",f:"button",t:13},{n:"tap",f:{x:{r:["@this","."],s:"[_0.fire(\"showFullScreen\",_1)]"}},t:70},{n:"style",f:"position: absolute; right:0; top:0; margin-right: 0; margin-bottom: 0;border-radius: 50%; padding: 0.9rem 0.9rem;",t:13}],f:[{p:[37,19,2565],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-fullscreen",t:13}]}]}," ",{p:[39,15,2666],t:7,e:"a",m:[{n:"btn",f:0,t:13},{n:"href",f:[{t:2,r:"HOSTNAME",p:[39,28,2679]},"image.php?id=",{t:2,r:".slug",p:[39,53,2704]}],t:13},{n:"download",f:[{t:2,r:".name",p:[39,74,2725]}],t:13},{n:"style",f:"position: absolute; left:0; top:0; margin-left: 0; margin-bottom: 0;border-radius: 50%; padding: 0.9rem 0.9rem;color: #679;",t:13}],f:[{p:[40,19,2888],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-download-alt",t:13}]}]}]}]}],n:52,r:"rows",p:[27,7,1704]}]}," ",{p:[47,3,3031],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13}],f:[{p:[48,7,3064],t:7,e:"button",m:[{n:"disabled",f:[{t:2,x:{r:["imgSelect"],s:"_0?false:true"},p:[48,24,3081]}],t:13},{n:"click",f:"delete",t:70},{n:"style",f:"margin: 0;",t:13}],f:["Delete file"]}," ",{t:4,f:[{p:[51,7,3212],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:"confirm",t:70},{n:"style",f:"margin: 0;",t:13}],f:["Confirm"]}],n:50,r:"show_confirm_btn",p:[50,7,3181]}]}]}," ",{t:4,f:[{p:[59,1,3385],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[59,14,3398]}],t:13},{n:"zoomFrom",f:["ib",{t:2,r:"showFullScreenObj.id",p:[59,46,3430]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[59,76,3460]}],t:13},{n:"title",f:[{t:2,r:"showFullScreenObj.name",p:[59,91,3475]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[59,132,3516]}],t:13},{n:"style",f:"\nheight: calc(100% - 45px);\nwidth: 100%;\nleft: 0;\nright: inherit;\ntop: 45px;\nbottom: inherit;",t:13}],f:[{p:[66,3,3632],t:7,e:"ShowImage",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[66,20,3649]}],t:13},{n:"imgObj",f:[{t:2,r:"showFullScreenObj",p:[66,47,3676]}],t:13}]}]}],n:50,r:"showFullScreen",p:[58,1,3362]},{t:4,f:[{p:[71,1,3755],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFoldersModal",p:[71,14,3768]}],t:13},{n:"zoomFrom",f:"showFoldersModal",t:13},{n:"title",f:"Manage image folders",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[71,106,3860]}],t:13},{n:"style",f:"\nheight: 34em;\nwidth: 24em;\nleft: calc(50% - 12em);\nright: inherit;\ntop: calc(50% - 17em);\nbottom: inherit;",t:13}],f:[{p:[78,1,3988],t:7,e:"TGrid",m:[{n:"G",f:[{t:2,r:"G",p:[78,10,3997]}],t:13},{n:"selected_tablename",f:"_Folders",t:13}]}]}],n:50,r:"showFoldersModal",p:[70,1,3730]}],e:{"_0?\"8px #689\":\"8px #fff\"":function (_0){return(_0?"8px #689":"8px #fff");},"(_0==0)?\"selectedfolder\":\"\"":function (_0){return((_0==0)?"selectedfolder":"");},"[_0.set(\"selectedfolder\",0)]":function (_0){return([_0.set("selectedfolder",0)]);},"(_0==_1)?\"selectedfolder\":\"\"":function (_0,_1){return((_0==_1)?"selectedfolder":"");},"[_0.set(\"selectedfolder\",_1)]":function (_0,_1){return([_0.set("selectedfolder",_1)]);},"[_0.set(\"showFoldersModal\",true)]":function (_0){return([_0.set("showFoldersModal",true)]);},"[_0.fire(\"imgSelect\",_1)]":function (_0,_1){return([_0.fire("imgSelect",_1)]);},"_0==_1?\"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)\":\"\"":function (_0,_1){return(_0==_1?"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)":"");},"[_0.fire(\"showFullScreen\",_1)]":function (_0,_1){return([_0.fire("showFullScreen",_1)]);},"_0?false:true":function (_0){return(_0?false:true);},"true":function (){return(true);}}};
+component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13},{n:"style",f:["transition: border 2s; border: dashed ",{t:2,x:{r:["drag"],s:"_0?\"8px #689\":\"8px #fff\""},p:[1,84,83]}],t:13}],f:[{p:[2,3,118],t:7,e:"div",m:[{n:"id",f:"dropArea",t:13},{n:"style",f:"display: flex;align-items: center;padding-bottom: 0; padding-top: 2rem;padding-bottom: 1rem; text-align: center;justify-content: center;",t:13}],f:[{p:[3,7,289],t:7,e:"input",m:[{n:"type",f:"file",t:13},{n:"multiple",f:0,t:13},{n:"name",f:"file",t:13},{n:"id",f:"inputfile",t:13},{n:"class",f:"inputfile",t:13}]}," ",{p:[4,7,369],t:7,e:"label",m:[{n:"class",f:"upload",t:13},{n:"for",f:"inputfile",t:13}],f:["Upload file here"]}," ",{p:[5,8,440],t:7,e:"span",m:[{n:"style",f:"padding: 1rem;",t:13}],f:["OR"]}," ",{p:[6,7,492],t:7,e:"div",m:[{n:"class",f:"upload",t:13},{n:"style",f:"border:dashed 1px #679",t:13},{n:"xx",f:0,t:13}],f:["Drag & Drop files here"]}]}," ",{p:[9,3,588],t:7,e:"div",m:[{n:"style",f:"display: flex; align-items: center; padding-top: 1rem; justify-content: center;margin-bottom: 0.5rem;",t:13}],f:[{p:[10,7,710],t:7,e:"span",m:[{n:"class",f:"hr",t:13}]}," ",{p:[11,7,741],t:7,e:"span",m:[{n:"class",f:"subheader",t:13},{n:"xx",f:"",t:13}],f:["or Select existing image"]}," ",{p:[12,7,809],t:7,e:"span",m:[{n:"class",f:"hr",t:13}]}]}," ",{p:[26,1,1120],t:7,e:"div",m:[{n:"style",f:"max-height: 6rem; overflow: auto;",t:13}],f:[{p:[27,1,1168],t:7,e:"tag",m:[{n:"dragndrop",f:"DROP",t:70},{n:"data-folder_id",f:"0",t:13},{n:"xx",f:0,t:13},{n:"class",f:["tag ",{t:2,x:{r:["selectedfolder"],s:"(_0==0)?\"selectedfolder\":\"\""},p:[27,60,1227]}],t:13},{n:"tap",f:{x:{r:["@this"],s:"[_0.set(\"selectedfolder\",0)]"}},t:70}],f:["All"]}," ",{t:4,f:[{p:[29,3,1344],t:7,e:"tag",m:[{n:"dragndrop",f:"DROP",t:70},{n:"data-folder_id",f:[{t:2,r:".id",p:[29,45,1386]}],t:13},{n:"xx",f:0,t:13},{n:"class",f:["tag ",{t:2,x:{r:["selectedfolder",".id"],s:"(_0==_1)?\"selectedfolder\":\"\""},p:[29,68,1409]}],t:13},{n:"tap",f:{x:{r:["@this",".id"],s:"[_0.set(\"selectedfolder\",_1)]"}},t:70}],f:[{t:2,r:".Name",p:[29,157,1498]}]}],n:52,r:"folders",p:[28,1,1324]},{p:[31,1,1524],t:7,e:"tag",m:[{n:"id",f:"showFoldersModal",t:13},{n:"xx",f:0,t:13},{n:"class",f:"tag",t:13},{n:"tap",f:{x:{r:["@this"],s:"[_0.set(\"showFoldersModal\",true)]"}},t:70}],f:[{p:[31,88,1611],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-folder-open",t:13}]}," Manage Folders"]}]}," ",{p:[33,7,1694],t:7,e:"div",m:[{n:"style",f:"flex:1; overflow:auto; display: flex; justify-content: space-around; flex-flow: row wrap;",t:13}],f:[{t:4,f:[{p:[35,7,1825],t:7,e:"div",m:[{n:"class",f:"cardholder",t:13},{n:"dblclick",f:"confirm",t:70},{n:"click",f:{x:{r:["@this","."],s:"[_0.fire(\"imgSelect\",_1)]"}},t:70},{n:"dragndrop",f:"DRAG",t:70},{n:"draggable",f:"true",t:13},{n:"data-id",f:[{t:2,r:".id",p:[35,137,1955]}],t:13}],f:[{p:[36,11,1975],t:7,e:"card",m:[{n:"style",f:[{t:2,x:{r:["imgSelect",".slug"],s:"_0==_1?\"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)\":\"\""},p:[36,24,1988]},"; position:relative"],t:13},{n:"id",f:["ib",{t:2,r:".id",p:[36,116,2080]}],t:13}],f:[{p:[37,15,2104],t:7,e:"div",m:[{n:"style",f:"text-align: center; height:3rem",t:13}],f:[{t:4,f:[{p:[38,38,2187],t:7,e:"tag",m:[{n:"style",f:"margin: 0",t:13}],f:[{t:2,r:".folder_name",p:[38,61,2210]}]}],n:50,r:".folder_name",p:[38,17,2166]}]}," ",{p:[40,15,2275],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"img",t:13},{n:"style",f:["background-image:url('",{t:2,r:"HOSTNAME",p:[40,64,2324]},"image.php?id=",{t:2,r:".slug",p:[40,89,2349]},"&forcethumb')"],t:13}],f:[]}," ",{p:[42,15,2409],t:7,e:"p",m:[{n:"xx",f:0,t:13},{n:"class",f:"carddesc",t:13}],f:[{t:2,r:".name",p:[42,38,2432]}]}," ",{p:[43,15,2460],t:7,e:"button",m:[{n:"type",f:"button",t:13},{n:"tap",f:{x:{r:["@this","."],s:"[_0.fire(\"showFullScreen\",_1)]"}},t:70},{n:"style",f:"position: absolute; right:0; top:0; margin-right: 0; margin-bottom: 0;border-radius: 50%; padding: 0.9rem 0.9rem;",t:13}],f:[{p:[44,19,2665],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-fullscreen",t:13}]}]}," ",{p:[46,15,2766],t:7,e:"a",m:[{n:"btn",f:0,t:13},{n:"href",f:[{t:2,r:"HOSTNAME",p:[46,28,2779]},"image.php?id=",{t:2,r:".slug",p:[46,53,2804]}],t:13},{n:"download",f:[{t:2,r:".name",p:[46,74,2825]}],t:13},{n:"style",f:"position: absolute; left:0; top:0; margin-left: 0; margin-bottom: 0;border-radius: 50%; padding: 0.9rem 0.9rem;color: #679;",t:13}],f:[{p:[47,19,2988],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-download-alt",t:13}]}]}]}]}],n:52,r:"rows",p:[34,7,1804]}]}," ",{p:[54,3,3131],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13}],f:[{p:[55,7,3164],t:7,e:"button",m:[{n:"disabled",f:[{t:2,x:{r:["imgSelect"],s:"_0?false:true"},p:[55,24,3181]}],t:13},{n:"click",f:"delete",t:70},{n:"style",f:"margin: 0;",t:13}],f:["Delete file"]}," ",{t:4,f:[{p:[58,7,3312],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:"confirm",t:70},{n:"style",f:"margin: 0;",t:13}],f:["Confirm"]}],n:50,r:"show_confirm_btn",p:[57,7,3281]}]}]}," ",{t:4,f:[{p:[66,1,3485],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[66,14,3498]}],t:13},{n:"zoomFrom",f:["ib",{t:2,r:"showFullScreenObj.id",p:[66,46,3530]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[66,76,3560]}],t:13},{n:"title",f:[{t:2,r:"showFullScreenObj.name",p:[66,91,3575]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[66,132,3616]}],t:13},{n:"style",f:"\nheight: calc(100% - 45px);\nwidth: 100%;\nleft: 0;\nright: inherit;\ntop: 45px;\nbottom: inherit;",t:13}],f:[{p:[73,3,3732],t:7,e:"ShowImage",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[73,20,3749]}],t:13},{n:"imgObj",f:[{t:2,r:"showFullScreenObj",p:[73,47,3776]}],t:13}]}]}],n:50,r:"showFullScreen",p:[65,1,3462]},{t:4,f:[{p:[78,1,3855],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFoldersModal",p:[78,14,3868]}],t:13},{n:"zoomFrom",f:"showFoldersModal",t:13},{n:"title",f:"Manage image folders",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[78,106,3960]}],t:13},{n:"style",f:"\nheight: 34em;\nwidth: 24em;\nleft: calc(50% - 12em);\nright: inherit;\ntop: calc(50% - 17em);\nbottom: inherit;",t:13}],f:[{p:[85,1,4088],t:7,e:"TGrid",m:[{n:"G",f:[{t:2,r:"G",p:[85,10,4097]}],t:13},{n:"selected_tablename",f:"_Folders",t:13}]}]}],n:50,r:"showFoldersModal",p:[77,1,3830]},{t:4,f:[{p:[90,1,4188],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showCropperModal",p:[90,14,4201]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[90,41,4228]}],t:13},{n:"title",f:[{t:2,r:"showFullScreenObj.name",p:[90,56,4243]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[90,97,4284]}],t:13},{n:"style",f:"\nheight: calc(100% - 45px);\nwidth: 100%;\nleft: 0;\nright: inherit;\ntop: 45px;\nbottom: inherit;",t:13}],f:[{p:[97,3,4400],t:7,e:"div",m:[{n:"style",f:"width:100; height:calc(100% - 40px)",t:13}],f:[{p:[98,5,4454],t:7,e:"img",m:[{n:"style",f:"max-width: 100%;",t:13},{n:"id",f:"cropperImage",t:13},{n:"src",f:"../images/word.png",t:13}]}]}," ",{p:[100,3,4539],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13},{n:"style",f:"position: absolute; bottom: 0; left:0; right:0",t:13}],f:[{p:[101,5,4625],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"style",f:"width: 100%;",t:13},{n:"click",f:"uploadFromCropper",t:70},{n:"style",f:"margin: 0;",t:13}],f:["Save & Upload"]}]}]}],n:50,r:"showCropperModal",p:[89,1,4163]}],e:{"_0?\"8px #689\":\"8px #fff\"":function (_0){return(_0?"8px #689":"8px #fff");},"(_0==0)?\"selectedfolder\":\"\"":function (_0){return((_0==0)?"selectedfolder":"");},"[_0.set(\"selectedfolder\",0)]":function (_0){return([_0.set("selectedfolder",0)]);},"(_0==_1)?\"selectedfolder\":\"\"":function (_0,_1){return((_0==_1)?"selectedfolder":"");},"[_0.set(\"selectedfolder\",_1)]":function (_0,_1){return([_0.set("selectedfolder",_1)]);},"[_0.set(\"showFoldersModal\",true)]":function (_0){return([_0.set("showFoldersModal",true)]);},"[_0.fire(\"imgSelect\",_1)]":function (_0,_1){return([_0.fire("imgSelect",_1)]);},"_0==_1?\"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)\":\"\"":function (_0,_1){return(_0==_1?"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)":"");},"[_0.fire(\"showFullScreen\",_1)]":function (_0,_1){return([_0.fire("showFullScreen",_1)]);},"_0?false:true":function (_0){return(_0?false:true);},"true":function (){return(true);}}};
 component.exports.css = ".tag,.upload{cursor:pointer}.upload,card{text-align:center}.selectedfolder,.tag:hover{background-color:#679;color:#fff}.cardholder{margin:1rem;width:200px}.upload{width:22rem;margin:0;color:#679;display:inline-block;padding:1.4rem 2rem;background:#fff;border:1px solid #679;border-radius:2px;box-shadow:0 0 0 transparent;text-transform:uppercase;text-decoration:none;font-size:1.2rem;font-weight:700;line-height:1rem;-webkit-appearance:none}.carddesc,.img{margin-bottom:1rem}.upload:hover{box-shadow:2px 2px 4px rgba(0,0,0,.3);background:#f4f5f6}.inputfile{width:.1px;height:.1px;opacity:0;overflow:hidden;position:absolute;z-index:-1}card{height:220px;transition:box-shadow 1s;background:rgba(255,255,255,0);padding-top:0}card:hover{box-shadow:0 1px 4px 0 rgba(0,0,0,1)}.carddesc{height:54px;overflow:auto;overflow-wrap:break-word}.img{background-repeat:no-repeat;background-position:center center;background-size:contain;width:100%;height:144px}.componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%;max-width:unset}.buttonBar{display:flex;justify-content:space-between;margin-top:1rem}.subheader{color:#679;font-size:1.8rem;margin-right:.5rem;margin-left:.5rem}.hr{flex:1;background:1px #679;height:1px}";
 module.exports = Ractive.extend(component.exports);
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -39257,7 +43362,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
@@ -39309,7 +43414,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -39356,6 +43461,22 @@ var component = module;
                 if ( !self.get('row.lookup_field') ) {
                     izitoast.error({ message: "For filed type 'DropDown' you must pick 'lookup field'"}); return;
                 }
+            }
+
+            if (self.get('row.aspect_ratio')){
+              var aspect_ratio_str = self.get('row.aspect_ratio');
+              if (!isNaN(aspect_ratio_str)) self.set('row.aspect_ratio', Number(aspect_ratio_str) ) // hm, ovo mozda i ne mora, sqlite-u je svejedno
+              else {
+                var isSlash = aspect_ratio_str.includes("/");
+                var isCol = aspect_ratio_str.includes(":");
+                if (isSlash || isCol) {
+                  var ar2 = aspect_ratio_str.split(isSlash?'/':':');
+                  try{
+                    self.set('row.aspect_ratio', Number(ar2[0]) / Number(ar2[1]) )
+                  } catch(e){}
+                }
+              }
+
             }
             
             if ( !self.get('row.nice_name') ) self.set('row.nice_name', self.get('row.field_name') )
@@ -39414,20 +43535,21 @@ var component = module;
                 , visible:true
                 , visible_details:true
                 , filter:true
+                , aspect_ratio:null
 
             }
         }
     }
 };
 
-component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13}],f:[{p:[2,5,42],t:7,e:"grid",m:[{n:"style",f:"flex:1; overflow:auto;",t:13}],f:[{p:[3,9,88],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[4,13,116],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Field name"]}," ",{p:[5,13,173],t:7,e:"input",m:[{n:"readonly",f:[{t:2,r:"update",p:[5,29,189]}],t:13},{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"only letters and _",t:13},{n:"value",f:[{t:2,r:"row.field_name",p:[5,122,282]}],t:13}]}]}," ",{p:[7,9,325],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[8,13,353],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Nice name"]}," ",{p:[9,13,409],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"",t:13},{n:"value",f:[{t:2,r:"row.nice_name",p:[9,84,480]}],t:13}]}]}," ",{p:[11,9,522],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[12,13,550],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Placeholder"]}," ",{p:[13,13,608],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"placeholder, like this one",t:13},{n:"value",f:[{t:2,r:"row.placeholder",p:[13,110,705]}],t:13}]}]}," ",{p:[15,9,749],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[16,13,777],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Tooltip"]}," ",{p:[17,13,831],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"",t:13},{n:"value",f:[{t:2,r:"row.tooltip",p:[17,84,902]}],t:13}]}]}," ",{p:[19,9,942],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[20,13,970],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Sort"]}," ",{p:[21,13,1021],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"number",t:13},{n:"placeholder",f:"Display order",t:13},{n:"value",f:[{t:2,r:"row.field_sort",p:[21,99,1107]}],t:13}]}]}," ",{p:[24,9,1151],t:7,e:"div",m:[{n:"col",f:"1/3",t:13}],f:[{p:[25,13,1179],t:7,e:"Checkbox",m:[{n:"id",f:"visiblegrid",t:13},{n:"checked",f:[{t:2,r:"row.visible",p:[25,48,1214]}],t:13}]}," ",{p:[26,13,1254],t:7,e:"label",m:[{n:"for",f:"visiblegrid",t:13}],f:["Show on grid"]}]}," ",{p:[28,9,1323],t:7,e:"div",m:[{n:"col",f:"1/3",t:13}],f:[{p:[29,13,1351],t:7,e:"Checkbox",m:[{n:"id",f:"visibledetails",t:13},{n:"checked",f:[{t:2,r:"row.visible_details",p:[29,51,1389]}],t:13}]}," ",{p:[30,13,1437],t:7,e:"label",m:[{n:"for",f:"visibledetails",t:13}],f:["Show on details"]}]}," ",{p:[32,9,1512],t:7,e:"div",m:[{n:"col",f:"1/3",t:13}],f:[{p:[33,13,1540],t:7,e:"Checkbox",m:[{n:"id",f:"Searchable",t:13},{n:"checked",f:[{t:2,r:"row.filter",p:[33,47,1574]}],t:13}]}," ",{p:[34,13,1613],t:7,e:"label",m:[{n:"for",f:"Searchable",t:13}],f:["Searchable"]}]}," ",{p:[37,9,1680],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[38,13,1708],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Default value"]}," ",{p:[39,13,1768],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"",t:13},{n:"value",f:[{t:2,r:"row.default_value",p:[39,84,1839]}],t:13}]}]}," ",{p:[41,9,1885],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[42,13,1913],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Type"]}," ",{p:[43,13,1964],t:7,e:"select",m:[{n:"style",f:"width:calc(99% - 14em); display: inline;",t:13},{n:"value",f:[{t:2,r:"row.field_type",p:[43,77,2028]}],t:13}],f:[{t:4,f:[{p:[45,21,2105],t:7,e:"option",m:[{n:"value",f:[{t:2,r:".myname",p:[45,36,2120]}],t:13}],f:[{t:2,r:".myname",p:[45,49,2133]}]}],n:52,i:"key",r:"types",p:[44,17,2065]}]}]}," ",{t:4,f:[{p:[51,9,2298],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[52,13,2326],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Slug from"]}," ",{p:[53,13,2382],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width:calc(99% - 14em);",t:13},{n:"url",f:["?query=_engine_schema_column&table_name=",{t:2,r:"table_name",p:[53,121,2490]}],t:13},{n:"value",f:[{t:2,r:"row.lookup_field",p:[53,143,2512]}],t:13},{n:"labelf",f:"label",t:13},{n:"valuef",f:"compId",t:13}],f:[{p:[54,17,2582],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}],n:50,x:{r:["row.field_type"],s:"_0==\"SLUG\""},p:[50,9,2258]}," ",{t:4,f:[{p:[60,9,2735],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[61,13,2763],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Lookup table"]}," ",{p:[62,13,2822],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width:calc(99% - 14em);",t:13},{n:"url",f:"?query=_cms_tables_list_get",t:13},{n:"value",f:[{t:2,r:"row.lookup_table",p:[62,116,2925]}],t:13},{n:"labelf",f:"name",t:13},{n:"valuef",f:"name",t:13}],f:[{p:[63,17,2992],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}],n:50,x:{r:["row.field_type"],s:"_0==\"CHILD\""},p:[59,9,2694]}," ",{t:4,f:[{p:[69,9,3181],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[70,13,3209],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Lookup table"]}," ",{p:[71,13,3268],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width:calc(99% - 14em);",t:13},{n:"url",f:"?query=_cms_tables_list_get",t:13},{n:"value",f:[{t:2,r:"row.lookup_table",p:[71,116,3371]}],t:13},{n:"labelf",f:"name",t:13},{n:"valuef",f:"name",t:13}],f:[{p:[72,17,3438],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}," ",{p:[75,9,3533],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[76,13,3561],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Lookup field (",{t:2,r:"row.lookup_field",p:[76,53,3601]},")"]}," ",{p:[77,13,3643],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width:calc(99% - 14em);",t:13},{n:"url",f:["?query=_engine_schema_column&table_name=",{t:2,r:"row.lookup_table",p:[77,121,3751]}],t:13},{n:"value",f:[{t:2,r:"row.lookup_field",p:[77,149,3779]}],t:13},{n:"labelf",f:"label",t:13},{n:"valuef",f:"compId",t:13}],f:[{p:[78,17,3849],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}],n:50,x:{r:["row.field_type"],s:"_0==\"DROPDOWN\"||_0==\"MULTISELECT\""},p:[68,9,3104]}," ",{p:[83,9,3961],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"style",f:"display:flex",t:13}],f:[{p:[84,13,4010],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Grid width"]}," ",{p:[85,13,4067],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"20%, 13rem,...",t:13},{n:"value",f:[{t:2,r:"row.w",p:[85,98,4152]}],t:13}]}]}," ",{p:[88,9,4195],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"style",f:"display:flex",t:13}],f:[{p:[89,13,4244],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Grid template"]}," ",{p:[90,13,4304],t:7,e:"textarea",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"formatNumber(viewport[i][.compId])...",t:13},{n:"value",f:[{t:2,r:"row.template",p:[90,124,4415]}],t:13}]}]}]}," ",{p:[93,5,4483],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13}],f:[{p:[94,9,4518],t:7,e:"button",m:[{n:"style",f:["visibility: ",{t:2,x:{r:["update"],s:"_0?\"\":\"hidden\""},p:[94,36,4545]},";"],t:13},{n:"disabled",f:[{t:2,x:{r:["row.field_name"],s:"_0==\"id\""},p:[94,70,4579]}],t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.fire(\"delete\")]"}},t:70}],f:["Delete"]}," ",{p:[95,9,4660],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:"save",t:70}],f:[{t:2,x:{r:["update"],s:"_0?\"Save Changes\":\"Save\""},p:[95,63,4714]}]}]}]}],e:{"_0==\"SLUG\"":function (_0){return(_0=="SLUG");},"_0==\"CHILD\"":function (_0){return(_0=="CHILD");},"_0==\"DROPDOWN\"||_0==\"MULTISELECT\"":function (_0){return(_0=="DROPDOWN"||_0=="MULTISELECT");},"_0?\"\":\"hidden\"":function (_0){return(_0?"":"hidden");},"_0==\"id\"":function (_0){return(_0=="id");},"[_0.fire(\"delete\")]":function (_0){return([_0.fire("delete")]);},"_0?\"Save Changes\":\"Save\"":function (_0){return(_0?"Save Changes":"Save");}}};
+component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13}],f:[{p:[2,5,42],t:7,e:"grid",m:[{n:"style",f:"flex:1; overflow:auto;",t:13}],f:[{p:[3,9,88],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[4,13,116],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Field name"]}," ",{p:[5,13,173],t:7,e:"input",m:[{n:"readonly",f:[{t:2,r:"update",p:[5,29,189]}],t:13},{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"only letters and _",t:13},{n:"value",f:[{t:2,r:"row.field_name",p:[5,122,282]}],t:13}]}]}," ",{p:[7,9,325],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[8,13,353],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Nice name"]}," ",{p:[9,13,409],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"",t:13},{n:"value",f:[{t:2,r:"row.nice_name",p:[9,84,480]}],t:13}]}]}," ",{p:[11,9,522],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[12,13,550],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Placeholder"]}," ",{p:[13,13,608],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"placeholder, like this one",t:13},{n:"value",f:[{t:2,r:"row.placeholder",p:[13,110,705]}],t:13}]}]}," ",{p:[15,9,749],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[16,13,777],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Tooltip"]}," ",{p:[17,13,831],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"",t:13},{n:"value",f:[{t:2,r:"row.tooltip",p:[17,84,902]}],t:13}]}]}," ",{p:[19,9,942],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[20,13,970],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Sort"]}," ",{p:[21,13,1021],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"number",t:13},{n:"placeholder",f:"Display order",t:13},{n:"value",f:[{t:2,r:"row.field_sort",p:[21,99,1107]}],t:13}]}]}," ",{p:[24,9,1151],t:7,e:"div",m:[{n:"col",f:"1/3",t:13}],f:[{p:[25,13,1179],t:7,e:"Checkbox",m:[{n:"id",f:"visiblegrid",t:13},{n:"checked",f:[{t:2,r:"row.visible",p:[25,48,1214]}],t:13}]}," ",{p:[26,13,1254],t:7,e:"label",m:[{n:"for",f:"visiblegrid",t:13}],f:["Show on grid"]}]}," ",{p:[28,9,1323],t:7,e:"div",m:[{n:"col",f:"1/3",t:13}],f:[{p:[29,13,1351],t:7,e:"Checkbox",m:[{n:"id",f:"visibledetails",t:13},{n:"checked",f:[{t:2,r:"row.visible_details",p:[29,51,1389]}],t:13}]}," ",{p:[30,13,1437],t:7,e:"label",m:[{n:"for",f:"visibledetails",t:13}],f:["Show on details"]}]}," ",{p:[32,9,1512],t:7,e:"div",m:[{n:"col",f:"1/3",t:13}],f:[{p:[33,13,1540],t:7,e:"Checkbox",m:[{n:"id",f:"Searchable",t:13},{n:"checked",f:[{t:2,r:"row.filter",p:[33,47,1574]}],t:13}]}," ",{p:[34,13,1613],t:7,e:"label",m:[{n:"for",f:"Searchable",t:13}],f:["Searchable"]}]}," ",{p:[37,9,1680],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[38,13,1708],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Default value"]}," ",{p:[39,13,1768],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"",t:13},{n:"value",f:[{t:2,r:"row.default_value",p:[39,84,1839]}],t:13}]}]}," ",{p:[41,9,1885],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[42,13,1913],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Type"]}," ",{p:[43,13,1964],t:7,e:"select",m:[{n:"style",f:"width:calc(99% - 14em); display: inline;",t:13},{n:"value",f:[{t:2,r:"row.field_type",p:[43,77,2028]}],t:13}],f:[{t:4,f:[{p:[45,21,2105],t:7,e:"option",m:[{n:"value",f:[{t:2,r:".myname",p:[45,36,2120]}],t:13}],f:[{t:2,r:".myname",p:[45,49,2133]}]}],n:52,i:"key",r:"types",p:[44,17,2065]}]}]}," ",{t:4,f:[{p:[51,9,2298],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[52,13,2326],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Slug from"]}," ",{p:[53,13,2382],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width:calc(99% - 14em);",t:13},{n:"url",f:["?query=_engine_schema_column&table_name=",{t:2,r:"table_name",p:[53,121,2490]}],t:13},{n:"value",f:[{t:2,r:"row.lookup_field",p:[53,143,2512]}],t:13},{n:"labelf",f:"label",t:13},{n:"valuef",f:"compId",t:13}],f:[{p:[54,17,2582],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}],n:50,x:{r:["row.field_type"],s:"_0==\"SLUG\""},p:[50,9,2258]}," ",{t:4,f:[{p:[60,9,2735],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[61,13,2763],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Lookup table"]}," ",{p:[62,13,2822],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width:calc(99% - 14em);",t:13},{n:"url",f:"?query=_cms_tables_list_get",t:13},{n:"value",f:[{t:2,r:"row.lookup_table",p:[62,116,2925]}],t:13},{n:"labelf",f:"name",t:13},{n:"valuef",f:"name",t:13}],f:[{p:[63,17,2992],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}],n:50,x:{r:["row.field_type"],s:"_0==\"CHILD\""},p:[59,9,2694]}," ",{t:4,f:[{p:[69,9,3145],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[70,13,3173],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Aspect ratio"]}," ",{p:[71,13,3232],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"16:9, 2:1, 0.5, 3,...",t:13},{n:"value",f:[{t:2,r:"row.aspect_ratio",p:[71,105,3324]}],t:13}]}]}],n:50,x:{r:["row.field_type"],s:"_0==\"IMAGE\""},p:[68,9,3104]}," ",{t:4,f:[{p:[76,9,3463],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[77,13,3491],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Lookup table"]}," ",{p:[78,13,3550],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width:calc(99% - 14em);",t:13},{n:"url",f:"?query=_cms_tables_list_get",t:13},{n:"value",f:[{t:2,r:"row.lookup_table",p:[78,116,3653]}],t:13},{n:"labelf",f:"name",t:13},{n:"valuef",f:"name",t:13}],f:[{p:[79,17,3720],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}," ",{p:[82,9,3815],t:7,e:"div",m:[{n:"col",f:"1/1",t:13}],f:[{p:[83,13,3843],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Lookup field (",{t:2,r:"row.lookup_field",p:[83,53,3883]},")"]}," ",{p:[84,13,3925],t:7,e:"Select",m:[{n:"style",f:"display: inline-block; width:calc(99% - 14em);",t:13},{n:"url",f:["?query=_engine_schema_column&table_name=",{t:2,r:"row.lookup_table",p:[84,121,4033]}],t:13},{n:"value",f:[{t:2,r:"row.lookup_field",p:[84,149,4061]}],t:13},{n:"labelf",f:"label",t:13},{n:"valuef",f:"compId",t:13}],f:[{p:[85,17,4131],t:7,e:"option",m:[{n:"disabled",f:0,t:13},{n:"selected",f:0,t:13},{n:"value",f:"",t:13}],f:["Pick"]}]}]}],n:50,x:{r:["row.field_type"],s:"_0==\"DROPDOWN\"||_0==\"MULTISELECT\""},p:[75,9,3386]}," ",{p:[90,9,4243],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"style",f:"display:flex",t:13}],f:[{p:[91,13,4292],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Grid width"]}," ",{p:[92,13,4349],t:7,e:"input",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"20%, 13rem,...",t:13},{n:"value",f:[{t:2,r:"row.w",p:[92,98,4434]}],t:13}]}]}," ",{p:[95,9,4477],t:7,e:"div",m:[{n:"col",f:"1/1",t:13},{n:"style",f:"display:flex",t:13}],f:[{p:[96,13,4526],t:7,e:"label",m:[{n:"style",f:"width:14em",t:13}],f:["Grid template"]}," ",{p:[97,13,4586],t:7,e:"textarea",m:[{n:"style",f:"width:calc(99% - 14em)",t:13},{n:"type",f:"text",t:13},{n:"placeholder",f:"formatNumber(viewport[i][.compId])...",t:13},{n:"value",f:[{t:2,r:"row.template",p:[97,124,4697]}],t:13}]}]}]}," ",{p:[100,5,4765],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13}],f:[{p:[101,9,4800],t:7,e:"button",m:[{n:"style",f:["visibility: ",{t:2,x:{r:["update"],s:"_0?\"\":\"hidden\""},p:[101,36,4827]},";"],t:13},{n:"disabled",f:[{t:2,x:{r:["row.field_name"],s:"_0==\"id\""},p:[101,70,4861]}],t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.fire(\"delete\")]"}},t:70}],f:["Delete"]}," ",{p:[102,9,4942],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"style",f:"width: 14rem;",t:13},{n:"click",f:"save",t:70}],f:[{t:2,x:{r:["update"],s:"_0?\"Save Changes\":\"Save\""},p:[102,63,4996]}]}]}]}],e:{"_0==\"SLUG\"":function (_0){return(_0=="SLUG");},"_0==\"CHILD\"":function (_0){return(_0=="CHILD");},"_0==\"IMAGE\"":function (_0){return(_0=="IMAGE");},"_0==\"DROPDOWN\"||_0==\"MULTISELECT\"":function (_0){return(_0=="DROPDOWN"||_0=="MULTISELECT");},"_0?\"\":\"hidden\"":function (_0){return(_0?"":"hidden");},"_0==\"id\"":function (_0){return(_0=="id");},"[_0.fire(\"delete\")]":function (_0){return([_0.fire("delete")]);},"_0?\"Save Changes\":\"Save\"":function (_0){return(_0?"Save Changes":"Save");}}};
 component.exports.css = ".componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%}.buttonBar{display:flex;justify-content:space-between;margin-top:2rem}.subheader{color:#679;font-size:1.8rem}.hr{flex:1;background:1px #679;height:1px;margin-left:.5rem}";
 module.exports = Ractive.extend(component.exports);
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -39489,7 +43611,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -39550,7 +43672,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
@@ -39783,7 +43905,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
@@ -39810,7 +43932,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
@@ -39873,7 +43995,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
@@ -39939,7 +44061,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var Ractive = __webpack_require__(0);
@@ -39959,7 +44081,7 @@ module.exports = Ractive.extend(component.exports);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
@@ -40033,6 +44155,547 @@ var component = module;
       };
       
 component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"style",f:"padding-bottom:0; padding-top:2rem; display:flex; flex-flow: row; justify-content:space-between",t:13}],f:[{p:[2,5,118],t:7,e:"span",m:[{n:"style",f:"font-weight: bold",t:13}],f:[{p:[3,9,159],t:7,e:"tag",f:[{t:2,r:"fr.length",p:[3,14,164]}," item",{t:2,x:{r:["fr.length"],s:"_0==1?\"\":\"s\""},p:[3,32,182]}]}]}," ",{p:[5,5,234],t:7,e:"span",m:[{n:"style",f:"flex: 1; text-align: center; font-weight: bold; text-transform: uppercase;",t:13}],f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"nice_name"]},p:[6,9,332]}]}," ",{p:[8,5,394],t:7,e:"button",m:[{n:"style",f:"padding: 9px; margin: 0;",t:13},{n:"click",f:{x:{r:["@this"],s:"[_0.set(\"addNew\",true)]"}},t:70},{n:"id",f:"addNew",t:13}],f:[{p:[9,9,492],t:7,e:"span",m:[{n:"class",f:"glyphicon glyphicon-plus",t:13}]}," Add new (",{t:2,r:"parent_id",p:[10,18,556]},")"]}]}," ",{p:[14,1,597],t:7,e:"section",m:[{n:"style",f:"flex:1; padding-bottom:1rem; padding-top:0; overflow:auto",t:13}],f:[{p:[15,5,677],t:7,e:"div",m:[{n:"id",f:"testbtn",t:13},{n:"style",f:"display:box; display:flex; height:100%; overflow:auto; flex:1",t:13}],f:[{p:[16,9,774],t:7,e:"f2table",m:[{n:"style",f:"width:100%",t:13},{n:"rows",f:[{t:2,r:"rows",p:[16,42,807]}],t:13},{n:"visible",f:"true",t:13},{n:"headerFixedHeight",f:[{t:2,x:{r:[],s:"false"},p:[16,84,849]}],t:13},{n:"alternateColor",f:[{t:2,x:{r:[],s:"true"},p:[16,110,875]}],t:13},{n:"columns",f:[{t:2,r:"columns",p:[17,21,906]}],t:13},{n:"ipp",f:"50",t:13},{n:"refresh",f:[{t:2,r:"refresh",p:[17,50,935]}],t:13},{n:"fr",f:[{t:2,r:"fr",p:[17,65,950]}],t:13},{n:"row",f:[{t:2,r:"row",p:[17,76,961]}],t:13},{n:"group_by",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"group_by"]},p:[18,23,992]}],t:13},{n:"group_by_order_asc",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"group_by_order_asc"]},p:[19,33,1070]}],t:13},{n:"variableRowHeight",f:[{t:2,x:{r:[],s:"false"},p:[20,31,1156]}],t:13},{n:"showSearch",f:[{t:2,x:{r:[],s:"true"},p:[20,52,1177]}],t:13},{n:"showPaginator",f:[{t:2,x:{r:[],s:"true"},p:[20,75,1200]}],t:13},{n:"showHeaders",f:[{t:2,x:{r:[],s:"true"},p:[20,96,1221]}],t:13},{n:"loading",f:[{t:2,r:"loading",p:[20,113,1238]}],t:13},{n:"nodata",f:[{t:2,x:{r:[],s:"false"},p:[20,132,1257]}],t:13}],f:[]}]}]}," ",{t:4,f:[{p:[26,1,1331],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showDetails",p:[26,14,1344]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[26,36,1366]}],t:13},{n:"title",f:[{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"nice_name"]},p:[26,51,1381]}," details"],t:13},{n:"class",f:"animated fadeInRight",t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"false"},p:[27,43,1479]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[34,5,1612],t:7,e:"TDetails",m:[{n:"row",f:[{t:2,r:"row",p:[34,19,1626]}],t:13},{n:"parent_id",f:[{t:2,r:"parent_id",p:[34,37,1644]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"true"},p:[34,58,1665]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[34,72,1679]}],t:13},{n:"show",f:[{t:2,r:"showDetails",p:[34,90,1697]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[34,117,1724]}],t:13}]}]}],n:50,r:"showDetails",p:[25,1,1311]},{t:4,f:[{p:[39,1,1792],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"addNew",p:[39,14,1805]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[39,31,1822]}],t:13},{n:"title",f:["Add new ",{t:2,rx:{r:"G.schemas",m:[{t:30,n:"~/selected_tablename"},"nice_name"]},p:[39,54,1845]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[39,114,1905]}],t:13},{n:"style",f:"\nheight: 44em;\nwidth: 50em;\nleft: calc(50% - 25em);\nright: inherit;\ntop: calc(50% - 22em);\nbottom: inherit;",t:13}],f:[{p:[46,5,2037],t:7,e:"TDetails",m:[{n:"show",f:[{t:2,r:"addNew",p:[46,21,2053]}],t:13},{n:"parent_id",f:[{t:2,r:"parent_id",p:[46,43,2075]}],t:13},{n:"update",f:[{t:2,x:{r:[],s:"false"},p:[46,64,2096]}],t:13},{n:"cols",f:[{t:2,r:"columns",p:[46,79,2111]}],t:13},{n:"tablename",f:[{t:2,r:"selected_tablename",p:[46,101,2133]}],t:13}]}]}],n:50,r:"addNew",p:[38,1,1777]}],e:{"_0==1?\"\":\"s\"":function (_0){return(_0==1?"":"s");},"[_0.set(\"addNew\",true)]":function (_0){return([_0.set("addNew",true)]);},"false":function (){return(false);},"true":function (){return(true);}}};
+module.exports = Ractive.extend(component.exports);
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
+var component = module;
+
+  component.exports ={
+    onteardown: function(){
+
+    }
+    ,onrender: function(){
+        var self = this;
+
+        const image = self.nodes.image;
+        const cropper = new window.Cropper(image, {
+          aspectRatio: 16 / 9,
+          crop(event) {
+            console.log(event.detail.x);
+            console.log(event.detail.y);
+            console.log(event.detail.width);
+            console.log(event.detail.height);
+            console.log(event.detail.rotate);
+            console.log(event.detail.scaleX);
+            console.log(event.detail.scaleY);
+          },
+        });
+        
+    },   // data:{code:null, fromParent:true}
+
+        data:function() { 
+            return {
+                 showFileBrowse:false
+                ,pathvarname:''
+                ,code:null
+                ,fromParent:true
+             }
+        }
+}
+
+
+component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"div",f:[{p:[2,3,8],t:7,e:"img",m:[{n:"style",f:"max-width: 100%;",t:13},{n:"id",f:"image",t:13},{n:"src",f:"../images/word.png",t:13}]}]}]};
+component.exports.css = "img{max-width:100%}";
+module.exports = Ractive.extend(component.exports);
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
+var component = module;
+
+component.exports = {
+  onteardown: function(){
+      //console.log('imgbroews teardown', this)
+      this.nodes.dropArea.removeEventListener("dragover", this.handleDragover, false);
+      this.nodes.dropArea.removeEventListener("dragleave", this.handleDragleave, false);
+      this.nodes.dropArea.removeEventListener("dragenter", this.handleDragenter, false);
+  }
+  ,onrender: function () {
+      var self = this;
+      var g_ix=0;
+      var g_files;
+
+      var cropper;
+      self.set('HOSTNAME', HOSTNAME);
+//      self.set('show_confirm_btn', !(self.root == self.parent) );
+      self.set('imgSelect', self.get('path'))
+
+
+      this.on('showFullScreen', function(o){
+          self.set('showFullScreenObj', o);
+          self.set('showFullScreen', true);
+          //{{HOSTNAME}}image.php?id={{id}}
+      })
+      //this.focusFirstElement();
+      this.handleDragenter = function (e) {
+          //console.log('Dragenter')
+          self.set('drag', true)
+      }
+      this.handleDragleave = function (e) {
+          self.set('drag', false)
+      }
+
+      this.handleDrop = function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          let dt = e.dataTransfer;
+          let files = dt.files;
+          self.fire('upload', files);
+          self.set('drag', false)
+          return false;
+      }
+      this.handleDragover = function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          self.set('drag', true)
+          return false;
+      }
+
+      this.nodes.dropArea.addEventListener('drop', this.handleDrop, false);
+      this.nodes.dropArea.addEventListener('dragover', this.handleDragover, false);
+      this.nodes.dropArea.addEventListener('dragleave', this.handleDragleave, false);
+      this.nodes.dropArea.addEventListener('dragenter', this.handleDragenter, false);
+      
+      this.nodes['inputfile'+self.get('GlobalIncrementer')].onchange = function() {
+          self.fire('upload')
+      };        
+      //this.singleUpload = function(file){}
+
+      function add_file(slug){
+        if (!self.get('rows')) self.set('rows',[])
+        var newItem = [{slug:slug, label:''}]
+        tmp_rows = newItem.concat(self.get('rows'))
+        self.set('rows', tmp_rows)        
+      }
+
+      this.on('uploadFromCropper', async function(){
+        cropper.getCroppedCanvas().toBlob(async (blob) => {
+          var data = new FormData()
+          data.append('file', blob, self.get('lastFileName'));
+          data.append('selectedfolder', self.get('selectedfolder'))
+
+          resp = await fetch(HOSTNAME+'uploadfile.php', {
+              method: 'POST',
+              credentials:'same-origin',
+              //'Content-Type': 'application/json',
+              body: data
+          })
+          //.then(function(resp){
+              //console.log('up resp',resp)
+          izitoast.success({ message: 'File uploaded.'});
+              //self.fire('refresh')
+              
+          if (resp) resp.text().then(function(id){
+              //console.log('iidd uploada',id)
+              self.set('imgSelect', id)
+              add_file(id)
+              self.set('showCropperModal', false).then(function(){
+                prepareCropperCanvas(false,false) // next image
+              })
+
+              self.set('path', id)
+              //console.log('imgSelect',r)
+              //if (self.parent) self.parent.fire('path', id);
+              //self.set('show', false)          
+            })
+          //self.fire('refresh')
+        }, 'image/jpeg', 0.75)
+      })
+
+
+      function prepareCropperCanvas(files, start){
+        if (start){ g_files = files, g_ix=0}
+        if (!g_files) return
+        if (g_files.length==0) return
+        if (!start) g_ix++
+        if (g_ix >= g_files.length ) return
+
+        self.set('showCropperModal',true).then(function(){
+          const image = self.nodes.cropperImage;
+          var FR= new FileReader();
+          FR.onload = function(e) {
+            //var img = new Image();
+            //img.addEventListener("load", function() {
+            //  context.drawImage(img, 0, 0);
+            //});
+            image.src = e.target.result;
+            cropper = new window.Cropper(image, {
+              aspectRatio: self.get('aspect_ratio'),
+              viewMode:1, //restrict the crop box to not exceed the size of the canvas.
+              dragMode:'move',
+              autoCropArea:1,
+              /*
+              crop(event) {
+                console.log(event.detail.x);
+                console.log(event.detail.y);
+                console.log(event.detail.width);
+                console.log(event.detail.height);
+                console.log(event.detail.rotate);
+                console.log(event.detail.scaleX);
+                console.log(event.detail.scaleY);
+              },
+              */
+            });                     
+          };       
+
+          FR.readAsDataURL( g_files[g_ix] );
+          self.set('lastFileName', g_files[g_ix].name)    
+        })
+      }
+
+
+      this.on('upload', async function(files){
+          //console.log(e)
+          if (!files){
+//                var input = document.querySelector('input[type="file"]');
+              var input = self.nodes['inputfile'+self.get('GlobalIncrementer')];
+              files = input.files;
+              //data.append('file', input.files[0])
+          }
+          if (!files || files.length==0) return; // let sort decorator do his thing
+
+          var aspect_ratio = self.get('aspect_ratio')
+          if (aspect_ratio){
+            console.log('caling prepareCropperCanvas')
+            prepareCropperCanvas(files, true)
+            return
+          }
+
+          izitoast.info({ message: 'Uploading to server, please wait...'});
+          var resp;
+          for (var i=0; i<files.length;i++){
+              var data = new FormData()
+              data.append('file', files[i]);
+              data.append('selectedfolder', self.get('selectedfolder'))
+
+              resp = await fetch(HOSTNAME+'uploadfile.php', {
+                  method: 'POST',
+                  credentials:'same-origin',
+                  //'Content-Type': 'application/json',
+                  body: data
+              })
+              //.then(function(resp){
+                  //console.log('up resp',resp)
+              izitoast.success({ message: 'File '+(i+1)+' of '+ files.length+' uploaded.'});
+              var slug = await resp.text()
+              self.set('imgSelect', slug)
+              add_file(slug)
+                  
+          }
+          //if (resp) resp.text().then(function(id){
+            //console.log('iidd uploada',id)
+            //self.set('imgSelect', id)
+            //add_file(id)
+          //})
+          //self.fire('refresh')
+          //return false; 
+      })
+
+
+      this.observe('selectedfolder', function(n){
+        self.fire('refresh');
+      }, {init:false})
+
+      this.on('file_folder_update', function(folder_id, id){
+        console.log(folder_id, id);
+        //var [resp, err] = await fetch2('?query=file_folder_update&folder_id='+folder_id+'&id='+id);
+      })
+
+      this.on('imgSelect', function(r){
+          //console.log('imgSelect',r)
+          self.set('imgSelect', r.slug)
+      })
+/*
+      this.on('confirm', function(r){
+          self.set('path', self.get('imgSelect'))
+          //console.log('imgSelect',r)
+          if (self.parent) self.parent.fire('path', self.get('imgSelect'));
+          self.set('show', false)
+      })
+*/      
+      this.on('delete', async function(ix){
+        let o = self.get('rows.'+ix)
+        console.log('delete', ix, o)
+        ractive.fire('showYesNoDialog', 'Delete file '+o.slug + ' ?', async function(answer){
+          self.splice('rows', ix, 1)
+          var [resp, err] = await fetch2('?query=_files&_action=delete&id='+o.slug )
+            if (resp) {
+                self.set('imgSelect', null);
+                izitoast.success({ message: 'File removed'});
+            }
+        })
+      })
+
+  },        
+  data:function() {
+          return {
+              G:null,
+              rows:[],
+              path:null,
+              aspect_ratio:null,
+              imgSelect:null,
+              drag:false,
+              showFullScreen:false,
+              showFullScreenObj:{},
+              show_confirm_btn:true,
+              selectedfolder:0,
+              showCropperModal:false,
+              lastFileName:'',
+              GlobalIncrementer : GlobalIncrementer++
+          }
+      }
+  };
+  
+component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"id",f:"dropArea",t:13},{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13},{n:"style",f:["transition: border 2s; border: dashed ",{t:2,x:{r:["drag"],s:"_0?\"8px #689\":\"8px #fff\""},p:[1,98,97]}],t:13}],f:[" ",{p:[24,3,904],t:7,e:"div",m:[{n:"style",f:"flex:1; overflow:auto; display: flex; justify-content: left; flex-flow: row wrap;",t:13}],f:[{p:[26,7,1007],t:7,e:"div",m:[{n:"class",f:"cardholder",t:13}],f:[{p:[27,9,1040],t:7,e:"card",m:[{n:"style",f:"padding:0",t:13}],f:[{p:[28,11,1075],t:7,e:"input",m:[{n:"type",f:"file",t:13},{n:"multiple",f:0,t:13},{n:"name",f:"file",t:13},{n:"id",f:["inputfile",{t:2,r:"GlobalIncrementer",p:[28,64,1128]}],t:13},{n:"class",f:"inputfile",t:13}]}," ",{p:[29,11,1180],t:7,e:"label",m:[{n:"class",f:"upload",t:13},{n:"for",f:["inputfile",{t:2,r:"GlobalIncrementer",p:[29,47,1216]}],t:13}],f:["Upload"]}]}]}," ",{t:4,f:[{p:[34,7,1312],t:7,e:"div",m:[{f:"sortable",t:71},{n:"class",f:"cardholder",t:13},{n:"click",f:{x:{r:["@this","."],s:"[_0.fire(\"imgSelect\",_1)]"}},t:70},{n:"data-id",f:[{t:2,r:".id",p:[34,100,1405]}],t:13}],f:[{p:[35,11,1425],t:7,e:"card",m:[{n:"style",f:[{t:2,x:{r:["imgSelect",".slug"],s:"_0==_1?\"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)\":\"\""},p:[35,24,1438]},"; position:relative"],t:13},{n:"id",f:["ib",{t:2,r:".id",p:[35,116,1530]}],t:13}],f:[{p:[36,15,1554],t:7,e:"div",m:[{n:"style",f:"text-align: center; height:3rem; overflow: auto;",t:13}],f:[{t:2,r:".slug",p:[37,17,1633]}]}," ",{p:[39,15,1678],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"img",t:13},{n:"style",f:["background-image:url('",{t:2,r:"HOSTNAME",p:[39,64,1727]},"image.php?id=",{t:2,r:".slug",p:[39,89,1752]},"&forcethumb')"],t:13}],f:[]}," ",{p:[42,15,1872],t:7,e:"textarea",m:[{n:"value",f:[{t:2,r:".label",p:[42,31,1888]}],t:13},{n:"class",f:"carddesc",t:13},{n:"placeholder",f:"Image label",t:13}]}," ",{p:[48,15,2311],t:7,e:"button",m:[{n:"type",f:"button",t:13},{n:"class",f:"remove_btn",t:13},{n:"tap",f:{x:{r:["@this","ix"],s:"[_0.fire(\"delete\",_1)]"}},t:70},{n:"xx",f:0,t:13},{n:"title",f:"Remove file",t:13}],f:[{p:[49,19,2429],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-remove",t:13}]}]}," ",{p:[51,15,2526],t:7,e:"a",m:[{n:"btn",f:0,t:13},{n:"class",f:"download_btn",t:13},{n:"href",f:[{t:2,r:"HOSTNAME",p:[51,49,2560]},"image.php?id=",{t:2,r:".slug",p:[51,74,2585]}],t:13},{n:"title",f:"Download file",t:13},{n:"download",f:[{t:2,r:".slug",p:[51,117,2628]}],t:13},{n:"xx",f:0,t:13}],f:[{p:[52,19,2662],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-download-alt",t:13}]}]}]}]}],n:52,i:"ix",r:"rows",p:[33,5,1288]}]}," "]}," ",{t:4,f:[{p:[72,1,3161],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[72,14,3174]}],t:13},{n:"zoomFrom",f:["ib",{t:2,r:"showFullScreenObj.id",p:[72,46,3206]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[72,76,3236]}],t:13},{n:"title",f:[{t:2,r:"showFullScreenObj.name",p:[72,91,3251]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[72,132,3292]}],t:13},{n:"style",f:"\nheight: calc(100% - 45px);\nwidth: 100%;\nleft: 0;\nright: inherit;\ntop: 45px;\nbottom: inherit;",t:13}],f:[{p:[79,3,3408],t:7,e:"ShowImage",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[79,20,3425]}],t:13},{n:"imgObj",f:[{t:2,r:"showFullScreenObj",p:[79,47,3452]}],t:13}]}]}],n:50,r:"showFullScreen",p:[71,1,3138]},{t:4,f:[{p:[86,1,3533],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showCropperModal",p:[86,14,3546]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[86,41,3573]}],t:13},{n:"title",f:[{t:2,r:"showFullScreenObj.name",p:[86,56,3588]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[86,97,3629]}],t:13},{n:"style",f:"\nheight: calc(100% - 45px);\nwidth: 100%;\nleft: 0;\nright: inherit;\ntop: 45px;\nbottom: inherit;",t:13}],f:[{p:[93,3,3745],t:7,e:"div",m:[{n:"style",f:"width:100; height:calc(100% - 40px)",t:13}],f:[{p:[94,5,3799],t:7,e:"img",m:[{n:"style",f:"max-width: 100%;",t:13},{n:"id",f:"cropperImage",t:13},{n:"src",f:"../images/word.png",t:13}]}]}," ",{p:[96,3,3884],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13},{n:"style",f:"position: absolute; bottom: 0; left:0; right:0",t:13}],f:[{p:[97,5,3970],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"style",f:"width: 100%;",t:13},{n:"click",f:"uploadFromCropper",t:70},{n:"style",f:"margin: 0;",t:13}],f:["Save & Upload"]}]}]}],n:50,r:"showCropperModal",p:[85,1,3508]}],e:{"_0?\"8px #689\":\"8px #fff\"":function (_0){return(_0?"8px #689":"8px #fff");},"[_0.fire(\"imgSelect\",_1)]":function (_0,_1){return([_0.fire("imgSelect",_1)]);},"_0==_1?\"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)\":\"\"":function (_0,_1){return(_0==_1?"box-shadow: 0 1px 4px 0 rgba(0,0,0,1)":"");},"[_0.fire(\"delete\",_1)]":function (_0,_1){return([_0.fire("delete",_1)]);},"true":function (){return(true);}}};
+component.exports.css = ".download_btn,.remove_btn{top:0;margin-bottom:0;border-radius:50%;padding:.9rem}.tag,.upload{cursor:pointer}.upload,card{text-align:center}.cardholder:hover .download_btn,.cardholder:hover .remove_btn{opacity:1}.download_btn,.inputfile,.remove_btn{opacity:0;position:absolute}.download_btn{left:0;margin-left:0;color:#679}.remove_btn{right:0;margin-right:0}.selectedfolder,.tag:hover{background-color:#679;color:#fff}.cardholder{margin:1rem;width:200px}.upload{height:100%;width:100%;margin:0;display:flex;font-size:2rem;flex-flow:column;justify-content:center;color:#679;padding:1.4rem 2rem;background:#fff;border:1px solid #679;border-radius:2px;box-shadow:0 0 0 transparent;text-transform:uppercase;text-decoration:none;font-weight:700;line-height:1rem;-webkit-appearance:none}.upload:hover{box-shadow:2px 2px 4px rgba(0,0,0,.3);background:#f4f5f6}.inputfile{width:.1px;height:.1px;overflow:hidden;z-index:-1}card{height:220px;transition:box-shadow 1s;background:rgba(255,255,255,0);padding:1rem}card:hover{box-shadow:0 1px 4px 0 rgba(0,0,0,1)}.carddesc{height:54px;overflow:auto;overflow-wrap:break-word;border:1px solid #eee;margin:0;resize:none}.img{background-repeat:no-repeat;background-position:center center;background-size:contain;width:100%;height:144px;margin-bottom:0}.componentSection{flex:1;padding:1rem;overflow:auto;display:flex;flex-flow:column;height:100%;max-width:unset}.buttonBar{display:flex;justify-content:space-between;margin-top:1rem}.subheader{color:#679;font-size:1.8rem;margin-right:.5rem;margin-left:.5rem}.hr{flex:1;background:1px #679;height:1px}";
+module.exports = Ractive.extend(component.exports);
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module, console) {var Ractive = __webpack_require__(0);
+var component = module;
+
+    component.exports = {
+      onteardown: function(){
+          //console.log('imgbroews teardown', this)
+          this.nodes.dropArea.removeEventListener("dragover", this.handleDragover, false);
+          this.nodes.dropArea.removeEventListener("dragleave", this.handleDragleave, false);
+          this.nodes.dropArea.removeEventListener("dragenter", this.handleDragenter, false);
+      }
+      ,onrender: function () {
+          var self = this;
+          var g_ix=0;
+          var g_files;
+    
+          var cropper;
+          self.set('HOSTNAME', HOSTNAME);
+    //      self.set('show_confirm_btn', !(self.root == self.parent) );
+          self.set('imgSelect', self.get('path'))
+    
+    
+          this.on('showFullScreen', function(o){
+              self.set('showFullScreenObj', o);
+              self.set('showFullScreen', true);
+              //{{HOSTNAME}}image.php?id={{id}}
+          })
+          //this.focusFirstElement();
+          this.handleDragenter = function (e) {
+              //console.log('Dragenter')
+              self.set('drag', true)
+          }
+          this.handleDragleave = function (e) {
+              self.set('drag', false)
+          }
+    
+          this.handleDrop = function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              let dt = e.dataTransfer;
+              let files = dt.files;
+              self.fire('upload', files);
+              self.set('drag', false)
+              return false;
+          }
+          this.handleDragover = function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              self.set('drag', true)
+              return false;
+          }
+    
+          this.nodes.dropArea.addEventListener('drop', this.handleDrop, false);
+          this.nodes.dropArea.addEventListener('dragover', this.handleDragover, false);
+          this.nodes.dropArea.addEventListener('dragleave', this.handleDragleave, false);
+          this.nodes.dropArea.addEventListener('dragenter', this.handleDragenter, false);
+          
+          this.nodes['inputfile'+self.get('GlobalIncrementer')].onchange = function() {
+              self.fire('upload')
+          };        
+          //this.singleUpload = function(file){}
+    
+          function add_file(slug){
+            self.set('slug', slug)        
+          }
+    
+          this.on('uploadFromCropper', async function(){
+            cropper.getCroppedCanvas().toBlob(async (blob) => {
+              var data = new FormData()
+              data.append('file', blob, self.get('lastFileName'));
+              data.append('selectedfolder', self.get('selectedfolder'))
+    
+              resp = await fetch(HOSTNAME+'uploadfile.php', {
+                  method: 'POST',
+                  credentials:'same-origin',
+                  //'Content-Type': 'application/json',
+                  body: data
+              })
+              //.then(function(resp){
+                  //console.log('up resp',resp)
+              izitoast.success({ message: 'File uploaded.'});
+                  //self.fire('refresh')
+                  
+              if (resp) resp.text().then(function(id){
+                  //console.log('iidd uploada',id)
+                  self.set('imgSelect', id)
+                  add_file(id)
+                  self.set('showCropperModal', false).then(function(){
+                    prepareCropperCanvas(false,false) // next image
+                  })
+    
+                  self.set('path', id)
+                  //console.log('imgSelect',r)
+                  //if (self.parent) self.parent.fire('path', id);
+                  //self.set('show', false)          
+                })
+              //self.fire('refresh')
+            }, 'image/jpeg', 0.75)
+          })
+    
+    
+          function prepareCropperCanvas(files, start){
+            if (start){ g_files = files, g_ix=0}
+            if (!g_files) return
+            if (g_files.length==0) return
+            if (!start) g_ix++
+            if (g_ix >= g_files.length ) return
+    
+            self.set('showCropperModal',true).then(function(){
+              const image = self.nodes.cropperImage;
+              var FR= new FileReader();
+              FR.onload = function(e) {
+                //var img = new Image();
+                //img.addEventListener("load", function() {
+                //  context.drawImage(img, 0, 0);
+                //});
+                image.src = e.target.result;
+                cropper = new window.Cropper(image, {
+                  aspectRatio: self.get('aspect_ratio'),
+                  viewMode:1, //restrict the crop box to not exceed the size of the canvas.
+                  dragMode:'move',
+                  autoCropArea:1,
+                  /*
+                  crop(event) {
+                    console.log(event.detail.x);
+                    console.log(event.detail.y);
+                    console.log(event.detail.width);
+                    console.log(event.detail.height);
+                    console.log(event.detail.rotate);
+                    console.log(event.detail.scaleX);
+                    console.log(event.detail.scaleY);
+                  },
+                  */
+                });                     
+              };       
+    
+              FR.readAsDataURL( g_files[g_ix] );
+              self.set('lastFileName', g_files[g_ix].name)    
+            })
+          }
+    
+    
+          this.on('upload', async function(files){
+              //console.log(e)
+              if (!files){
+    //                var input = document.querySelector('input[type="file"]');
+                  var input = self.nodes['inputfile'+self.get('GlobalIncrementer')];
+                  files = input.files;
+                  //data.append('file', input.files[0])
+              }
+              if (!files || files.length==0) return; // let sort decorator do his thing
+    
+              var aspect_ratio = self.get('aspect_ratio')
+              if (aspect_ratio){
+                console.log('caling prepareCropperCanvas')
+                prepareCropperCanvas(files, true)
+                return
+              }
+    
+              izitoast.info({ message: 'Uploading to server, please wait...'});
+              var resp;
+              for (var i=0; i<files.length;i++){
+                var data = new FormData()
+                data.append('file', files[i]);
+                data.append('selectedfolder', self.get('selectedfolder'))
+  
+                resp = await fetch(HOSTNAME+'uploadfile.php', {
+                    method: 'POST',
+                    credentials:'same-origin',
+                    //'Content-Type': 'application/json',
+                    body: data
+                })
+                //.then(function(resp){
+                    //console.log('up resp',resp)
+                izitoast.success({ message: 'File '+(i+1)+' of '+ files.length+' uploaded.'});
+                var slug = await resp.text()
+                self.set('imgSelect', slug)
+                add_file(slug)
+                    //self.fire('refresh')
+                      
+              }
+
+          })
+    
+    
+          this.observe('selectedfolder', function(n){
+            self.fire('refresh');
+          }, {init:false})
+    
+          this.on('file_folder_update', function(folder_id, id){
+            console.log(folder_id, id);
+            //var [resp, err] = await fetch2('?query=file_folder_update&folder_id='+folder_id+'&id='+id);
+          })
+    
+          this.on('imgSelect', function(r){
+              //console.log('imgSelect',r)
+              self.set('imgSelect', r.slug)
+          })
+    /*
+          this.on('confirm', function(r){
+              self.set('path', self.get('imgSelect'))
+              //console.log('imgSelect',r)
+              if (self.parent) self.parent.fire('path', self.get('imgSelect'));
+              self.set('show', false)
+          })
+    */      
+
+    
+      },        
+      data:function() {
+              return {
+                  G:null,
+                  //rows:[],
+                  slug:null,
+                  path:null,
+                  aspect_ratio:null,
+                  imgSelect:null,
+                  drag:false,
+                  showFullScreen:false,
+                  showFullScreenObj:{},
+                  show_confirm_btn:true,
+                  selectedfolder:0,
+                  showCropperModal:false,
+                  lastFileName:'',
+                  GlobalIncrementer: GlobalIncrementer++
+              }
+          }
+      };
+      
+component.exports.template = {v:4,t:[{p:[1,1,0],t:7,e:"section",m:[{n:"id",f:"dropArea",t:13},{n:"xx",f:0,t:13},{n:"class",f:"componentSection",t:13},{n:"style",f:["transition: border 2s; border: dashed ",{t:2,x:{r:["drag"],s:"_0?\"4px #689\":\"4px #fff\""},p:[1,98,97]}],t:13}],f:[" ",{p:[24,7,996],t:7,e:"div",m:[{n:"style",f:"flex:1; overflow:auto; display: flex; justify-content: left; flex-flow: row wrap;",t:13}],f:[{p:[26,11,1107],t:7,e:"div",m:[{n:"class",f:"cardholder",t:13}],f:[{p:[27,13,1144],t:7,e:"card",m:[{n:"style",f:"padding:0",t:13}],f:[{p:[28,15,1183],t:7,e:"input",m:[{n:"type",f:"file",t:13},{n:"multiple",f:0,t:13},{n:"name",f:"file",t:13},{n:"id",f:["inputfile",{t:2,r:"GlobalIncrementer",p:[28,68,1236]}],t:13},{n:"class",f:"inputfile",t:13}]}," ",{p:[29,15,1292],t:7,e:"label",m:[{n:"class",f:"upload",t:13},{n:"for",f:["inputfile",{t:2,r:"GlobalIncrementer",p:[29,51,1328]}],t:13}],f:["Upload"]}]}]}," ",{p:[33,11,1418],t:7,e:"div",m:[{f:"sortable",t:71},{n:"class",f:"cardholder",t:13},{n:"click",f:{x:{r:["@this","slug"],s:"[_0.fire(\"imgSelect\",_1)]"}},t:70}],f:[{p:[34,15,1520],t:7,e:"card",m:[{n:"style",f:"position:relative",t:13}],f:[{p:[35,19,1572],t:7,e:"div",m:[{n:"style",f:"text-align: center; height:3rem; overflow: auto;",t:13}],f:[{t:2,r:"slug",p:[36,21,1655]}]}," ",{p:[38,19,1707],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"img",t:13},{n:"style",f:["background-image:url('",{t:2,r:"HOSTNAME",p:[38,68,1756]},"image.php?id=",{t:2,r:"slug",p:[38,93,1781]},"&forcethumb')"],t:13}],f:[]}," ",{p:[40,19,1848],t:7,e:"a",m:[{n:"btn",f:0,t:13},{n:"class",f:"download_btn",t:13},{n:"href",f:[{t:2,r:"HOSTNAME",p:[40,53,1882]},"image.php?id=",{t:2,r:".slug",p:[40,78,1907]}],t:13},{n:"title",f:"Download file",t:13},{n:"download",f:[{t:2,r:".slug",p:[40,121,1950]}],t:13},{n:"xx",f:0,t:13}],f:[{p:[41,23,1988],t:7,e:"i",m:[{n:"class",f:"glyphicon glyphicon-download-alt",t:13}]}]}]}]}]}," "]}," ",{t:4,f:[{p:[61,5,2550],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[61,18,2563]}],t:13},{n:"zoomFrom",f:["ib",{t:2,r:"showFullScreenObj.id",p:[61,50,2595]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[61,80,2625]}],t:13},{n:"title",f:[{t:2,r:"showFullScreenObj.name",p:[61,95,2640]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[61,136,2681]}],t:13},{n:"style",f:"\n    height: calc(100% - 45px);\n    width: 100%;\n    left: 0;\n    right: inherit;\n    top: 45px;\n    bottom: inherit;",t:13}],f:[{p:[68,7,2825],t:7,e:"ShowImage",m:[{n:"show",f:[{t:2,r:"showFullScreen",p:[68,24,2842]}],t:13},{n:"imgObj",f:[{t:2,r:"showFullScreenObj",p:[68,51,2869]}],t:13}]}]}],n:50,r:"showFullScreen",p:[60,5,2523]}," ",{t:4,f:[{p:[75,5,2978],t:7,e:"modal",m:[{n:"show",f:[{t:2,r:"showCropperModal",p:[75,18,2991]}],t:13},{n:"cw",f:[{t:2,r:"cw",p:[75,45,3018]}],t:13},{n:"title",f:[{t:2,r:"showFullScreenObj.name",p:[75,60,3033]}],t:13},{n:"showOverlay",f:[{t:2,x:{r:[],s:"true"},p:[75,101,3074]}],t:13},{n:"style",f:"\n    height: calc(100% - 45px);\n    width: 100%;\n    left: 0;\n    right: inherit;\n    top: 45px;\n    bottom: inherit;",t:13}],f:[{p:[82,7,3218],t:7,e:"div",m:[{n:"style",f:"width:100; height:calc(100% - 40px)",t:13}],f:[{p:[83,9,3276],t:7,e:"img",m:[{n:"style",f:"max-width: 100%;",t:13},{n:"id",f:"cropperImage",t:13},{n:"src",f:"../images/word.png",t:13}]}]}," ",{p:[85,7,3369],t:7,e:"div",m:[{n:"xx",f:0,t:13},{n:"class",f:"buttonBar",t:13},{n:"style",f:"position: absolute; bottom: 0; left:0; right:0",t:13}],f:[{p:[86,9,3459],t:7,e:"button",m:[{n:"primary",f:0,t:13},{n:"style",f:"width: 100%;",t:13},{n:"click",f:"uploadFromCropper",t:70},{n:"style",f:"margin: 0;",t:13}],f:["Save & Upload"]}]}]}],n:50,r:"showCropperModal",p:[74,5,2949]}],e:{"_0?\"4px #689\":\"4px #fff\"":function (_0){return(_0?"4px #689":"4px #fff");},"[_0.fire(\"imgSelect\",_1)]":function (_0,_1){return([_0.fire("imgSelect",_1)]);},"true":function (){return(true);}}};
+component.exports.css = ".download_btn,.remove_btn{top:0;margin-bottom:0;border-radius:50%;padding:.9rem}.tag,.upload{cursor:pointer}.upload,card{text-align:center}.cardholder:hover .download_btn,.cardholder:hover .remove_btn{opacity:1}.download_btn,.inputfile,.remove_btn{opacity:0;position:absolute}.download_btn{left:0;margin-left:0;color:#679}.remove_btn{right:0;margin-right:0}.selectedfolder,.tag:hover{background-color:#679;color:#fff}.cardholder{margin:1rem 1rem 1rem 0;width:200px}.upload{height:100%;width:100%;margin:0;display:flex;font-size:2rem;flex-flow:column;justify-content:center;color:#679;padding:1.4rem 2rem;background:#fff;border:1px solid #679;border-radius:2px;box-shadow:0 0 0 transparent;text-transform:uppercase;text-decoration:none;font-weight:700;line-height:1rem;-webkit-appearance:none}.upload:hover{box-shadow:2px 2px 4px rgba(0,0,0,.3);background:#f4f5f6}.inputfile{width:.1px;height:.1px;overflow:hidden;z-index:-1}card{height:160px;transition:box-shadow 1s;background:rgba(255,255,255,0);padding-top:0}card:hover{box-shadow:0 1px 4px 0 rgba(0,0,0,1)}.carddesc{height:54px;overflow:auto;overflow-wrap:break-word;border:1px solid #eee;margin:0;resize:none}.img{background-repeat:no-repeat;background-position:center center;background-size:contain;width:100%;height:144px;margin-bottom:1rem}.componentSection{flex:1;padding:.1rem;overflow:auto;display:flex;flex-flow:column;height:100%;max-width:unset}.buttonBar{display:flex;justify-content:space-between;margin-top:1rem}.subheader{color:#679;font-size:1.8rem;margin-right:.5rem;margin-left:.5rem}.hr{flex:1;background:1px #679;height:1px}";
 module.exports = Ractive.extend(component.exports);
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module), __webpack_require__(2)))

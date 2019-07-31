@@ -47,16 +47,30 @@
             </div>
             {{/if}}
             
-            {{#if .compType=='IMAGE' && .visible_details=='true'}}
-            <div col='1/1'  class="f" xx>
-                <label class="l" xx>{{.nice_name}}</label>
-                <input style="width: calc(100% - 39rem); margin-right: 1rem;" type="text" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}>
-                <button id="browse" style="width: 14rem;" on-click="@this.fire('showFileBrowse', .compId)">Browse
-                </button>    
-                <img src="{{HOSTNAME}}image.php?id={{row[.compId]}}&forcethumb" alt="{{row[.compId]}}" style="max-width: 8rem; max-height: 6rem;">
+            {{#if .compType=='IMAGE' && .visible_details=='true' && !((.compId).endsWith('_')) }}
+<!--
+        <div col='1/1'  class="f" xx>
+            <label class="l" xx>{{.nice_name}}</label>
+            <input style="width: calc(100% - 39rem); margin-right: 1rem;" type="text" title="{{.tooltip}}" placeholder="{{.placeholder}}" value={{row[.compId]}}>
+            <button id="browse" style="width: 14rem;" on-click="@this.fire('showFileBrowse', .compId, .aspect_ratio)">Browse
+            </button>    
+            <img src="{{HOSTNAME}}image.php?id={{row[.compId]}}&forcethumb" alt="{{row[.compId]}}" style="max-width: 8rem; max-height: 6rem;">
+        </div>
+-->
+            <div col='1/1' class="f" xx>
+              <label class="l" xx>{{.nice_name}}</label>
+              <Gallery2single slug={{row[.compId]}} aspect_ratio={{.aspect_ratio}} />
             </div>
             {{/if}}
-    
+
+            {{#if .compType=='IMAGE' && .visible_details=='true' && (.compId).endsWith('_') }}
+            <div col='1/1' class="f" xx>
+              <label class="l" xx>{{.nice_name}}</label>
+              <Gallery rows={{row[.compId]}} aspect_ratio={{.aspect_ratio}} />
+            </div>
+            {{/if}}
+
+            
             {{#if .compType=='DROPDOWN' && .visible_details=='true'}}
             <div col='1/1' class="f" xx>
                 <label class="l" xx>{{.nice_name}}</label>
@@ -224,7 +238,14 @@ bottom: inherit;" >
             var cols = self.get('cols');
             var row = {};
             for(var i=0;i<cols.length;i++) {
-                row[ cols[i].compId ] = cols[i].default_value;
+                //row[ cols[i].compId ] = cols[i].default_value;
+                try{
+                  row[ cols[i].compId ] = eval( cols[i].default_value )
+                }
+                catch(e){
+                  row[ cols[i].compId ] = cols[i].default_value;
+                }
+
                 if (cols[i].default_value == 'now' && cols[i].compType == 'DATE')
                     row[ cols[i].compId ] = new Date().toISOString().substr(0, 10);
             }

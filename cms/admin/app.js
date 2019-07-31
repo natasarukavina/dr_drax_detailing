@@ -3,7 +3,13 @@ jQuery = $;
 var Ractive  = require("ractive");
 window.Ractive = Ractive;
 require('./js/selectize.min.js');
+var Cropper = require('cropperjs');
+window.Cropper = Cropper
 
+var decoratorsSortable = require( './ractive-decorators-sortable.js' );
+console.log('decoratorsSortable', decoratorsSortable)
+
+window.GlobalIncrementer = 1;
 /*
 var CSSJS = require("jotform-css.js");
 var CSS = new CSSJS.cssjs();
@@ -44,41 +50,44 @@ izitoast.settings({
 
 window.fetch2 = function(url, obj){
 //    var body = JSON.stringify(obj);
-    //console.log('fetch', this)
-    // TODO: Zamijeni ovo sranje s necim boljim
-    var body = new FormData()
-    if (obj)
-        Object.keys(obj).forEach(function(key) {
-            body.append(key, obj[key]===null?'':obj[key])
-        });
-    var self =  (this instanceof Ractive)?this:null;
-    if (self) self.set('loading', true)
-	return new Promise(function(resolve, reject) {
-        var response = fetch(HOSTNAME+'api.php/'+url, {
-            method: 'post',
-            credentials:'same-origin',
+  //console.log('fetch', this)
+  // TODO: Zamijeni ovo sranje s necim boljim
+  var body = new FormData()
+  if (obj)
+      Object.keys(obj).forEach(function(key) {
+        var tmpObj = obj[key]===null?'':obj[key]
+        if (typeof tmpObj == 'object') tmpObj=JSON.stringify(tmpObj)
+        body.append(key, tmpObj)
+      });
+  var self =  (this instanceof Ractive)?this:null;
+  if (self) self.set('loading', true)
+  
+  return new Promise(function(resolve, reject) {
+    var response = fetch(HOSTNAME+'api.php/'+url, {
+        method: 'post',
+        credentials:'same-origin',
 //            headers: {
- //             'Accept': 'application/json',
-              'Content-Type': 'application/json',
+//             'Accept': 'application/json',
+          'Content-Type': 'application/json',
 //              "authorization":'Bearer '+ authorization
 //            },
-            body: body
-          }).then(function(response){ 
-                if (self) self.set('loading', false)
-                return response.json()
-            })
-          .then(function(j){ 
-              //console.log('j',j); 
-              if (j && j._message_action == "reload")  ractive.set('is_logedin',false)//document.location = document.location; // missing session
-              resolve([j,null]) 
-            })
-          .catch(function(err){
-              if (self) self.set('loading', false)
-              console.log('nework error!', err);
-              izitoast.error({ message: 'Network error!!!'});
-              resolve([null,err])
-          })
+        body: body
+      }).then(function(response){ 
+            if (self) self.set('loading', false)
+            return response.json()
         })
+      .then(function(j){ 
+          //console.log('j',j); 
+          if (j && j._message_action == "reload")  ractive.set('is_logedin',false)//document.location = document.location; // missing session
+          resolve([j,null]) 
+        })
+      .catch(function(err){
+          if (self) self.set('loading', false)
+          console.log('nework error!', err);
+          izitoast.error({ message: 'Network error!!!'});
+          resolve([null,err])
+      })
+    })
 }
 
 //Ractive.events.tap = require( 'ractive-events-tap' );
@@ -300,6 +309,10 @@ Ractive.components.UserList                =  require('./user/UserList.html');
 Ractive.components.UserDetail              =  require('./user/UserDetail.html');
 Ractive.components.About                   =  require('./About.html');
 Ractive.components.TGridNested             =  require('./TGridNested.html');
+Ractive.components.Cropper                  =  require('./Cropper.html');
+//Ractive.components.Gallery                  =  require('./Gallery.html');
+Ractive.components.Gallery                  =  require('./Gallery2.html');
+Ractive.components.Gallery2single           =  require('./Gallery2single.html');
 
 //document.addEventListener("deviceready", onDeviceReady, false);
 //if (!window.cordova) onDeviceReady()

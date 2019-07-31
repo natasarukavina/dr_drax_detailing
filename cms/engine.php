@@ -148,9 +148,9 @@
             if ($is_eval){
                 $resp = eval($sqlstring);
                 if ($is_multiple) 
-                    return ($resp);
+                    return nest_array($resp);
                 else 
-                    return count($resp)>0 ? $resp[0] : new stdClass() ;      
+                    return count($resp)>0 ? nest_array($resp)[0] : new stdClass() ;      
             }
 
         }
@@ -180,7 +180,7 @@
             return nest_array($resp); // response only from last query if multiple
         } else {
 //            echo json_encode( count($resp)>0 ? $resp[0] : array() , JSON_FORCE_OBJECT ); // response only from last query if multiple
-            return count($resp)>0 ? $resp[0] : new stdClass() ; // response only from last query if multiple
+            return count($resp)>0 ? nest_array($resp)[0] : new stdClass() ; // response only from last query if multiple
         }
     }
 
@@ -196,11 +196,11 @@
         $v2 = strpos($_SERVER['REQUEST_URI'], 'https://'); 
         if ( $v1!==false || $v2!==false ) {
             if ($v1!==false) {
-                header('Location: ' . substr( $_SERVER['REQUEST_URI'], $v1) );
+                header('Location: ' . rtrim(substr( $_SERVER['REQUEST_URI'], $v1), '&forcethumb') );
                 return;
             }
             if ($v2!==false) {
-                header('Location: ' . substr( $_SERVER['REQUEST_URI'], $v2) );
+                header('Location: ' . rtrim(substr( $_SERVER['REQUEST_URI'], $v2), '&forcethumb') );
                 return;
             }
         } 
@@ -381,7 +381,7 @@
             }
         }
 
-        if (!$any_col_has_dot_in_name) return $arr; //->fetchAll(PDO::FETCH_ASSOC);
+        if (!$any_col_has_dot_in_name) return convert_str_array_cols_to_array($arr); //->fetchAll(PDO::FETCH_ASSOC);
 
         // Nesting starts here
         $res = array(); $last_col_id = -1; 
@@ -418,4 +418,26 @@
         }
         return $res;
     }
+
+    function convert_str_array_cols_to_array($arr){
+      $ends_with_ = array();
+      if (count($arr)>0) {
+          $fieldsArr = array_keys($arr[0]);
+          foreach($fieldsArr as $rk => $rv) {
+//            if ( strpos($rv, '.')!== false ) {
+            if ( substr_compare($rv, '_', -1) === 0 ) { // endsWith
+                $ends_with_[] = $rv;
+              }
+          }
+      }
+      if (count($ends_with_)==0) return $arr; //->fetchAll(PDO::FETCH_ASSOC);
+
+      // replace all columns named something_ ; values from string to json_decode(string, array=true)
+      foreach($arr as $rowkey => $rowvalue) {
+        foreach($ends_with_ as $colkey => $colname) {
+          $arr[$rowkey][$colname] = json_decode($rowvalue[$colname], true);
+        }    
+      }
+      return $arr;
+  }    
 ?>
