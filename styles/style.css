@@ -1,0 +1,169 @@
+@font-face {
+  font-family: Poppins, sans-serif;
+  font-weight: 300;
+  src: url('../styles/font/Poppins-Light.ttf');
+}
+@font-face {
+  font-family: Poppins, sans-serif;
+  font-weight: normal;
+  src: url('../styles/font/Poppins-Regular.ttf');
+}
+@font-face {
+  font-family: Poppins, sans-serif;
+  font-weight: 600;
+  src: url('../styles/font/Poppins-SemiBold.ttf');
+}
+* {
+  font-family: Poppins, sans-serif;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: normal;
+  letter-spacing: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+* button:focus {
+  outline: 0;
+}
+html {
+  font-size: 16px;
+}
+button {
+  width: 9.375rem;
+  height: 3.125rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.background-white {
+  background-color: #ffffff;
+}
+.background-grey {
+  background-color: #f9f9f9;
+}
+.background-orange {
+  background-color: #fbb216;
+}
+.background-green-blue {
+  background-color: #1fbbbb;
+}
+.background-black {
+  background-color: #000000;
+}
+.border-white {
+  border: 1px solid #ffffff;
+}
+.border-orange {
+  border: 1px solid #fbb216;
+}
+.border-green-blue {
+  border: 1px solid #1fbbbb;
+}
+.font-300 {
+  font-weight: 300;
+}
+.font-normal {
+  font-weight: normal;
+}
+.font-600 {
+  font-weight: 600;
+}
+.font-12 {
+  font-size: 0.75rem;
+  letter-spacing: 0.068rem;
+}
+.font-14 {
+  font-size: 0.875rem;
+  letter-spacing: 0.079rem;
+}
+.font-16 {
+  font-size: 1rem;
+  letter-spacing: 0.091rem;
+}
+.font-36 {
+  font-size: 2.25rem;
+  letter-spacing: 0.204rem;
+}
+.font-48 {
+  font-size: 3rem;
+  letter-spacing: 0.273rem;
+}
+.line-height-1_5 {
+  line-height: 1.5;
+}
+.line-height-1_75 {
+  line-height: 1.75;
+}
+.line-height-2 {
+  line-height: 2;
+}
+.color-white {
+  color: #ffffff;
+}
+.color-black {
+  color: #000000;
+}
+.text-center {
+  text-align: center;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.flex {
+  display: flex;
+}
+.flex-column {
+  flex-direction: column;
+}
+.al-it-center {
+  align-items: center;
+}
+.ju-co-center {
+  justify-content: center;
+}
+.ju-co-between {
+  justify-content: space-between;
+}
+.h {
+  height: 100%;
+}
+.w {
+  height: 100%;
+}
+.margin-top-24 {
+  margin-top: 1.5rem;
+}
+.margin-bottom-14 {
+  margin-bottom: 0.875rem;
+}
+.margin-bottom-24 {
+  margin-bottom: 1.5rem;
+}
+.margin-bottom-40 {
+  margin-bottom: 2.5rem;
+}
+.margin-left-50 {
+  margin-left: 3.125rem;
+}
+.margin-right-50 {
+  margin-right: 3.125rem;
+}
+.home-blok-1 {
+  height: 100vh;
+  width: 100%;
+  background-image: url(../images/header.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 9999;
+}
+.header-button {
+  height: 2.5rem !important;
+  width: 6.875rem !important;
+}

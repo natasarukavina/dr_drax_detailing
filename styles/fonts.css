@@ -1,0 +1,50 @@
+.font-300 {
+  font-weight: 300;
+}
+.font-normal {
+  font-weight: normal;
+}
+.font-600 {
+  font-weight: 600;
+}
+.font-12 {
+  font-size: 0.75rem;
+  letter-spacing: 0.068rem;
+}
+.font-14 {
+  font-size: 0.875rem;
+  letter-spacing: 0.079rem;
+}
+.font-16 {
+  font-size: 1rem;
+  letter-spacing: 0.091rem;
+}
+.font-36 {
+  font-size: 2.25rem;
+  letter-spacing: 0.204rem;
+}
+.font-48 {
+  font-size: 3rem;
+  letter-spacing: 0.273rem;
+}
+.line-height-1_5 {
+  line-height: 1.5;
+}
+.line-height-1_75 {
+  line-height: 1.75;
+}
+.line-height-2 {
+  line-height: 2;
+}
+.color-white {
+  color: #ffffff;
+}
+.color-black {
+  color: #000000;
+}
+.text-center {
+  text-align: center;
+}
+.cursor-pointer {
+  cursor: pointer;
+}

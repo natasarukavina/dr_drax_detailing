@@ -1,0 +1,24 @@
+.background-white {
+  background-color: #ffffff;
+}
+.background-grey {
+  background-color: #f9f9f9;
+}
+.background-orange {
+  background-color: #fbb216;
+}
+.background-green-blue {
+  background-color: #1fbbbb;
+}
+.background-black {
+  background-color: #000000;
+}
+.border-white {
+  border: 1px solid #ffffff;
+}
+.border-orange {
+  border: 1px solid #fbb216;
+}
+.border-green-blue {
+  border: 1px solid #1fbbbb;
+}
