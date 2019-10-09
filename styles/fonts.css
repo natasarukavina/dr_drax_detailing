@@ -19,6 +19,10 @@
   font-size: 1rem;
   letter-spacing: 0.091rem;
 }
+.font-24 {
+  font-size: 1.5rem;
+  letter-spacing: normal;
+}
 .font-36 {
   font-size: 2.25rem;
   letter-spacing: 0.204rem;
@@ -38,6 +42,12 @@
 }
 .color-white {
   color: #ffffff;
+}
+.color-grey {
+  color: #f9f9f9;
+}
+.color-blue {
+  color: #1eacc7;
 }
 .color-black {
   color: #000000;

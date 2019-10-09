@@ -38,25 +38,22 @@ button {
   background-color: #ffffff;
 }
 .background-grey {
-  background-color: #f9f9f9;
+  background-color: #aeaeae;
 }
 .background-orange {
   background-color: #fbb216;
 }
-.background-green-blue {
-  background-color: #1fbbbb;
+.background-blue {
+  background-color: #1eacc7;
 }
-.background-black {
-  background-color: #000000;
+.background-dark {
+  background-color: #111111;
 }
 .border-white {
   border: 1px solid #ffffff;
 }
 .border-orange {
   border: 1px solid #fbb216;
-}
-.border-green-blue {
-  border: 1px solid #1fbbbb;
 }
 .font-300 {
   font-weight: 300;
@@ -79,6 +76,10 @@ button {
   font-size: 1rem;
   letter-spacing: 0.091rem;
 }
+.font-24 {
+  font-size: 1.5rem;
+  letter-spacing: normal;
+}
 .font-36 {
   font-size: 2.25rem;
   letter-spacing: 0.204rem;
@@ -99,6 +100,12 @@ button {
 .color-white {
   color: #ffffff;
 }
+.color-grey {
+  color: #aeaeae;
+}
+.color-blue {
+  color: #1eacc7;
+}
 .color-black {
   color: #000000;
 }
@@ -114,6 +121,9 @@ button {
 .flex-column {
   flex-direction: column;
 }
+.flex-wrap {
+  flex-wrap: wrap;
+}
 .al-it-center {
   align-items: center;
 }
@@ -127,10 +137,13 @@ button {
   height: 100%;
 }
 .w {
-  height: 100%;
+  width: 100%;
 }
 .margin-top-24 {
   margin-top: 1.5rem;
+}
+.margin-top-200 {
+  margin-top: 12.5rem;
 }
 .margin-bottom-14 {
   margin-bottom: 0.875rem;
@@ -141,19 +154,77 @@ button {
 .margin-bottom-40 {
   margin-bottom: 2.5rem;
 }
+.margin-bottom-80 {
+  margin-bottom: 5rem;
+}
 .margin-left-50 {
   margin-left: 3.125rem;
 }
 .margin-right-50 {
   margin-right: 3.125rem;
 }
+.padding-top-80 {
+  padding-top: 5rem;
+}
+.padding-top-200 {
+  padding-top: 12.5rem;
+}
+.padding-bottom-80 {
+  padding-bottom: 5rem;
+}
 .home-blok-1 {
   height: 100vh;
   width: 100%;
-  background-image: url(../images/header.png);
+  background: linear-gradient(180deg, #111111 2.41%, rgba(17, 17, 17, 0) 54%), linear-gradient(360deg, #111111 0%, rgba(17, 17, 17, 0) 42%), url(../images/intro.jpg);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+BODY {
+  background: url(http://placekitten.com/600/600);
+}
+.hexagon {
+  overflow: hidden;
+  visibility: hidden;
+  -webkit-transform: rotate(120deg);
+  -moz-transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  -o-transform: rotate(120deg);
+  transform: rotate(120deg);
+  cursor: pointer;
+}
+.hexagon-in1 {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  -webkit-transform: rotate(-60deg);
+  -moz-transform: rotate(-60deg);
+  -ms-transform: rotate(-60deg);
+  -o-transform: rotate(-60deg);
+  transform: rotate(-60deg);
+}
+.hexagon-in2 {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-image: url(http://placekitten.com/240/240);
+  visibility: visible;
+  -webkit-transform: rotate(-60deg);
+  -moz-transform: rotate(-60deg);
+  -ms-transform: rotate(-60deg);
+  -o-transform: rotate(-60deg);
+  transform: rotate(-60deg);
+}
+.hexagon1 {
+  width: 400px;
+  height: 200px;
+  margin: 0 0 0 -80px;
+}
+.hexagon2 {
+  width: 200px;
+  height: 400px;
+  margin: -80px 0 0 20px;
 }
 .header {
   position: absolute;
@@ -161,6 +232,7 @@ button {
   left: 0;
   right: 0;
   width: 100%;
+  height: 5rem;
   z-index: 9999;
 }
 .header-button {

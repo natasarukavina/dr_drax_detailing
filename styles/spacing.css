@@ -2,10 +2,13 @@
   height: 100%;
 }
 .w {
-  height: 100%;
+  width: 100%;
 }
 .margin-top-24 {
   margin-top: 1.5rem;
+}
+.margin-top-200 {
+  margin-top: 12.5rem;
 }
 .margin-bottom-14 {
   margin-bottom: 0.875rem;
@@ -16,9 +19,21 @@
 .margin-bottom-40 {
   margin-bottom: 2.5rem;
 }
+.margin-bottom-80 {
+  margin-bottom: 5rem;
+}
 .margin-left-50 {
   margin-left: 3.125rem;
 }
 .margin-right-50 {
   margin-right: 3.125rem;
+}
+.padding-top-80 {
+  padding-top: 5rem;
+}
+.padding-top-200 {
+  padding-top: 12.5rem;
+}
+.padding-bottom-80 {
+  padding-bottom: 5rem;
 }

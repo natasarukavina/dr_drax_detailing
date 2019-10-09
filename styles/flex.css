@@ -4,6 +4,9 @@
 .flex-column {
   flex-direction: column;
 }
+.flex-wrap {
+  flex-wrap: wrap;
+}
 .al-it-center {
   align-items: center;
 }
