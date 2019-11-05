@@ -2,61 +2,92 @@
 {% block description %}All posts{% endblock %}
 {% block content %}
 
-<div class="home-blok-1 flex flex-column al-it-center">
-  <div class="font-36 font-600 color-blue text-center margin-bottom-14 padding-top-200">"Budućnost pripada onima koji <br> sanjaju velike snove"</div>
-  <div class="font-16 font-normal line-height-1_75 color-blue text-center">Viktor Igo</div>
-  {# <div class="font-16 font-normal line-height-1_75 color-white text-center margin-bottom-40">Connect with top companies and opportunities.</div> #}
-  {# <button class="font-12 font-600 color-white text-center background-orange border-orange">GET STARTED</button> #}
+<!-- intro -->
+{% set item = fetch("Home_Intro") %}
+<div id="owl1" class="owl-carousel owl-theme">
+  {% for img in item.Images_ %}
+  <div  class="home-blok-1 flex flex-column al-it-center"
+      style="background: linear-gradient(180deg, #111111 2.41%, rgba(17, 17, 17, 0) 54%),linear-gradient(360deg, rgba(17, 17, 17, 1) 0%, rgba(17, 17, 17, 0) 42%), url(img/{{img.slug}});">
+    {# <div class="font-36 font-600 color-blue text-center margin-bottom-14 padding-top-200">"Budućnost pripada onima koji <br> sanjaju velike snove"</div> #}
+    {# <div class="font-16 font-normal line-height-1_75 color-blue text-center">Viktor Igo</div> #}
+    {# <div class="font-16 font-normal line-height-1_75 color-white text-center margin-bottom-40">Connect with top companies and opportunities.</div> #}
+    {# <button class="font-12 font-600 color-white text-center background-orange border-orange">GET STARTED</button> #}
+  </div>
+  {% endfor %}
 </div>
 
-<div class="background-dark w-100 flex flex-column ju-co-center al-it-center padding-top-80  padding-bottom-80" >
-  <div class="font-36 color-grey font-500 margin-bottom-80">USLUGE</div>
-  <div class="flex margin-bottom-24">
-    <div class="flex flex-column ju-co-center al-it-center margin-left-50 margin-right-50">
-      <img style="width: 100px; height:100px;" class="margin-bottom-24" src="images/icon1.svg">
-      <div class="font-24 color-grey">Poliranje</div>
+<div class="background-dark w-100 flex flex-column ju-co-center al-it-center padding-top-80">
+  <div class="font-36 color-grey font-500 margin-bottom-40">Ko smo mi i zašto treba da dođete kod nas?</div>
+  <div style="max-width: 700px;" class="font-16 color-grey font-300 text-center margin-bottom-40">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+  <button class="background-blue font-14 color-black border-blue margin-bottom-80">DETALJNIJE</button>
+</div>
+
+<div class="background-dark flex flex-column ju-co-center al-it-center padding-left-200 padding-right-200 padding-bottom-80" >
+  <div class="font-36 color-grey font-500 margin-bottom-80">Šta sve možemo da vam ponudimo</div>
+  <div class="flex flex-wrap ju-co-center w-100">
+    <div class="home-usluge flex flex-column al-it-center margin-bottom-80">
+      <img class="home-usluge-icon margin-bottom-24" src="images/logo.svg">
+      <div class="font-24 color-grey">Light Paket</div>
     </div>
-    <div class="flex flex-column ju-co-center al-it-center margin-left-50 margin-right-50">
-      <img style="width: 100px; height:100px;" class="margin-bottom-24" src="images/icon2.svg">
-      <div class="font-24 color-grey">Voskiranje</div>
+    <div class="home-usluge flex flex-column al-it-center margin-bottom-80">
+      <img class="home-usluge-icon margin-bottom-24" src="images/logo.svg">
+      <div class="font-24 color-grey">Dr Clean Drax Paket</div>
     </div>
-    <div class="flex flex-column ju-co-center al-it-center margin-left-50 margin-right-50">
-      <img style="width: 100px; height:100px;" class="margin-bottom-24" src="images/icon3.svg">
-      <div class="font-24 color-grey">Poliranje</div>
+    <div class="home-usluge flex flex-column al-it-center margin-bottom-80">
+      <img class="home-usluge-icon margin-bottom-24" src="images/logo.svg">
+      <div class="font-24 color-grey ">Detailing Enterijera</div>
     </div>
-    <div class="flex flex-column ju-co-center al-it-center margin-left-50 margin-right-50">
-      <img style="width: 100px; height:100px;" class="margin-bottom-24" src="images/icon4.svg">
-      <div class="font-24 color-grey">Voskiranje</div>
+    <div class="home-usluge flex flex-column al-it-center margin-bottom-80">
+      <img class="home-usluge-icon margin-bottom-24" src="images/logo.svg">
+      <div class="font-24 color-grey">Jednoslojno poliranje</div>
+    </div>
+    <div class="home-usluge flex flex-column al-it-center margin-bottom-80">
+      <img class="home-usluge-icon margin-bottom-24" src="images/logo.svg">
+      <div class="font-24 color-grey">Dvoslojno Poliranje</div>
+    </div>
+    <div class="home-usluge flex flex-column al-it-center margin-bottom-80">
+      <img class="home-usluge-icon margin-bottom-24" src="images/logo.svg">
+      <div class="font-24 color-grey">Troslojno Poliranje</div>
+    </div>
+    <div class="home-usluge flex flex-column al-it-center margin-bottom-80">
+      <img class="home-usluge-icon margin-bottom-24" src="images/logo.svg">
+      <div class="font-24 color-grey">Keramička Zaštita</div>
+    </div>
+    <div class="home-usluge flex flex-column al-it-center margin-bottom-80">
+      <img class="home-usluge-icon margin-bottom-24" src="images/logo.svg">
+      <div class="font-24 color-grey">Dodatne Usluge</div>
     </div>
   </div>
-  <div class="flex margin-top-24">
-    <div class="flex flex-column ju-co-center al-it-center margin-left-50 margin-right-50">
-      <img style="width: 100px; height:100px;" class="margin-bottom-24" src="images/icon1.svg">
-      <div class="font-24 color-grey">Poliranje</div>
-    </div>
-    <div class="flex flex-column ju-co-center al-it-center margin-left-50 margin-right-50">
-      <img style="width: 100px; height:100px;" class="margin-bottom-24" src="images/icon2.svg">
-      <div class="font-24 color-grey">Voskiranje</div>
-    </div>
-    <div class="flex flex-column ju-co-center al-it-center margin-left-50 margin-right-50">
-      <img style="width: 100px; height:100px;" class="margin-bottom-24" src="images/icon3.svg">
-      <div class="font-24 color-grey">Poliranje</div>
-    </div>
-    <div class="flex flex-column ju-co-center al-it-center margin-left-50 margin-right-50">
-      <img style="width: 100px; height:100px;" class="margin-bottom-24" src="images/icon4.svg">
-      <div class="font-24 color-grey">Voskiranje</div>
+</div>
+
+<div class="background-blue flex flex-column al-it-center ju-co-center w-100" style="height: 100vh;">
+{# background: linear-gradient(180deg, #111111 0%, rgba(30, 172, 199, 1) 100%); #}
+  <div class="font-36 color-black font-600 margin-bottom-24">Šta su rekli o nama</div>
+  <div id="owl2" class="owl-carousel owl-theme">
+    <div class="flex flex-column al-it-center ju-co-between" style="width: 100%;">
+      {# <div class="flex al-it-center ju-co-center">
+        <img style="max-height: 30px;transform: rotate(180deg);" src="images/arrow.png">
+      </div> #}
+      <div class="flex al-it-center ju-co-center hexagon hexagon2">
+        <div class="hexagon-in1">
+          <div class="hexagon-in2"></div>
+        </div>
+      </div>
+      <div style="max-width: 620px;" class="font-16 color-black font-normal text-center margin-top-24">"Lorem Ipsum is simply dummy" text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"</div>
+      <div class="font-16 color-black font-600 text-center margin-top-24">Ime i Prezime</div>
     </div>
   </div>
 </div>
 
-<div class="background-blue w-100" style="height: 100vh;background: linear-gradient(180deg, #111111 0%, rgba(30, 172, 199, 1) 100%);">
-
-{# <div class="hexagon hexagon1"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div> #}
-
-<div class="hexagon hexagon2"><div class="hexagon-in1"><div class="hexagon-in2"></div></div></div>
-
+<div style="height: 350px;" class="background-dark flex al-it-center ju-co-around">
+<div><img style="max-height: 30px;transform: rotate(180deg);" src="images/arrow-blue.png"></div>
+<div id="owl3" style="width:90%;" class="owl-carousel owl-theme flex al-it-center ju-co-between">
+  {% for img in item.Images_ %}
+    <div style="height: 220px; width: 350px;background-image: url(img/{{img.slug}});background-size:cover;background-position:center;" class="background-grey"></div>
+  {% endfor %}
+</div>
+  <div><img style="max-height: 30px;" src="images/arrow-blue.png"></div>
 
 </div>
-
 
 {% endblock %}

@@ -1,0 +1,12 @@
+.usluge-box {
+  height: 565px;
+  width: 1130px;
+}
+.usluge-box-image {
+  width: 565px;
+  height: 565px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url('../images/HomeIntro/toine-g-iRnUeA04kUY-unsplash.jpg');
+}
