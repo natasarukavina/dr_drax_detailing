@@ -36,3 +36,19 @@ owl3.owlCarousel({
     dots:false,
     animateOut: 'fadeOut',
 });
+
+var owl4 = $('.owl4');
+
+owl4.owlCarousel({
+    items:1,
+    loop:false,
+    lazyLoad : true,
+    autoplay:false,
+    autoplayTimeout:3500,
+    autoplayHoverPause:false,
+    nav:false,
+    dots:true,
+    dotsClass: 'kruzici',
+    dotClass: 'krug',
+    animateOut: 'fadeOut',
+});

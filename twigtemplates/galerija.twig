@@ -1,0 +1,22 @@
+{% extends "base.twig" %}
+{% block description %}Galerija{% endblock %}
+{% block content %}
+
+{% set Gelerija = fetch("Gelerija") %}
+
+<div class="background-dark flex ju-co-center padding-top-200 padding-bottom-120">
+    {% for item in Gelerija %}
+    <div class="gallery flex flex-column margin-left-24 margin-right-24 border-blue">
+        <div class="gallery-desc flex flex-1 al-it-center ju-co-center font-24 color-grey">{{item.Naziv}}</div>
+        <div  class="owl4 owl-carousel owl-theme w-100">
+        {% for img in item.Slike_ %}
+        <div 
+             class="gallery-photos"
+             style="background-image: url(img/{{img.slug}})"></div>
+        {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
