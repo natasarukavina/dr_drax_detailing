@@ -4,8 +4,14 @@
 .w-100 {
   width: 100%;
 }
+.margin-top-20 {
+  margin-top: 1.25rem;
+}
 .margin-top-24 {
   margin-top: 1.5rem;
+}
+.margin-top-40 {
+  margin-top: 2.5rem;
 }
 .margin-top-200 {
   margin-top: 12.5rem;
@@ -43,6 +49,9 @@
 .margin-right-50 {
   margin-right: 3.125rem;
 }
+.padding-top-24 {
+  padding-top: 1.5rem;
+}
 .padding-top-80 {
   padding-top: 5rem;
 }
@@ -51,6 +60,9 @@
 }
 .padding-top-200 {
   padding-top: 12.5rem;
+}
+.padding-bottom-50 {
+  padding-bottom: 3.125rem;
 }
 .padding-bottom-80 {
   padding-bottom: 5rem;

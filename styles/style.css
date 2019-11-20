@@ -154,8 +154,14 @@ button:hover {
 .w-100 {
   width: 100%;
 }
+.margin-top-20 {
+  margin-top: 1.25rem;
+}
 .margin-top-24 {
   margin-top: 1.5rem;
+}
+.margin-top-40 {
+  margin-top: 2.5rem;
 }
 .margin-top-200 {
   margin-top: 12.5rem;
@@ -193,6 +199,9 @@ button:hover {
 .margin-right-50 {
   margin-right: 3.125rem;
 }
+.padding-top-24 {
+  padding-top: 1.5rem;
+}
 .padding-top-80 {
   padding-top: 5rem;
 }
@@ -201,6 +210,9 @@ button:hover {
 }
 .padding-top-200 {
   padding-top: 12.5rem;
+}
+.padding-bottom-50 {
+  padding-bottom: 3.125rem;
 }
 .padding-bottom-80 {
   padding-bottom: 5rem;
@@ -281,6 +293,20 @@ button:hover {
   background-position: center;
   background-repeat: no-repeat;
   background-image: url('../images/HomeIntro/toine-g-iRnUeA04kUY-unsplash.jpg');
+}
+.usluge-dodatne-title {
+  width: 350px;
+}
+.usluge-dodatne-desc {
+  width: 400px;
+  position: relative;
+}
+.usluge-dodatne-desc-one {
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  transition: all 0.8s ease-in-out;
 }
 .gallery {
   height: 400px;
@@ -371,6 +397,6 @@ button.krug {
   height: 35vw;
 }
 .footer {
-  height: 18.75rem;
+  height: 11.75rem;
   padding: 40px 44px 40px 44px;
 }

@@ -52,3 +52,25 @@ owl4.owlCarousel({
     dotClass: 'krug',
     animateOut: 'fadeOut',
 });
+
+
+function Dodatne_usluge (value) {
+    var i;
+
+    for (i = 1; i < 11; i++) {
+        if (i == value) {
+            document.getElementById(i+'1').style.opacity = '1';
+            document.getElementById(i).style.color = '#1eacc7';
+            console.log('nova', i);
+            
+        } else {
+            document.getElementById(i+'1').style.opacity = '0';
+            document.getElementById(i).style.color = '#aeaeae';
+            console.log('stara', i);
+            
+        }
+    }
+
+    
+    
+}

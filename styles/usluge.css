@@ -10,3 +10,17 @@
   background-repeat: no-repeat;
   background-image: url('../images/HomeIntro/toine-g-iRnUeA04kUY-unsplash.jpg');
 }
+.usluge-dodatne-title {
+  width: 350px;
+}
+.usluge-dodatne-desc {
+  width: 400px;
+  position: relative;
+}
+.usluge-dodatne-desc-one {
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  transition: all 0.8s ease-in-out;
+}
