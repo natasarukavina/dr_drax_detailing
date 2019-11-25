@@ -184,6 +184,9 @@ button:hover {
 .margin-bottom-80 {
   margin-bottom: 5rem;
 }
+.margin-left-7 {
+  margin-left: 0.438rem;
+}
 .margin-left-24 {
   margin-left: 1.5rem;
 }
@@ -201,6 +204,9 @@ button:hover {
 }
 .padding-top-24 {
   padding-top: 1.5rem;
+}
+.padding-top-50 {
+  padding-top: 3.125rem;
 }
 .padding-top-80 {
   padding-top: 5rem;
