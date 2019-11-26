@@ -22,3 +22,8 @@
 .ju-co-around {
   justify-content: space-around;
 }
+@media screen and (max-width: 1024px) {
+  .ju-co-1024-start {
+    justify-content: flex-start;
+  }
+}

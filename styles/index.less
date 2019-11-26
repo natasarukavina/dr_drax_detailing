@@ -12,6 +12,12 @@
     }
     &-usluge {
         width: 30%;
+        @media screen and (max-width: 768px) {
+            width: 45%;
+        }
+        @media screen and (max-width: 500px) {
+            width: 90%;
+        }
         &-icon {
             height: 8.125rem;
             width: 8.125rem;
@@ -19,9 +25,6 @@
     }
 }
 
-// BODY {
-    // background: url(http://placekitten.com/600/600);
-// }
 .hexagon {
     overflow: hidden;
     visibility: hidden;
