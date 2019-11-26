@@ -16,14 +16,15 @@
   {% endfor %}
 </div>
 
-<div class="background-dark w-100 flex flex-column ju-co-center al-it-center padding-top-80">
-  <div class="font-36 color-grey font-500 margin-bottom-40">Ko smo mi i zašto treba da dođete kod nas?</div>
-  <div style="max-width: 700px;" class="font-16 color-grey font-300 text-center margin-bottom-40">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+<div class="background-dark border-box w-100 flex flex-column ju-co-center al-it-center padding-top-80 padding-left-24 padding-right-24">
+  <div style="max-width: 630px;" class="font-36 color-grey font-500 text-center margin-bottom-40">Drax Detailing je studio za negu i ulepšavanje Vašeg ljubimca</div>
+  <div style="max-width: 700px;" class="font-16 color-grey font-300 text-center margin-bottom-14">Naš studio je naša strast, a automobile volimo više od svega. Kod nas možete Vašeg ljubimca počastiti nekom iz široke lepeze usluga kao što su detailing svih delova na najvišem mogućem nivou, više vrsta poliranja, dubinsko pranje, detaljno pranje eksterijera, kao i keramička zaštita svih delova i komponenti vozila.</div>
+  <div style="max-width: 700px;" class="font-16 color-grey font-300 text-center margin-bottom-40">Želite da zaštitite i očuvate sjaj Vašeg tek kupljenog automobila, ili prosto želite da osvežite izgled Vašeg oldtajmera ili jangtajmera? Na pravom ste mestu! Mi ćemo zaštititi i očuvati Vašeg ljubimca da može još mnogo godina da izgleda čak i bolje nego kad je bio nov. Garantujemo kvalitet vrhunske usluge i verujemo da kad jednom dođete, uvek ćete se vraćati!</div>
   <a href="o_nama"><button class="background-blue font-14 color-black border-blue margin-bottom-80">DETALJNIJE</button></a>
 </div>
 
 <div class="background-dark flex flex-column ju-co-center al-it-center padding-top-24 padding-bottom-50" >
-  <div class="font-36 color-grey font-500 margin-bottom-80">Šta sve možemo da vam ponudimo</div>
+  <div class="font-36 color-grey font-500 text-center margin-bottom-80 padding-left-24 padding-right-24">Naša ponuda paketa i usluga</div>
   <div class="flex flex-wrap ju-co-center w-100">
     <a href="usluge/#drax" class="home-usluge flex flex-column al-it-center margin-bottom-80">
       <img class="home-usluge-icon margin-bottom-24" src="images/drax.png">
@@ -61,9 +62,9 @@
   <a href="usluge"><button class="background-blue font-14 color-black border-blue margin-bottom-80">SVE USLUGE</button></a>
 </div>
 
-<div class="background-blue flex flex-column al-it-center ju-co-center w-100" style="height: 100vh;">
+<div class="background-blue flex flex-column al-it-center ju-co-center w-100 padding-top-80 padding-bottom-80">
 {# background: linear-gradient(180deg, #111111 0%, rgba(30, 172, 199, 1) 100%); #}
-  <div class="font-36 color-black font-600 margin-bottom-24">Šta su rekli o nama</div>
+  <div class="font-36 color-black font-600 text-center margin-bottom-24">Naši zadovoljni klijenti</div>
   <div id="owl2" class="owl-carousel owl-theme">
     <div class="flex flex-column al-it-center ju-co-between" style="width: 100%;">
       {# <div class="flex al-it-center ju-co-center">
@@ -80,11 +81,11 @@
   </div>
 </div>
 
-<div style="height: 350px;" class="background-dark flex al-it-center ju-co-around">
+<div style="padding: 30px 0px 30px 0;" class="background-dark flex al-it-center ju-co-around">
 <div><img style="max-height: 30px;transform: rotate(180deg);" src="images/arrow-blue.png"></div>
 <div id="owl3" style="width:90%;" class="owl-carousel owl-theme flex al-it-center ju-co-between">
   {% for img in item.Images_ %}
-    <div style="height: 220px; width: 350px;background-image: url(img/{{img.slug}});background-size:cover;background-position:center;" class="background-grey"></div>
+    <div style="height: 18vw; width: 27.4vw;background-image: url(img/{{img.slug}});background-size:cover;background-position:center;" class="background-dark"></div>
   {% endfor %}
 </div>
   <div><img style="max-height: 30px;" src="images/arrow-blue.png"></div>

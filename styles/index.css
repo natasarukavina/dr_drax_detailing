@@ -8,6 +8,16 @@
 .home-usluge {
   width: 30%;
 }
+@media screen and (max-width: 768px) {
+  .home-usluge {
+    width: 45%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .home-usluge {
+    width: 90%;
+  }
+}
 .home-usluge-icon {
   height: 8.125rem;
   width: 8.125rem;
