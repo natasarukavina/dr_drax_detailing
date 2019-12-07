@@ -66,18 +66,21 @@
 {# background: linear-gradient(180deg, #111111 0%, rgba(30, 172, 199, 1) 100%); #}
   <div class="font-36 color-black font-600 text-center margin-bottom-24">Naši zadovoljni klijenti</div>
   <div id="owl2" class="owl-carousel owl-theme">
+  {% set Testimonial = fetch("Testimonial") %}
+  {% for item in Testimonial %}
     <div class="flex flex-column al-it-center ju-co-between" style="width: 100%;">
       {# <div class="flex al-it-center ju-co-center">
         <img style="max-height: 30px;transform: rotate(180deg);" src="images/arrow.png">
       </div> #}
       <div class="flex al-it-center ju-co-center hexagon hexagon2">
         <div class="hexagon-in1">
-          <div class="hexagon-in2"></div>
+          <div style="background-image: url(img/{{item.Slika}})" class="hexagon-in2"></div>
         </div>
       </div>
-      <div style="max-width: 620px;" class="font-16 color-black font-normal text-center margin-top-24">"Lorem Ipsum is simply dummy" text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"</div>
-      <div class="font-16 color-black font-600 text-center margin-top-24">Ime i Prezime</div>
+      <div style="max-width: 620px;" class="font-16 color-black font-normal text-center margin-top-24">"{{item.Text}}"</div>
+      <div class="font-16 color-black font-600 text-center margin-top-24">{{item.Ime_Prezime}}</div>
     </div>
+  {% endfor %}
   </div>
 </div>
 
