@@ -4,11 +4,15 @@
     &-blok-1 {
         height: 100vh;
         width: 100%;
-        // background-image: url(../images/intro.jpg);
-        
         background-size: cover!important;
         background-position: center!important;
-        background-repeat: no-repeat!important;
+				background-repeat: no-repeat!important;
+				@media screen and (max-width: 1024px){
+					height: 60vw;
+				}
+				@media screen and (max-width: 500px){
+					height: 100vw;
+				}
     }
     &-usluge {
         width: 30%;
@@ -20,7 +24,11 @@
         }
         &-icon {
             height: 8.125rem;
-            width: 8.125rem;
+						width: 8.125rem;
+						@media screen and (max-width: 768px){
+							height: 6.125rem;
+							width: 6.125rem;
+						}
         }
     }
 }

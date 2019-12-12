@@ -1,6 +1,9 @@
 .flex {
   display: flex;
 }
+.flex-imp {
+  display: flex !important;
+}
 .flex-column {
   flex-direction: column;
 }
@@ -22,8 +25,24 @@
 .ju-co-around {
   justify-content: space-around;
 }
+@media screen and (max-width: 1180px) {
+  .flex-1180-column {
+    flex-direction: column;
+  }
+  .flex-1180-column-rev {
+    flex-direction: column-reverse;
+  }
+}
 @media screen and (max-width: 1024px) {
   .ju-co-1024-start {
     justify-content: flex-start;
+  }
+}
+@media screen and (max-width: 799px) {
+  .display-799-none {
+    display: none;
+  }
+  .al-it-799-center {
+    align-items: center;
   }
 }

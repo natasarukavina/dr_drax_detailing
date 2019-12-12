@@ -1,6 +1,17 @@
 .gallery {
   height: 400px;
-  width: 500px;
+  width: 450px;
+}
+@media screen and (max-width: 960px) {
+  .gallery {
+    height: 260px;
+    width: 330px;
+  }
+}
+@media screen and (max-width: 360px) {
+  .gallery {
+    width: 260px;
+  }
 }
 .gallery-photos {
   width: 100%;
@@ -9,6 +20,11 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+@media screen and (max-width: 960px) {
+  .gallery-photos {
+    height: 215px;
+  }
 }
 .owl-theme .kruzici .krug {
   display: inline-block;

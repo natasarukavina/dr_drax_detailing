@@ -15,11 +15,12 @@ var owl2 = $('#owl2');
 
 owl2.owlCarousel({
     items:1,
-    loop:false,
-    autoplay:false,
+    loop:true,
+    autoplay:true,
     autoplayTimeout:3500,
     autoplayHoverPause:false,
-    nav:true,
+		nav:true,
+		navText: ["<img src='images/left-arrow.png'>","<img src='images/right-arrow.png'>"],
     dots:false,
     animateOut: 'fadeOut',
 });
@@ -56,19 +57,36 @@ owl4.owlCarousel({
 
 function Dodatne_usluge (value) {
     var i;
-
+	  var window_width = window.innerWidth;
     for (i = 1; i < 11; i++) {
-        if (i == value) {
+        if ( window_width > 779) {
+					if (i == value) {
             document.getElementById(i+'1').style.opacity = '1';
             document.getElementById(i).style.color = '#1eacc7';
-            console.log('nova', i);
+            // console.log('nova', i);
             
-        } else {
-            document.getElementById(i+'1').style.opacity = '0';
-            document.getElementById(i).style.color = '#aeaeae';
-            console.log('stara', i);
+					} else {
+							document.getElementById(i+'1').style.opacity = '0';
+							document.getElementById(i).style.color = '#aeaeae';
+							// console.log('stara', i);
+							
+					}
+				} else {
+					if (i == value) {
+            document.getElementById(i+'01').style.opacity = '1';
+						document.getElementById(i+'01').style.height = 'auto';
+						document.getElementById(i+'01').style.marginBottom = '40px';
+            document.getElementById(i).style.color = '#1eacc7';
             
-        }
+					} else {
+						document.getElementById(i+'01').style.opacity = '0';
+						document.getElementById(i+'01').style.height = '0';
+						document.getElementById(i+'01').style.marginBottom = '0px';
+						document.getElementById(i).style.color = '#aeaeae';
+							// console.log('stara', i);
+							
+					}
+				}
     }
 
     
