@@ -44,7 +44,7 @@
   color: #ffffff;
 }
 .color-grey {
-  color: #f9f9f9;
+  color: #aeaeae;
 }
 .color-blue {
   color: #1eacc7;
@@ -57,4 +57,12 @@
 }
 .cursor-pointer {
   cursor: pointer;
+}
+@media screen and (max-width: 768px) {
+  .font-l-20 {
+    font-size: 1.25rem;
+  }
+  .font-l-26 {
+    font-size: 1.625rem;
+  }
 }

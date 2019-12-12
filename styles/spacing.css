@@ -88,11 +88,17 @@
 .padding-left-24 {
   padding-left: 1.5rem;
 }
+.padding-left-70 {
+  padding-left: 4.375rem;
+}
 .padding-left-200 {
   padding-left: 12.5rem;
 }
 .padding-right-24 {
   padding-right: 1.5rem;
+}
+.padding-right-70 {
+  padding-right: 4.375rem;
 }
 .padding-right-200 {
   padding-right: 12.5rem;

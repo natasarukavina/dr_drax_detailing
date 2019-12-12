@@ -16,39 +16,39 @@
   {% endfor %}
 </div>
 
-<div class="background-dark border-box w-100 flex flex-column ju-co-center al-it-center padding-top-80 padding-left-24 padding-right-24">
-  <div style="max-width: 630px;" class="font-36 color-grey font-500 text-center margin-bottom-40">Drax Detailing je studio za negu i ulepšavanje Vašeg ljubimca</div>
+<div class="background-dark border-box w-100 flex flex-column ju-co-center al-it-center padding-top-80 padding-left-70 padding-right-70">
+  <div style="max-width: 630px;" class="font-36 font-l-26 color-grey font-500 text-center margin-bottom-40">Drax Detailing je studio za negu i ulepšavanje Vašeg ljubimca</div>
   <div style="max-width: 700px;" class="font-16 color-grey font-300 text-center margin-bottom-14">Naš studio je naša strast, a automobile volimo više od svega. Kod nas možete Vašeg ljubimca počastiti nekom iz široke lepeze usluga kao što su detailing svih delova na najvišem mogućem nivou, više vrsta poliranja, dubinsko pranje, detaljno pranje eksterijera, kao i keramička zaštita svih delova i komponenti vozila.</div>
   <div style="max-width: 700px;" class="font-16 color-grey font-300 text-center margin-bottom-40">Želite da zaštitite i očuvate sjaj Vašeg tek kupljenog automobila, ili prosto želite da osvežite izgled Vašeg oldtajmera ili jangtajmera? Na pravom ste mestu! Mi ćemo zaštititi i očuvati Vašeg ljubimca da može još mnogo godina da izgleda čak i bolje nego kad je bio nov. Garantujemo kvalitet vrhunske usluge i verujemo da kad jednom dođete, uvek ćete se vraćati!</div>
-  <a href="o_nama"><button class="background-blue font-14 color-black border-blue margin-bottom-80">DETALJNIJE</button></a>
+  <a href="o_nama"><button class="background-blue button font-14 color-black border-blue margin-bottom-80">DETALJNIJE</button></a>
 </div>
 
 <div class="background-dark flex flex-column ju-co-center al-it-center padding-top-24 padding-bottom-50" >
-  <div class="font-36 color-grey font-500 text-center margin-bottom-80 padding-left-24 padding-right-24">Naša ponuda paketa i usluga</div>
+  <div class="font-36 font-l-26 color-grey font-500 text-center margin-bottom-80 padding-left-24 padding-right-24">Naša ponuda paketa i usluga</div>
   <div class="flex flex-wrap ju-co-center w-100">
     <a href="usluge/#drax" class="home-usluge flex flex-column al-it-center margin-bottom-80">
       <img class="home-usluge-icon margin-bottom-24" src="images/drax.png">
-      <div class="font-24 color-grey">Dr Clean Drax Paket</div>
+      <div class="font-24 font-l-20 color-grey">Dr Clean Drax Paket</div>
     </a>
     <a href="usluge/#light" class="home-usluge flex flex-column al-it-center margin-bottom-80">
       <img class="home-usluge-icon margin-bottom-24" src="images/light.png">
-      <div class="font-24 color-grey">Light Paket</div>
+      <div class="font-24 font-l-20 color-grey">Light Paket</div>
     </a>
     <a href="usluge/#jednoslojno" class="home-usluge flex flex-column al-it-center margin-bottom-80">
       <img class="home-usluge-icon margin-bottom-24" src="images/jednoslojno.png">
-      <div class="font-24 color-grey">Jednoslojno poliranje</div>
+      <div class="font-24 font-l-20 color-grey">Jednoslojno poliranje</div>
     </a>
     <a href="usluge/#dvoslojno" class="home-usluge flex flex-column al-it-center margin-bottom-80">
       <img class="home-usluge-icon margin-bottom-24" src="images/dvoslojno.png">
-      <div class="font-24 color-grey">Dvoslojno Poliranje</div>
+      <div class="font-24 font-l-20 color-grey">Dvoslojno Poliranje</div>
     </a>
     <a href="usluge/#troslojno" class="home-usluge flex flex-column al-it-center margin-bottom-80">
       <img class="home-usluge-icon margin-bottom-24" src="images/troslojno.png">
-      <div class="font-24 color-grey">Troslojno Poliranje</div>
+      <div class="font-24 font-l-20 color-grey">Troslojno Poliranje</div>
     </a>
     <a href="usluge/#enterijer" class="home-usluge flex flex-column al-it-center margin-bottom-80">
       <img class="home-usluge-icon margin-bottom-24" src="images/enterijer.png">
-      <div class="font-24 color-grey ">Detailing Enterijera</div>
+      <div class="font-24 font-l-20 color-grey ">Detailing Enterijera</div>
     </a>
     {# <div class="home-usluge flex flex-column al-it-center margin-bottom-80">
       <img class="home-usluge-icon margin-bottom-24" src="images/logo.svg">
@@ -59,13 +59,13 @@
       <div class="font-24 color-grey">Dodatne Usluge</div>
     </div> #}
   </div>
-  <a href="usluge"><button class="background-blue font-14 color-black border-blue margin-bottom-80">SVE USLUGE</button></a>
+  <a href="usluge"><button class="background-blue button font-14 color-black border-blue margin-bottom-80">SVE USLUGE</button></a>
 </div>
 
 <div class="background-blue flex flex-column al-it-center ju-co-center w-100 padding-top-80 padding-bottom-80">
 {# background: linear-gradient(180deg, #111111 0%, rgba(30, 172, 199, 1) 100%); #}
-  <div class="font-36 color-black font-600 text-center margin-bottom-24">Naši zadovoljni klijenti</div>
-  <div id="owl2" class="owl-carousel owl-theme">
+  <div class="font-36 font-l-26 color-black font-600 text-center margin-bottom-24">Naši zadovoljni klijenti</div>
+  <div id="owl2" class="owl-carousel owl-theme flex-imp al-it-center ju-co-center">
   {% set Testimonial = fetch("Testimonial") %}
   {% for item in Testimonial %}
     <div class="flex flex-column al-it-center ju-co-between" style="width: 100%;">
@@ -77,8 +77,8 @@
           <div style="background-image: url(img/{{item.Slika}})" class="hexagon-in2"></div>
         </div>
       </div>
-      <div style="max-width: 620px;" class="font-16 color-black font-normal text-center margin-top-24">"{{item.Text}}"</div>
-      <div class="font-16 color-black font-600 text-center margin-top-24">{{item.Ime_Prezime}}</div>
+      <div style="max-width: 620px;" class="font-16 color-black font-normal text-center margin-top-24 padding-left-24 padding-right-24 border-box">"{{item.Text}}"</div>
+      <div class="font-16 color-black font-600 text-center margin-top-24 padding-left-24 padding-right-24 border-box">{{item.Ime_Prezime}}</div>
     </div>
   {% endfor %}
   </div>
