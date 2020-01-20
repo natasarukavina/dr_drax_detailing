@@ -8,9 +8,25 @@
   <meta name="description" content="{% block description %}{% endblock %}"/>
   {# <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bare-css@2.0.3/css/bare.min.css"> #}
   <link rel="stylesheet" type="text/css" href="cms/sharedstyle.css">
-  <link rel="stylesheet" type="text/css" href="styles/style.css">
+
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/magnific-popup.css">
+	<link rel="stylesheet" href="css/jquery-ui.css">
+
   <link rel="stylesheet" href="owl/assets/owl.carousel.min.css" />
   <link rel="stylesheet" href="owl/assets/owl.theme.default.css" />
+
+	<link rel="stylesheet" href="css/lightgallery.min.css">    
+    
+	<link rel="stylesheet" href="css/bootstrap-datepicker.css">
+
+	{# <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css"> #}
+	
+	<link rel="stylesheet" href="css/swiper.css">
+
+	<link rel="stylesheet" href="css/aos.css">
+
+	<link rel="stylesheet" type="text/css" href="styles/style.css">
   <!--
   <meta name="keywords" content="">
   <link rel="icon" href="images/favicon.png">
@@ -98,8 +114,24 @@
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.3.1.js"  crossorigin="anonymous"></script>
-<script src="owl/owl.carousel.min.js"></script>
+{# <script src="https://code.jquery.com/jquery-3.3.1.js"  crossorigin="anonymous"></script>
+<script src="owl/owl.carousel.min.js"></script> #}
+<script src="js/jquery-3.3.1.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/jquery-ui.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/jquery.countdown.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/bootstrap-datepicker.min.js"></script>
+  <script src="js/swiper.min.js"></script>
+  <script src="js/aos.js"></script>
+
+  <script src="js/picturefill.min.js"></script>
+  <script src="js/lightgallery-all.min.js"></script>
+  <script src="js/jquery.mousewheel.min.js"></script>
 <script src="js/home.js"></script>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
@@ -122,17 +154,11 @@ crossorigin=""></script>
 
     var marker = new L.marker([lat, lng]).addTo(map);
 
-    {# var owl = $('.owl-carousel');
-owl.owlCarousel({
-    items:1,
-    loop:true,
-    autoplay:true,
-    autoplayTimeout:3500,
-    autoplayHoverPause:false,
-    nav:false,
-    dots:false,
-    animateOut: 'fadeOut',
-}); #}
+    $(document).ready(function L(){
+      $('.lightgallery').lightGallery({
+				download: true
+			});
+    });
 </script>
 
 

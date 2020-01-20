@@ -464,6 +464,7 @@ a {
 .gallery {
   height: 400px;
   width: 450px;
+  position: relative;
 }
 @media screen and (max-width: 960px) {
   .gallery {
@@ -475,6 +476,11 @@ a {
   .gallery {
     width: 260px;
   }
+}
+.gallery-resize {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 .gallery-photos {
   width: 100%;

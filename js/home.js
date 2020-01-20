@@ -83,12 +83,27 @@ function Dodatne_usluge (value) {
 						document.getElementById(i+'01').style.height = '0';
 						document.getElementById(i+'01').style.marginBottom = '0px';
 						document.getElementById(i).style.color = '#aeaeae';
-							// console.log('stara', i);
-							
 					}
 				}
     }
+}
+status = false;
+function resize(id) {
+	status = !status;
+	console.log(status, !status);
+	
+	// console.log(document.getElementById(id))
+	if (status) {
+		document.getElementById(id).style.position = 'absolute';
+		document.getElementById(id).style.width = '200%';
+		document.getElementById(id).style.maxHeight = '100%';
+		console.log(!status);
+		
+	} else {
+		document.getElementById(id).style.position = 'relative';
+		document.getElementById(id).style.width = '100%';
+		// document.getElementById(id).style.maxHeight = '100%';
+	}
+	
 
-    
-    
 }
