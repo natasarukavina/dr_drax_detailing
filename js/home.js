@@ -119,26 +119,35 @@ var lastScrollTop = 0;
             if (st > lastScrollTop){
               // downscroll code
 							$( ".header" ).css( "top", "-7rem" );
-							$( ".header" ).css( "background-color", "rgba(17,17,17,0.8)" );
+							$( ".header" ).css( "background-color", "rgba(17,17,17,0.9)" );
             } else {
               // upscroll code
 							$( ".header" ).css( "top", "0rem" );
-							$( ".header" ).css( "background-color", "rgba(17,17,17,0.8)" );
+							$( ".header" ).css( "background-color", "rgba(17,17,17,0.9)" );
             }
           }
           if (window.innerWidth < 1023) {
-            if (st<75) { 
+            if (st<100) { 
 							$( ".header" ).css( "top", "0rem" );
-							$( ".header" ).css( "background-color", "rgba(17,17,17,0)" ); 
+							 
+							if (open === true) {
+								$( ".header" ).css( "background-color", "rgba(17,17,17,0.9)" );
+							} else {
+								$( ".header" ).css( "background-color", "rgba(17,17,17,0)" );
+							}
 							return }
             if (st > lastScrollTop){
-              // downscroll code
-							$( ".header" ).css( "top", "-5rem" );
-							$( ".header" ).css( "background-color", "rgba(17,17,17,0.8)" );
+							// downscroll code
+							if (open === true) {
+								$( ".header" ).css( "top", "0" );
+							} else {
+								$( ".header" ).css( "top", "-5rem" );
+							}
+							$( ".header" ).css( "background-color", "rgba(17,17,17,0.9)" );
             } else {
               // upscroll code
 							$( ".header" ).css( "top", "0rem" );
-							$( ".header" ).css( "background-color", "rgba(17,17,17,0.8)" );
+							$( ".header" ).css( "background-color", "rgba(17,17,17,0.9)" );
             }
           }
           lastScrollTop = st;
@@ -150,7 +159,7 @@ function OpenClose(){
 		open = false;
 		$( ".ham" ).css( "right", "-20rem" );
 		$( "body" ).css( "overflow", "auto" );
-		if (st<75) {
+		if (st<100) {
 			$( ".header" ).css( "background-color", "rgba(17,17,17,0)" );
 		} else {
 			$( ".header" ).css( "background-color", "rgba(17,17,17,0.8)" );

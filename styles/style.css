@@ -613,5 +613,6 @@ button.krug {
     background-color: rgba(17, 17, 17, 0.9);
     top: 5rem;
     transition: right 0.6s ease-in-out;
+    overflow-y: auto;
   }
 }
