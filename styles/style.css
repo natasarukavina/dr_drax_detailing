@@ -162,6 +162,9 @@ a {
 .ju-co-around {
   justify-content: space-around;
 }
+.display-none {
+  display: none;
+}
 @media screen and (max-width: 1180px) {
   .flex-1180-column {
     flex-direction: column;
@@ -481,6 +484,7 @@ a {
   position: absolute;
   top: 20px;
   right: 20px;
+  cursor: pointer;
 }
 .gallery-photos {
   width: 100%;

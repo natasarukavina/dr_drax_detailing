@@ -25,6 +25,9 @@
 .ju-co-around {
   justify-content: space-around;
 }
+.display-none {
+  display: none;
+}
 @media screen and (max-width: 1180px) {
   .flex-1180-column {
     flex-direction: column;
