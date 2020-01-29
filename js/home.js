@@ -109,9 +109,8 @@ function resize(id) {
 }
 
 var lastScrollTop = 0;
-var st = $(this).scrollTop();
         $(window).scroll(function(event){
-          
+          var st = $(this).scrollTop();
           if (window.innerWidth > 1023) {
             if (st<112) { 
 							$( ".header" ).css( "top", "0rem" );
@@ -146,7 +145,7 @@ var st = $(this).scrollTop();
 				});
 var open = false;
 function OpenClose(){
-	// var st = $(this).scrollTop();
+	var st = $(this).scrollTop();
 	if (open === true) {
 		open = false;
 		$( ".ham" ).css( "right", "-20rem" );
