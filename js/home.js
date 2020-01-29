@@ -107,3 +107,37 @@ function resize(id) {
 	
 
 }
+
+var lastScrollTop = 0;
+        $(window).scroll(function(event){
+          var st = $(this).scrollTop();
+          // console.log(window.innerWidth);
+          
+          if (window.innerWidth > 1023) {
+            if (st<112) { $( ".header" ).css( "top", "7rem" ); return }
+            if (st > lastScrollTop){
+              // downscroll code
+							$( ".header" ).css( "top", "-7rem" );
+							
+            } else {
+              // upscroll code
+              $( ".header" ).css( "top", "7rem" );
+            }
+          }
+          if (window.innerWidth < 1023) {
+            if (st<75) { 
+							$( ".header" ).css( "top", "0rem" );
+							$( ".header" ).css( "background-color", "rgba(17,17,17,0)" ); 
+							return }
+            if (st > lastScrollTop){
+              // downscroll code
+							$( ".header" ).css( "top", "-5rem" );
+							$( ".header" ).css( "background-color", "rgba(17,17,17,0.8)" );
+            } else {
+              // upscroll code
+							$( ".header" ).css( "top", "0rem" );
+							$( ".header" ).css( "background-color", "rgba(17,17,17,0.8)" );
+            }
+          }
+          lastScrollTop = st;
+        });

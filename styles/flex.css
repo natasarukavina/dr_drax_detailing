@@ -45,6 +45,9 @@
   .display-799-none {
     display: none;
   }
+  .display-799-flex {
+    display: flex;
+  }
   .al-it-799-center {
     align-items: center;
   }
