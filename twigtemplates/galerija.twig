@@ -4,17 +4,22 @@
 
 {% set Gelerija = fetch("Gelerija") %}
 
-<div class="background-dark flex flex-wrap ju-co-center padding-top-200 padding-bottom-120">
+<div style="position: realtive" class="background-dark flex flex-wrap ju-co-center padding-top-200 padding-bottom-120">
     {% for item in Gelerija %}
-    <div class="gallery flex flex-column margin-left-24 margin-right-24 margin-top-24 margin-bottom-24 border-blue">
+    <div  class="gallery flex flex-column margin-left-24 margin-right-24 margin-top-24 margin-bottom-24 border-blue">
         <div class="gallery-desc flex flex-1 al-it-center ju-co-center font-24 color-grey">{{item.Naziv}}</div>
-        <div  class="owl4 owl-carousel owl-theme w-100">
-        {% for img in item.Slike_ %}
-        <div 
-             class="gallery-photos"
-             style="background-image: url(img/{{img.slug}})"></div>
-        {% endfor %}
-        </div>
+				{# <div onClick="resize({{item.id}})" class="gallery-resize"><img src="images/arrows.png"></div> #}
+        {# <div  class="owl4 owl-carousel owl-theme w-100"> #}
+        
+        <div style="max-height: 330px;overflow: hidden;" class="lightgallery">
+				{% for img in item.Slike_ %}
+					<a class="gallery-photos" href="img/{{img.slug}}">
+						 <img style="max-height: 100%;" src="img/{{img.slug}}">
+					</a>
+				{% endfor %}
+				</div>
+        
+        {# </div> #}
     </div>
     {% endfor %}
 </div>
