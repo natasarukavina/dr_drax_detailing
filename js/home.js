@@ -16,7 +16,7 @@ var owl2 = $('#owl2');
 owl2.owlCarousel({
     items:1,
     loop:true,
-    autoplay:true,
+    autoplay:false,
     autoplayTimeout:3500,
     autoplayHoverPause:false,
 		nav:true,
@@ -90,7 +90,6 @@ function Dodatne_usluge (value) {
 status = false;
 function resize(id) {
 	status = !status;
-	console.log(status, !status);
 	
 	// console.log(document.getElementById(id))
 	if (status) {

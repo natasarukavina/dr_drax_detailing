@@ -309,6 +309,9 @@ a {
   .margin-799-right-24 {
     margin-right: 1.5rem;
   }
+  .padding-799-30 {
+    padding: 30px;
+  }
 }
 .home-blok-1 {
   height: 100vh;
@@ -390,6 +393,16 @@ a {
 .hexagon2 {
   width: 250px;
   height: 310px;
+}
+@media screen and (max-width: 799px) {
+  .hexagon1 {
+    width: 200px;
+    height: 260px;
+  }
+  .hexagon2 {
+    width: 200px;
+    height: 260px;
+  }
 }
 .usluge-box {
   height: 565px;
@@ -508,7 +521,6 @@ a {
 .gallery-photos {
   width: 100%;
   height: 330px;
-  background-image: url('../images/HomeIntro/toine-g-iRnUeA04kUY-unsplash.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -595,6 +607,14 @@ button.krug {
   filter: grayscale(100%);
   height: 35vw;
 }
+.owl-nav {
+  display: flex;
+  align-items: center;
+  margin-bottom: 140px;
+}
+.owl-theme .owl-nav {
+  width: 800px;
+}
 .footer {
   padding: 40px 44px 30px 44px;
 }
@@ -607,7 +627,7 @@ button.krug {
   }
   .ham {
     position: absolute;
-    right: -20rem;
+    right: -30rem;
     width: 20rem;
     max-height: calc(100vh - 5rem);
     height: 27.475rem;
@@ -615,5 +635,11 @@ button.krug {
     top: 5rem;
     transition: right 0.6s ease-in-out;
     overflow-y: auto;
+  }
+  .owl-nav {
+    margin-bottom: 200px;
+  }
+  .owl-theme .owl-nav {
+    width: 320px;
   }
 }
