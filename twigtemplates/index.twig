@@ -62,36 +62,38 @@
   <a href="usluge"><button class="background-blue button font-14 color-black border-blue margin-bottom-80">SVE USLUGE</button></a>
 </div>
 
+<!-- testimonial -->
 <div class="background-blue flex flex-column al-it-center ju-co-center w-100 padding-top-80 padding-bottom-80">
 {# background: linear-gradient(180deg, #111111 0%, rgba(30, 172, 199, 1) 100%); #}
   <div class="font-36 font-l-26 color-black font-600 text-center margin-bottom-24 margin-left-24 margin-right-24">Naši zadovoljni klijenti</div>
-  <div id="owl2" class="owl-carousel owl-theme flex-imp al-it-center ju-co-center">
-  {% set Testimonial = fetch("Testimonial") %}
-  {% for item in Testimonial %}
-    <div class="flex flex-column al-it-center ju-co-between" style="width: 100%;">
-      {# <div class="flex al-it-center ju-co-center">
-        <img style="max-height: 30px;transform: rotate(180deg);" src="images/arrow.png">
-      </div> #}
-      <div class="flex al-it-center ju-co-center hexagon hexagon2">
-        <div class="hexagon-in1">
-          <div style="background-image: url(img/{{item.Slika}})" class="hexagon-in2"></div>
-        </div>
-      </div>
-      <div style="max-width: 620px;" class="font-16 color-black font-normal text-center margin-top-24 padding-left-24 padding-right-24 border-box">"{{item.Text}}"</div>
-      <div class="font-16 color-black font-600 text-center margin-top-24 padding-left-24 padding-right-24 border-box">{{item.Ime_Prezime}}</div>
-    </div>
-  {% endfor %}
-  </div>
+  <div class="testimonial">
+		<div id="owl2" class="owl-carousel owl-theme flex-imp al-it-center ju-co-center">
+		{% set Testimonial = fetch("Testimonial") %}
+		{% for item in Testimonial %}
+			<div class="flex flex-column al-it-center ju-co-between" style="width: 100%;">
+				{# <div class="flex al-it-center ju-co-center">
+					<img style="max-height: 30px;transform: rotate(180deg);" src="images/arrow.png">
+				</div> #}
+				<div class="flex al-it-center ju-co-center hexagon hexagon2">
+					<div class="hexagon-in1">
+						<div style="background-image: url(img/{{item.Slika}})" class="hexagon-in2"></div>
+					</div>
+				</div>
+				<div style="max-width: 38.75rem;" class="font-16 color-black font-normal text-center margin-top-24 padding-left-24 padding-right-24 border-box">"{{item.Text}}"</div>
+				<div class="font-16 color-black font-600 text-center margin-top-24 padding-left-24 padding-right-24 border-box">{{item.Ime_Prezime}}</div>
+			</div>
+		{% endfor %}
+		</div>
+	</div>
 </div>
 
-<div style="padding: 30px 0px 30px 0;" class="background-dark flex al-it-center ju-co-around">
-<div><img style="max-height: 30px;transform: rotate(180deg);" src="images/arrow-blue.png"></div>
-<div id="owl3" style="width:90%;" class="owl-carousel owl-theme flex al-it-center ju-co-between">
-  {% for img in item.Images_ %}
-    <div style="height: 18vw; width: 27.4vw;background-image: url(img/{{img.slug}});background-size:cover;background-position:center;" class="background-dark"></div>
-  {% endfor %}
-</div>
-  <div><img style="max-height: 30px;" src="images/arrow-blue.png"></div>
+<div style="padding: 1.875rem 0px 1.875rem 0;" class="background-dark flex flex-column al-it-center ju-co-around">
+	<div id="owl3"  class="owl-carousel owl-theme flex al-it-center ju-co-between">
+		{% for img in item.Images_ %}
+			<div style="height: 16.25rem; width: 25.5rem; box-sizing: border-box; margin: 0 auto; background-image: url(img/{{img.slug}});background-size:cover;background-position:center;" class="background-dark"></div>
+		{% endfor %}
+	</div>
+	<a href="galerija" class="color-blue text-center margin-top-24 margin-left-24 margin-right-24">Da biste videli i ostale naše radove, posetite našu galeriju</a>
 </div>
 
 {% endblock %}

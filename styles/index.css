@@ -38,6 +38,9 @@
     width: 6.125rem;
   }
 }
+.testimonial {
+  width: 800px;
+}
 .hexagon {
   overflow: hidden;
   visibility: hidden;
@@ -87,5 +90,8 @@
   .hexagon2 {
     width: 200px;
     height: 260px;
+  }
+  .testimonial {
+    width: 320px;
   }
 }
