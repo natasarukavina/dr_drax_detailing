@@ -11,12 +11,19 @@
 				{# <div onClick="resize({{item.id}})" class="gallery-resize"><img src="images/arrows.png"></div> #}
         {# <div  class="owl4 owl-carousel owl-theme w-100"> #}
         
-        <div style="max-height: 330px;overflow: hidden;" class="lightgallery">
+        <div style="max-height: 330px;overflow: hidden;" >
+				<ul class="lightGallery">
 				{% for img in item.Slike_ %}
-					<a class="gallery-photos" href="img/{{img.slug}}">
+					{# <a class="gallery-photos" href="img/{{img.slug}}">
 						 <img style="max-width: 100%;" src="img/{{img.slug}}">
-					</a>
+					</a> #}
+					
+						<li data-src="img/{{img.slug}}">
+							<img class="gallery-photos" src="img/{{img.slug}}" />
+						</li>
+					
 				{% endfor %}
+				</ul>
 				</div>
         
         {# </div> #}

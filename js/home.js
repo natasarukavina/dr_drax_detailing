@@ -28,14 +28,33 @@ owl2.owlCarousel({
 var owl3 = $('#owl3');
 
 owl3.owlCarousel({
-    items:3,
     loop:true,
     autoplay:false,
     autoplayTimeout:3500,
-    autoplayHoverPause:false,
-    nav:false,
+		autoplayHoverPause:false,
+		nav: true,
+		navText: ["<img src='images/arrow-left-blue.png'>","<img src='images/arrow-right-blue.png'>"],
     dots:false,
-    animateOut: 'fadeOut',
+		animateOut: 'fadeOut',
+		responsiveClass:true,
+    responsive:{
+        0:{
+						items:1,
+						nav: true
+        },
+        960:{
+            items:2,
+            nav:true
+        },
+        1440:{
+            items:3,
+            nav:true
+				},
+				1680:{
+					items:4,
+					nav:true
+			},
+    }
 });
 
 var owl4 = $('.owl4');
