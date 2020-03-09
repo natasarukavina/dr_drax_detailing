@@ -175,7 +175,7 @@ function OpenClose(){
 	var st = $(this).scrollTop();
 	if (open === true) {
 		open = false;
-		$( ".ham" ).css( "right", "-20rem" );
+		$( ".ham" ).css( "right", "-30rem" );
 		$( "body" ).css( "overflow", "auto" );
 		if (st<100) {
 			$( ".header" ).css( "background-color", "rgba(17,17,17,0)" );
