@@ -51,7 +51,7 @@
 @media screen and (max-width: 1024px) {
   .o_name {
     height: 60vw;
-    background-attachment: scroll;
+    background-attachment: scroll!important;
   }
 }
 @media screen and (max-width: 500px) {

@@ -420,7 +420,7 @@ a:hover {
 @media screen and (max-width: 1024px) {
   .o_name {
     height: 60vw;
-    background-attachment: scroll;
+    background-attachment: scroll!important;
   }
 }
 @media screen and (max-width: 500px) {
@@ -629,6 +629,7 @@ a:hover {
     width: 20rem;
     max-height: calc(100vh - 5rem);
     height: 27.475rem;
+    box-sizing: border-box;
     background-color: rgba(17, 17, 17, 0.9);
     top: 5rem;
     -webkit-transition: right 0.6s ease-in-out;
