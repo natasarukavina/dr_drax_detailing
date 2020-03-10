@@ -38,8 +38,28 @@
     width: 6.125rem;
   }
 }
+.o_name {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(180deg, #111111 2.41%, rgba(17, 17, 17, 0) 54%), linear-gradient(360deg, #111111 0%, rgba(17, 17, 17, 0) 42%), url('../images/photos/O_nama-min.jpg');
+  background-attachment: fixed!important;
+  background-size: cover!important;
+  background-position: center!important;
+  background-repeat: no-repeat !important;
+}
+@media screen and (max-width: 1024px) {
+  .o_name {
+    height: 60vw;
+    background-attachment: scroll;
+  }
+}
+@media screen and (max-width: 500px) {
+  .o_name {
+    height: 100vw;
+  }
+}
 .testimonial {
-  width: 800px;
+  width: 50rem;
 }
 .hexagon {
   overflow: hidden;
@@ -75,23 +95,23 @@
   transform: rotate(-60deg);
 }
 .hexagon1 {
-  width: 250px;
-  height: 310px;
+  width: 15.625rem;
+  height: 19.375rem;
 }
 .hexagon2 {
-  width: 250px;
-  height: 310px;
+  width: 15.625rem;
+  height: 19.375rem;
 }
 @media screen and (max-width: 799px) {
   .hexagon1 {
-    width: 200px;
-    height: 260px;
+    width: 12.5rem;
+    height: 16.25rem;
   }
   .hexagon2 {
-    width: 200px;
-    height: 260px;
+    width: 12.5rem;
+    height: 16.25rem;
   }
   .testimonial {
-    width: 320px;
+    width: 20rem;
   }
 }

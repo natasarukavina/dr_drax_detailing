@@ -1,23 +1,27 @@
 .gallery {
-  height: 400px;
-  width: 450px;
+  height: 25rem;
+  width: 28.125rem;
   position: relative;
 }
 @media screen and (max-width: 960px) {
   .gallery {
-    height: 260px;
-    width: 330px;
+    height: 16.25rem;
+    width: 20.625rem;
   }
 }
 @media screen and (max-width: 360px) {
   .gallery {
-    width: 260px;
+    width: 16.25rem;
   }
+}
+.gallery-desc {
+  min-height: 4.375rem;
+  max-height: 4.375rem;
 }
 .gallery-resize {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 1.25rem;
+  right: 1.25rem;
   cursor: pointer;
 }
 .gallery-photos {

@@ -62,7 +62,6 @@
   </div> #}
   {# <div class="flex flex-1 flex-colum ju-co-between"> #}
     <div class="w-100 flex flex-wrap ju-co-center ju-co-1024-start">
-      {# <div class="flex w-100"> #}
       <!-- 1 -->
         <div class="flex flex-column ju-co-between margin-right-40 margin-left-40 margin-bottom-40">
           <div class="flex flex-column">
@@ -86,13 +85,13 @@
         <div class="flex flex-column ju-co-between margin-right-40 margin-left-40 margin-bottom-40">
           <div class="flex flex-column al-it-540-center margin-540-bottom-60">
             <div class="font-18 font-300 line-height-2 color-white margin-bottom-14">Telefon:</div>
-            <div class="font-14 font-300 line-height-2 color-grey">011/123 45 67</div>
-            <div class="font-14 font-300 line-height-2 color-grey margin-bottom-14">069/55 06 063</div>
-            <div class="flex">
+            <a class="font-14 font-300 line-height-2 color-grey">011/123 45 67</a>
+            <a href="tel:+381 69 55 06 063" class="font-14 font-300 line-height-2 color-grey margin-bottom-14">069/55 06 063</a>
+            {# <div class="flex">
               <img style="width: 25px; height: 25px" class="margin-right-7" src="images/viber.png">
               <img style="width: 25px; height: 25px" class="margin-right-7 margin-left-7" src="images/messenger.png">
               <img style="width: 25px; height: 25px" class="margin-left-7" src="images/whatsapp.png">
-            </div>
+            </div> #}
           </div>
         </div>
         <!-- 2 -->
@@ -109,8 +108,8 @@
           <div class="flex flex-column al-it-end al-it-540-center">
             <div class="font-18 font-300 line-height-1_5 color-white margin-bottom-20">Pratite nas na<br> društvenim mrežama:</div>
             <div class="flex">
-              <a href="https://www.facebook.com" target="_blank" class="cursor-pointer"><img src="images/fb.svg"></a>
-              <a href="https://www.instagram.com" target="_blank" class="margin-left-24 cursor-pointer"><img src="images/ig.svg"></a>
+              <a href="https://www.facebook.com/JovanovicDraganDrax/" target="_blank" class="cursor-pointer"><img src="images/fb.svg"></a>
+              <a href="https://instagram.com/drax_detailing?igshid=qem6ql71gb1l" target="_blank" class="margin-left-24 cursor-pointer"><img src="images/ig.svg"></a>
             </div>
           </div>
         </div>
@@ -134,22 +133,16 @@ integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9
 crossorigin=""></script>
 
 <script>
-    var MapStr = '44.805197991471516,20.47651067376137';
+    var MapStr = '44.85252909700807,20.335790861863646';
     var lat  = Number( MapStr.split(',')[0] );
     var lng  = Number( MapStr.split(',')[1] );
     var map =  L.map('mapid').setView([lat, lng ], 13);
 
     L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        attribution: ''
     }).addTo(map);    
 
     var marker = new L.marker([lat, lng]).addTo(map);
-
-    // $(document).ready(function L(){
-    //   $('.lightgallery').lightGallery({
-		// 		download: true
-		// 	});
-    // });
 </script>
 
 <script type="text/javascript">
