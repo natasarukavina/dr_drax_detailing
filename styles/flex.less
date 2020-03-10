@@ -1,29 +1,37 @@
 .flex {
+		display: -webkit-box;
 		display: flex;
 		&-imp {
+			display: -webkit-box !important;
 			display: flex !important;
 		}
     &-column {
-        flex-direction: column;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+                flex-direction: column;
     }
     &-wrap {
         flex-wrap: wrap;
     }
     &-1 {
-        flex: 1;
+        -webkit-box-flex: 1;
+                flex: 1;
     }
 }
 .al-it {
     &-center {
-        align-items: center;
+        -webkit-box-align: center;
+                align-items: center;
     }
 }
 .ju-co {
     &-center {
-        justify-content: center;
+        -webkit-box-pack: center;
+                justify-content: center;
     }
     &-between {
-        justify-content: space-between;
+        -webkit-box-pack: justify;
+                justify-content: space-between;
     }
     &-around {
         justify-content: space-around;
@@ -35,9 +43,13 @@
 @media screen and (max-width: 1180px) {
 	.flex-1180 {
 			&-column {
-					flex-direction: column;
+					-webkit-box-orient: vertical;
+					-webkit-box-direction: normal;
+					        flex-direction: column;
 					&-rev {
-						flex-direction: column-reverse;
+						-webkit-box-orient: vertical;
+						-webkit-box-direction: reverse;
+						        flex-direction: column-reverse;
 					}
 			}
 	}
@@ -46,7 +58,8 @@
 @media screen and (max-width: 1024px) {
     .ju-co-1024 {
         &-start {
-            justify-content: flex-start;
+            -webkit-box-pack: start;
+                    justify-content: flex-start;
         }
     }
 }
@@ -57,10 +70,31 @@
 			display: none;
 		}
 		&-flex {
+			display: -webkit-box;
 			display: flex;
+			&-column {
+				-webkit-box-orient: vertical;
+				-webkit-box-direction: normal;
+				        flex-direction: column;
+			}
 		}
 	}
 	.al-it-799-center {
-		align-items: center;
+		-webkit-box-align: center;
+		        align-items: center;
+	}
+}
+
+@media screen and (max-width: 560px) {
+	.display-560 {
+		&-flex {
+			display: -webkit-box;
+			display: flex;
+			&-column {
+				-webkit-box-orient: vertical;
+				-webkit-box-direction: normal;
+				        flex-direction: column;
+			}
+		}
 	}
 }

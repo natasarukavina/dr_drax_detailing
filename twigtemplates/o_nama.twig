@@ -2,20 +2,27 @@
 {% block description %}O nama{% endblock %}
 {% block content %}
 
-<div  class="home-blok-1 flex flex-column al-it-center"
-      style="background: linear-gradient(180deg, #111111 2.41%, rgba(17, 17, 17, 0) 54%),linear-gradient(360deg, rgba(17, 17, 17, 1) 0%, rgba(17, 17, 17, 0) 42%), url(images/HomeIntro/yuvraj-singh-tmAynVA_ihE-unsplash.jpg);">
+<div  class="o_name flex flex-column al-it-center">
 </div>
 <div class="flex flex-column al-it-center background-blue padding-top-80 padding-bottom-80 w-100 h-100">
     <div class="font-36 color-black font-500 margin-bottom-40">O nama</div>
-  <div style="max-width: 43.75rem;" class="font-16 padding-799-30 color-black font-300 text-center margin-bottom-40">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+  <div style="max-width: 43.75rem;" class="flex flex-column al-it-center margin-bottom-40 padding-799-30">
+		<div class="font-16 color-black font-300 text-center margin-bottom-16 line-height-1_5"><span class="font-16 color-black font-300 text-center" style="font-style: italic;">“Budućnost pripada onima koji sanjaju velike snove”</span> – Viktor Igo</div>
+		<div class="font-16 color-black font-300 text-center margin-bottom-16 line-height-1_5">Od 2001. sanjamo svoj sopstveni studio u kome ulepšavamo automobile i motocikle, i vraćamo ih u njihovo fabričko stanje. Nema veće sreće za ponosnog vlasnika nego kad vidi da njegov ljubimac zablista još sjajnije nego kada je prvi put napustio prodajni salon. 
+Naš san nije mogao da se ostvari bez ogromne podrške porodice i prijatelja, i sada u našoj novoj garaži konačno postaje realnost. Kod nas garantujemo najbolji mogući tretman, te će vaš lepotan zasjati jače nego kad je sišao sa proizvodne trake. </div>
+		<div class="font-16 color-black font-300 text-center margin-bottom-16 line-height-1_5">Kod nas možete svog ljubimca razmaziti troslojnim poliranjem, detailingom enterijera, kao i voskiranjem prirodnim voskom, a kao vrhunac naše ponude predlažemo ultimativni tretman - <a href="usluge/#drax" class="font-16 color-black font-300 text-center line-height-1_5">Dr Clean Drax Paket</a>.</div>
+		<div class="font-16 color-black font-300 text-center margin-bottom-16 line-height-1_5">Koristimo samo najkvalitetnije materijale i mašine, a naše osoblje poseduje višedecenijsko iskustvo u radu sa najekskluzivnijim vozilima i radi u skladu sa sertifikatima renomiranih svetskih kompanija Sonax i Serfaces.</div>
+		<div class="font-16 color-black font-300 text-center line-height-1_5">Dođite da udahnemo nov život i podarimo nov sjaj vašem ljubimcu!</div>
+	</div>
 </div>
 <div class="background-dark flex flex-column al-it-center ju-co-around padding-top-50 padding-bottom-50">
     <div class="font-36 color-grey font-500 margin-bottom-40">Partneri</div>
     <div class="flex al-it-center ju-co-center w-100 flex-wrap">
-        <img class="margin-left-7 margin-right-7" src="images/logo.svg">
-        <img class="margin-left-7 margin-right-7" src="images/logo.svg">
-        <img class="margin-left-7 margin-right-7" src="images/logo.svg">
-        <img class="margin-left-7 margin-right-7" src="images/logo.svg">
+		{% set photo = fetch("Prijatelji") %}
+		{% for img in photo.Logoi_ %}
+			<img style="max-width: 12.5rem; max-height: 12.5rem;" class="margin-left-24 margin-right-24" src="img/{{img.slug}}">
+		{% endfor %}
+        
     </div>
 </div>
 

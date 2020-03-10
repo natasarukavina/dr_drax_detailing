@@ -74,57 +74,57 @@ owl4.owlCarousel({
 });
 
 
-function Dodatne_usluge (value) {
-    var i;
-	  var window_width = window.innerWidth;
-    for (i = 1; i < 11; i++) {
-        if ( window_width > 779) {
-					if (i == value) {
-            document.getElementById(i+'1').style.opacity = '1';
-            document.getElementById(i).style.color = '#1eacc7';
-            // console.log('nova', i);
+// function Dodatne_usluge (value) {
+//     var i;
+// 	  var window_width = window.innerWidth;
+//     for (i = 1; i < 11; i++) {
+//         if ( window_width > 779) {
+// 					if (i == value) {
+//             document.getElementById(i+'1').style.opacity = '1';
+//             document.getElementById(i).style.color = '#1eacc7';
+//             // console.log('nova', i);
             
-					} else {
-							document.getElementById(i+'1').style.opacity = '0';
-							document.getElementById(i).style.color = '#aeaeae';
-							// console.log('stara', i);
+// 					} else {
+// 							document.getElementById(i+'1').style.opacity = '0';
+// 							document.getElementById(i).style.color = '#aeaeae';
+// 							// console.log('stara', i);
 							
-					}
-				} else {
-					if (i == value) {
-            document.getElementById(i+'01').style.opacity = '1';
-						document.getElementById(i+'01').style.height = 'auto';
-						document.getElementById(i+'01').style.marginBottom = '40px';
-            document.getElementById(i).style.color = '#1eacc7';
+// 					}
+// 				} else {
+// 					if (i == value) {
+//             document.getElementById(i+'01').style.opacity = '1';
+// 						document.getElementById(i+'01').style.height = 'auto';
+// 						document.getElementById(i+'01').style.marginBottom = '40px';
+//             document.getElementById(i).style.color = '#1eacc7';
             
-					} else {
-						document.getElementById(i+'01').style.opacity = '0';
-						document.getElementById(i+'01').style.height = '0';
-						document.getElementById(i+'01').style.marginBottom = '0px';
-						document.getElementById(i).style.color = '#aeaeae';
-					}
-				}
-    }
-}
-status = false;
-function resize(id) {
-	status = !status;
+// 					} else {
+// 						document.getElementById(i+'01').style.opacity = '0';
+// 						document.getElementById(i+'01').style.height = '0';
+// 						document.getElementById(i+'01').style.marginBottom = '0px';
+// 						document.getElementById(i).style.color = '#aeaeae';
+// 					}
+// 				}
+//     }
+// }
+// status = false;
+// function resize(id) {
+// 	status = !status;
 	
-	// console.log(document.getElementById(id))
-	if (status) {
-		document.getElementById(id).style.position = 'absolute';
-		document.getElementById(id).style.width = '200%';
-		document.getElementById(id).style.maxHeight = '100%';
-		console.log(!status);
+// 	// console.log(document.getElementById(id))
+// 	if (status) {
+// 		document.getElementById(id).style.position = 'absolute';
+// 		document.getElementById(id).style.width = '200%';
+// 		document.getElementById(id).style.maxHeight = '100%';
+// 		console.log(!status);
 		
-	} else {
-		document.getElementById(id).style.position = 'relative';
-		document.getElementById(id).style.width = '100%';
-		// document.getElementById(id).style.maxHeight = '100%';
-	}
+// 	} else {
+// 		document.getElementById(id).style.position = 'relative';
+// 		document.getElementById(id).style.width = '100%';
+// 		// document.getElementById(id).style.maxHeight = '100%';
+// 	}
 	
 
-}
+// }
 
 var lastScrollTop = 0;
         $(window).scroll(function(event){

@@ -143,28 +143,41 @@ a:hover {
     font-size: 1.625rem;
   }
 }
+@media screen and (max-width: 560px) {
+  .text-799-center {
+    text-align: center;
+  }
+}
 .flex {
+  display: -webkit-box;
   display: flex;
 }
 .flex-imp {
+  display: -webkit-box !important;
   display: flex !important;
 }
 .flex-column {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
   flex-direction: column;
 }
 .flex-wrap {
   flex-wrap: wrap;
 }
 .flex-1 {
+  -webkit-box-flex: 1;
   flex: 1;
 }
 .al-it-center {
+  -webkit-box-align: center;
   align-items: center;
 }
 .ju-co-center {
+  -webkit-box-pack: center;
   justify-content: center;
 }
 .ju-co-between {
+  -webkit-box-pack: justify;
   justify-content: space-between;
 }
 .ju-co-around {
@@ -175,14 +188,19 @@ a:hover {
 }
 @media screen and (max-width: 1180px) {
   .flex-1180-column {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
     flex-direction: column;
   }
   .flex-1180-column-rev {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: reverse;
     flex-direction: column-reverse;
   }
 }
 @media screen and (max-width: 1024px) {
   .ju-co-1024-start {
+    -webkit-box-pack: start;
     justify-content: flex-start;
   }
 }
@@ -191,10 +209,28 @@ a:hover {
     display: none;
   }
   .display-799-flex {
+    display: -webkit-box;
     display: flex;
   }
+  .display-799-flex-column {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+  }
   .al-it-799-center {
+    -webkit-box-align: center;
     align-items: center;
+  }
+}
+@media screen and (max-width: 560px) {
+  .display-560-flex {
+    display: -webkit-box;
+    display: flex;
+  }
+  .display-560-flex-column {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
   }
 }
 .h-100 {
@@ -202,6 +238,12 @@ a:hover {
 }
 .w-100 {
   width: 100%;
+}
+.w-50 {
+  width: 50%;
+}
+.w-40 {
+  width: 40%;
 }
 .margin-top-20 {
   margin-top: 1.25rem;
@@ -221,6 +263,9 @@ a:hover {
 .margin-bottom-14 {
   margin-bottom: 0.875rem;
 }
+.margin-bottom-16 {
+  margin-bottom: 1rem;
+}
 .margin-bottom-20 {
   margin-bottom: 1.25rem;
 }
@@ -236,6 +281,9 @@ a:hover {
 .margin-left-7 {
   margin-left: 0.438rem;
 }
+.margin-left-16 {
+  margin-left: 1rem;
+}
 .margin-left-24 {
   margin-left: 1.5rem;
 }
@@ -247,6 +295,9 @@ a:hover {
 }
 .margin-right-7 {
   margin-right: 0.438rem;
+}
+.margin-right-16 {
+  margin-right: 1rem;
 }
 .margin-right-24 {
   margin-right: 1.5rem;
@@ -356,16 +407,34 @@ a:hover {
     width: 6.125rem;
   }
 }
+.o_name {
+  height: 100vh;
+  width: 100%;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(2.41%, #111111), color-stop(54%, rgba(17, 17, 17, 0))), -webkit-gradient(linear, left bottom, left top, from(#111111), color-stop(42%, rgba(17, 17, 17, 0))), url('../images/photos/O_nama-min.jpg');
+  background: linear-gradient(180deg, #111111 2.41%, rgba(17, 17, 17, 0) 54%), linear-gradient(360deg, #111111 0%, rgba(17, 17, 17, 0) 42%), url('../images/photos/O_nama-min.jpg');
+  background-attachment: fixed!important;
+  background-size: cover!important;
+  background-position: center!important;
+  background-repeat: no-repeat !important;
+}
+@media screen and (max-width: 1024px) {
+  .o_name {
+    height: 60vw;
+    background-attachment: scroll;
+  }
+}
+@media screen and (max-width: 500px) {
+  .o_name {
+    height: 100vw;
+  }
+}
 .testimonial {
-  width: 800px;
+  width: 50rem;
 }
 .hexagon {
   overflow: hidden;
   visibility: hidden;
   -webkit-transform: rotate(120deg);
-  -moz-transform: rotate(120deg);
-  -ms-transform: rotate(120deg);
-  -o-transform: rotate(120deg);
   transform: rotate(120deg);
   cursor: pointer;
 }
@@ -374,9 +443,6 @@ a:hover {
   width: 100%;
   height: 100%;
   -webkit-transform: rotate(-60deg);
-  -moz-transform: rotate(-60deg);
-  -ms-transform: rotate(-60deg);
-  -o-transform: rotate(-60deg);
   transform: rotate(-60deg);
 }
 .hexagon-in2 {
@@ -387,144 +453,126 @@ a:hover {
   background-size: cover;
   visibility: visible;
   -webkit-transform: rotate(-60deg);
-  -moz-transform: rotate(-60deg);
-  -ms-transform: rotate(-60deg);
-  -o-transform: rotate(-60deg);
   transform: rotate(-60deg);
 }
 .hexagon1 {
-  width: 250px;
-  height: 310px;
+  width: 15.625rem;
+  height: 19.375rem;
 }
 .hexagon2 {
-  width: 250px;
-  height: 310px;
+  width: 15.625rem;
+  height: 19.375rem;
 }
 @media screen and (max-width: 799px) {
   .hexagon1 {
-    width: 200px;
-    height: 260px;
+    width: 12.5rem;
+    height: 16.25rem;
   }
   .hexagon2 {
-    width: 200px;
-    height: 260px;
+    width: 12.5rem;
+    height: 16.25rem;
   }
   .testimonial {
-    width: 320px;
+    width: 20rem;
   }
 }
 .usluge-box {
-  height: 565px;
-  width: 1130px;
+  height: 35.313rem;
+  width: 70.625rem;
 }
 @media screen and (max-width: 1180px) {
   .usluge-box {
-    width: 565px;
+    width: 35.313rem;
     height: auto;
   }
 }
 @media screen and (max-width: 600px) {
   .usluge-box {
-    width: 435px;
+    width: 27.118rem;
   }
 }
 @media screen and (max-width: 480px) {
   .usluge-box {
-    width: 360px;
+    width: 22.5rem;
   }
 }
 @media screen and (max-width: 375px) {
   .usluge-box {
-    width: 290px;
+    width: 18.125rem;
   }
 }
 .usluge-box-image {
-  width: 565px;
-  height: 565px;
+  width: 35.313rem;
+  height: 35.313rem;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url('../images/HomeIntro/kartik-bhattacharjee-vw0AmpZvHZg-unsplash.jpg');
 }
 @media screen and (max-width: 1180px) {
   .usluge-box-image {
     width: 100%;
-    height: 375px;
+    height: 23.438rem;
   }
 }
 @media screen and (max-width: 480px) {
   .usluge-box-image {
-    height: 250px;
+    height: 15.625rem;
   }
 }
 @media screen and (max-width: 375px) {
   .usluge-box-image {
-    height: 200px;
+    height: 12.5rem;
   }
 }
 .usluge-dodatne-title {
-  width: 350px;
+  width: 34.375rem;
 }
-.usluge-dodatne-desc {
-  width: 400px;
-  position: relative;
-}
-.usluge-dodatne-desc-one {
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  left: 0;
-  transition: all 0.8s ease-in-out;
+.usluge-dodatne-a {
+  width: 15.625rem;
 }
 @media screen and (max-width: 1180px) {
   .usluge-bottom {
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
   }
 }
 @media screen and (max-width: 779px) {
   .usluge-dodatne-title {
-    width: auto;
-  }
-  .usluge-dodatne-desc {
-    width: 400px;
-    position: relative;
-  }
-  .usluge-dodatne-desc-one {
-    position: relative;
-    height: 0;
-    min-height: 0;
-    margin-left: 24px;
-    margin-right: 24px;
-    text-align: center;
-    transition: height 0.8s ease-in-out;
+    width: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    box-sizing: border-box;
   }
   .opacity {
     opacity: 1;
     height: auto;
-    margin-bottom: 40px;
+    margin-bottom: 2.5rem;
     pointer-events: none;
   }
 }
 .gallery {
-  height: 400px;
-  width: 450px;
+  height: 25rem;
+  width: 28.125rem;
   position: relative;
 }
 @media screen and (max-width: 960px) {
   .gallery {
-    height: 260px;
-    width: 330px;
+    height: 16.25rem;
+    width: 20.625rem;
   }
 }
 @media screen and (max-width: 360px) {
   .gallery {
-    width: 260px;
+    width: 16.25rem;
   }
+}
+.gallery-desc {
+  min-height: 4.375rem;
+  max-height: 4.375rem;
 }
 .gallery-resize {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 1.25rem;
+  right: 1.25rem;
   cursor: pointer;
 }
 .gallery-photos {
@@ -538,6 +586,7 @@ a:hover {
   width: 100%;
   height: 7rem;
   z-index: 2;
+  -webkit-transition: all 0.6s ease-in-out;
   transition: all 0.6s ease-in-out;
 }
 .header-button {
@@ -559,12 +608,13 @@ a:hover {
   height: 35vw;
 }
 .owl-nav {
+  display: -webkit-box;
   display: flex;
+  -webkit-box-align: center;
   align-items: center;
-  margin-bottom: 140px;
 }
 .footer {
-  padding: 40px 44px 30px 44px;
+  padding: 2.5rem 2.75rem 1.875rem 2.75rem;
 }
 @media screen and (max-width: 799px) {
   .header {
@@ -581,10 +631,11 @@ a:hover {
     height: 27.475rem;
     background-color: rgba(17, 17, 17, 0.9);
     top: 5rem;
+    -webkit-transition: right 0.6s ease-in-out;
     transition: right 0.6s ease-in-out;
     overflow-y: auto;
   }
   .owl-nav {
-    margin-bottom: 200px;
+    margin-bottom: 12.5rem;
   }
 }

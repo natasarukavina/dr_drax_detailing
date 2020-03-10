@@ -36,7 +36,7 @@
     </a>
     <a href="usluge/#jednoslojno" class="home-usluge flex flex-column al-it-center margin-bottom-80">
       <img class="home-usluge-icon margin-bottom-24" src="images/jednoslojno.png">
-      <div class="font-24 font-l-20 color-grey">Jednoslojno poliranje</div>
+      <div class="font-24 font-l-20 color-grey">Jednoslojno Poliranje</div>
     </a>
     <a href="usluge/#dvoslojno" class="home-usluge flex flex-column al-it-center margin-bottom-80">
       <img class="home-usluge-icon margin-bottom-24" src="images/dvoslojno.png">
@@ -87,13 +87,15 @@
 	</div>
 </div>
 
+
 <div style="padding: 1.875rem 0px 1.875rem 0;" class="background-dark flex flex-column al-it-center ju-co-around">
 	<div id="owl3"  class="owl-carousel owl-theme flex al-it-center ju-co-between">
-		{% for img in item.Images_ %}
+		{% set photo = fetch("Galerija_Hompage") %}
+		{% for img in photo.Images_ %}
 			<div style="height: 16.25rem; width: 25.5rem; box-sizing: border-box; margin: 0 auto; background-image: url(img/{{img.slug}});background-size:cover;background-position:center;" class="background-dark"></div>
 		{% endfor %}
 	</div>
-	<a href="galerija" class="color-blue text-center margin-top-24 margin-left-24 margin-right-24">Da biste videli i ostale naše radove, posetite našu galeriju</a>
+	<a href="galerija" class="color-blue text-center margin-top-24 margin-left-24 margin-right-24">Posetite galeriju svih naših radova</a>
 </div>
 
 {% endblock %}

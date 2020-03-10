@@ -1,25 +1,33 @@
 .flex {
+  display: -webkit-box;
   display: flex;
 }
 .flex-imp {
+  display: -webkit-box !important;
   display: flex !important;
 }
 .flex-column {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
   flex-direction: column;
 }
 .flex-wrap {
   flex-wrap: wrap;
 }
 .flex-1 {
+  -webkit-box-flex: 1;
   flex: 1;
 }
 .al-it-center {
+  -webkit-box-align: center;
   align-items: center;
 }
 .ju-co-center {
+  -webkit-box-pack: center;
   justify-content: center;
 }
 .ju-co-between {
+  -webkit-box-pack: justify;
   justify-content: space-between;
 }
 .ju-co-around {
@@ -30,14 +38,19 @@
 }
 @media screen and (max-width: 1180px) {
   .flex-1180-column {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
     flex-direction: column;
   }
   .flex-1180-column-rev {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: reverse;
     flex-direction: column-reverse;
   }
 }
 @media screen and (max-width: 1024px) {
   .ju-co-1024-start {
+    -webkit-box-pack: start;
     justify-content: flex-start;
   }
 }
@@ -46,9 +59,27 @@
     display: none;
   }
   .display-799-flex {
+    display: -webkit-box;
     display: flex;
   }
+  .display-799-flex-column {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+  }
   .al-it-799-center {
+    -webkit-box-align: center;
     align-items: center;
+  }
+}
+@media screen and (max-width: 560px) {
+  .display-560-flex {
+    display: -webkit-box;
+    display: flex;
+  }
+  .display-560-flex-column {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
   }
 }
