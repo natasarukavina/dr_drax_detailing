@@ -1,31 +1,31 @@
 .usluge-box {
-  height: 565px;
-  width: 1130px;
+  height: 35.313rem;
+  width: 70.625rem;
 }
 @media screen and (max-width: 1180px) {
   .usluge-box {
-    width: 565px;
+    width: 35.313rem;
     height: auto;
   }
 }
 @media screen and (max-width: 600px) {
   .usluge-box {
-    width: 435px;
+    width: 27.118rem;
   }
 }
 @media screen and (max-width: 480px) {
   .usluge-box {
-    width: 360px;
+    width: 22.5rem;
   }
 }
 @media screen and (max-width: 375px) {
   .usluge-box {
-    width: 290px;
+    width: 18.125rem;
   }
 }
 .usluge-box-image {
-  width: 565px;
-  height: 565px;
+  width: 35.313rem;
+  height: 35.313rem;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -33,59 +33,41 @@
 @media screen and (max-width: 1180px) {
   .usluge-box-image {
     width: 100%;
-    height: 375px;
+    height: 23.438rem;
   }
 }
 @media screen and (max-width: 480px) {
   .usluge-box-image {
-    height: 250px;
+    height: 15.625rem;
   }
 }
 @media screen and (max-width: 375px) {
   .usluge-box-image {
-    height: 200px;
+    height: 12.5rem;
   }
 }
 .usluge-dodatne-title {
   width: 34.375rem;
 }
-.usluge-dodatne-desc {
-  width: 400px;
-  position: relative;
-}
-.usluge-dodatne-desc-one {
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  left: 0;
-  transition: all 0.8s ease-in-out;
+.usluge-dodatne-a {
+  width: 15.625rem;
 }
 @media screen and (max-width: 1180px) {
   .usluge-bottom {
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
   }
 }
 @media screen and (max-width: 779px) {
   .usluge-dodatne-title {
-    width: auto;
-  }
-  .usluge-dodatne-desc {
-    width: 400px;
-    position: relative;
-  }
-  .usluge-dodatne-desc-one {
-    position: relative;
-    height: 0;
-    min-height: 0;
-    margin-left: 24px;
-    margin-right: 24px;
-    text-align: center;
-    transition: height 0.8s ease-in-out;
+    width: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    box-sizing: border-box;
   }
   .opacity {
     opacity: 1;
     height: auto;
-    margin-bottom: 40px;
+    margin-bottom: 2.5rem;
     pointer-events: none;
   }
 }
